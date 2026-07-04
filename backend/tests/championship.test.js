@@ -1,7 +1,6 @@
 process.env.DATABASE_URL = process.env.DATABASE_URL || 'postgresql://motogp_user:motogp_password@localhost:5432/motogp_test';
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'supersecretmotogpkey';
 
-const { describe, it, expect, beforeAll, afterAll } = require('vitest');
 const request = require('supertest');
 const app = require('../app');
 const { setupTestDatabase, cleanTestDatabase } = require('./testSetup');

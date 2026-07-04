@@ -1,0 +1,106 @@
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import Auth from './Auth';
+
+const mockLogin = vi.fn();
+
+// Mock AuthContext
+vi.mock('../context/AuthContext', () => ({
+  useAuth: () => ({
+    login: mockLogin,
+  }),
+}));
+
+describe('Auth Component', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    global.fetch = vi.fn();
+  });
+
+  it('renders login tab by default with email and password inputs', () => {
+    render(<Auth showToast={vi.fn()} />);
+    
+    expect(screen.getByRole('button', { name: /sign in/i })).toHaveClass('text-red-500');
+    expect(screen.getByPlaceholderText(/manager@motogp.com/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/••••••••/i)).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText(/ManagerName/i)).not.toBeInTheDocument();
+  });
+
+  it('switches to register tab when clicking register', () => {
+    render(<Auth showToast={vi.fn()} />);
+    
+    const registerTab = screen.getByRole('button', { name: /register/i });
+    fireEvent.click(registerTab);
+    
+    expect(registerTab).toHaveClass('text-red-500');
+    expect(screen.getByPlaceholderText(/ManagerName/i)).toBeInTheDocument();
+  });
+
+  it('triggers showToast error if fields are missing on submit', async () => {
+    const mockShowToast = vi.fn();
+    render(<Auth showToast={mockShowToast} />);
+    
+    const submitBtn = screen.getByRole('button', { name: /sign in manager/i });
+    fireEvent.click(submitBtn);
+    
+    expect(mockShowToast).toHaveBeenCalledWith('Please fill in all fields', 'error');
+  });
+
+  it('performs successful login call and sets context', async () => {
+    const mockShowToast = vi.fn();
+    
+    // Mock successful login fetch response
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        token: 'fake-jwt-token',
+        user: { email: 'manager@motogp.com', username: 'testuser', role: 'player' }
+      })
+    });
+
+    render(<Auth showToast={mockShowToast} />);
+    
+    fireEvent.change(screen.getByPlaceholderText(/manager@motogp.com/i), {
+      target: { value: 'manager@motogp.com' }
+    });
+    fireEvent.change(screen.getByPlaceholderText(/••••••••/i), {
+      target: { value: 'password123' }
+    });
+    
+    const submitBtn = screen.getByRole('button', { name: /sign in manager/i });
+    fireEvent.click(submitBtn);
+    
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith('/api/auth/login', expect.any(Object));
+      expect(mockLogin).toHaveBeenCalledWith('fake-jwt-token', expect.any(Object));
+      expect(mockShowToast).toHaveBeenCalledWith('Welcome back to MotoGP Manager!', 'success');
+    });
+  });
+
+  it('handles backend error message on failed login', async () => {
+    const mockShowToast = vi.fn();
+    
+    // Mock error response
+    global.fetch.mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: 'Invalid credentials' })
+    });
+
+    render(<Auth showToast={mockShowToast} />);
+    
+    fireEvent.change(screen.getByPlaceholderText(/manager@motogp.com/i), {
+      target: { value: 'manager@motogp.com' }
+    });
+    fireEvent.change(screen.getByPlaceholderText(/••••••••/i), {
+      target: { value: 'wrongpassword' }
+    });
+    
+    const submitBtn = screen.getByRole('button', { name: /sign in manager/i });
+    fireEvent.click(submitBtn);
+    
+    await waitFor(() => {
+      expect(mockShowToast).toHaveBeenCalledWith('Invalid credentials', 'error');
+    });
+  });
+});
