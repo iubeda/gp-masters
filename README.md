@@ -23,6 +23,14 @@
 
 ---
 
+## 📖 Documentación Técnica
+
+| Documento | Descripción |
+|-----------|-------------|
+| [Motor de Simulación de Carreras](docs/simulation-engine.md) | Análisis completo del motor de simulación: fórmulas matemáticas, lógica de neumáticos, adelantamientos, feedback del piloto y diagramas de flujo |
+
+---
+
 ## 🛠️ Tecnologías Utilizadas
 
 El proyecto está construido sobre una arquitectura moderna desacoplada en Frontend y Backend:
