@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 
 const AuthContext = createContext(null);
 
@@ -10,22 +10,22 @@ export const AuthProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(false);
 
-  const login = (jwtToken, userData) => {
+  const login = useCallback((jwtToken, userData) => {
     setToken(jwtToken);
     setUser(userData);
     localStorage.setItem('motogp_token', jwtToken);
     localStorage.setItem('motogp_user', JSON.stringify(userData));
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setToken(null);
     setUser(null);
     localStorage.removeItem('motogp_token');
     localStorage.removeItem('motogp_user');
-  };
+  }, []);
 
   // Helper function to perform authenticated API calls
-  const apiFetch = async (url, options = {}) => {
+  const apiFetch = useCallback(async (url, options = {}) => {
     const headers = {
       'Content-Type': 'application/json',
       ...options.headers,
@@ -52,10 +52,14 @@ export const AuthProvider = ({ children }) => {
     }
 
     return data;
-  };
+  }, [token, logout]);
+
+  const contextValue = React.useMemo(() => ({
+    token, user, login, logout, apiFetch, isAuthenticated: !!token
+  }), [token, user, login, logout, apiFetch]);
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout, apiFetch, isAuthenticated: !!token }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
