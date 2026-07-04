@@ -272,8 +272,10 @@ const getGPStatus = asyncHandler(async (req, res) => {
   }
   const teamId = teamRes.rows[0].id;
 
-  // Obtener/Crear clima del fin de semana
-  const weekend = await simulationModel.getOrCreateWeekend(championshipId, circuitId);
+  // Obtener/Crear clima para cada sesión de forma independiente
+  const practiceWeather = await simulationModel.getOrCreateWeekend(championshipId, circuitId, 'practice');
+  const qualifyingWeather = await simulationModel.getOrCreateWeekend(championshipId, circuitId, 'qualifying');
+  const raceWeather = await simulationModel.getOrCreateWeekend(championshipId, circuitId, 'race');
 
   // Obtener/Crear estado del equipo en este GP
   const teamStatus = await simulationModel.getOrCreateTeamStatus(championshipId, circuitId, teamId);
@@ -287,7 +289,11 @@ const getGPStatus = asyncHandler(async (req, res) => {
   const gridStatus = await simulationModel.getGPStatusForAllTeams(championshipId, circuitId);
 
   res.json({
-    weekend,
+    weather: {
+      practice: practiceWeather,
+      qualifying: qualifyingWeather,
+      race: raceWeather
+    },
     teamStatus,
     practiceLaps,
     qualifyingLaps,
@@ -334,10 +340,10 @@ const runPracticeStint = asyncHandler(async (req, res) => {
   }
   const lapsToSimulate = Math.min(laps, remainingLaps);
 
-  // Detalles del circuito y clima
+  // Detalles del circuito y clima de la sesión de entrenamientos
   const circuitRes = await db.query('SELECT * FROM circuits WHERE id = $1', [circuit_id]);
   const circuit = circuitRes.rows[0];
-  const weekend = await simulationModel.getOrCreateWeekend(championship_id, circuit_id);
+  const weather = await simulationModel.getOrCreateWeekend(championship_id, circuit_id, 'practice');
 
   // Obtener número del stint actual
   const stintRes = await db.query(
@@ -377,7 +383,7 @@ const runPracticeStint = asyncHandler(async (req, res) => {
   // Simular vuelta a vuelta
   for (let i = 1; i <= lapsToSimulate; i++) {
     const lapNum = teamStatus.practice_laps_used + i;
-    const result = simulateLap(pilot, bike, circuit, weekend, tire_type, pilot_focus, setup, accumulatedWear, lapNum, 15);
+    const result = simulateLap(pilot, bike, circuit, weather, tire_type, pilot_focus, setup, accumulatedWear, lapNum, 15);
     accumulatedWear = result.tire_wear_pct;
 
     if (result.has_crashed) {
@@ -494,10 +500,11 @@ const runQualifyingStint = asyncHandler(async (req, res) => {
   }
   const lapsToSimulate = Math.min(laps, remainingLaps);
 
-  // Detalles del circuito y clima
+  // Detalles del circuito y clima de la sesión de clasificación
   const circuitRes = await db.query('SELECT * FROM circuits WHERE id = $1', [circuit_id]);
   const circuit = circuitRes.rows[0];
-  const weekend = await simulationModel.getOrCreateWeekend(championship_id, circuit_id);
+  const weather = await simulationModel.getOrCreateWeekend(championship_id, circuit_id, 'qualifying');
+
 
   // Obtener número del stint
   const stintRes = await db.query(
@@ -536,7 +543,7 @@ const runQualifyingStint = asyncHandler(async (req, res) => {
 
   for (let i = 1; i <= lapsToSimulate; i++) {
     const lapNum = teamStatus.qualifying_laps_used + i;
-    const result = simulateLap(pilot, bike, circuit, weekend, tire_type, pilot_focus, setup, accumulatedWear, lapNum, 3);
+    const result = simulateLap(pilot, bike, circuit, weather, tire_type, pilot_focus, setup, accumulatedWear, lapNum, 3);
     accumulatedWear = result.tire_wear_pct;
 
     if (result.has_crashed) {
@@ -681,7 +688,7 @@ const runRaceSimulationInternal = async (championshipId, circuitId) => {
     throw new Error('Circuito no encontrado.');
   }
 
-  const weekend = await simulationModel.getOrCreateWeekend(championshipId, circuitId);
+  const weekend = await simulationModel.getOrCreateWeekend(championshipId, circuitId, 'race');
 
   // 2. Cargar estados y ordenar la parrilla
   const pilotStates = [];
@@ -910,10 +917,10 @@ const runRaceSimulationInternal = async (championshipId, circuitId) => {
     });
   }
 
-  // Actualizar tabla race_weekends a 'completed'
+  // Actualizar tabla race_weekends a 'completed' para la sesión de carrera
   await db.query(
-    'UPDATE race_weekends SET status = $1 WHERE championship_id = $2 AND circuit_id = $3',
-    ['completed', championshipId, circuitId]
+    'UPDATE race_weekends SET status = $1 WHERE championship_id = $2 AND circuit_id = $3 AND session_type = $4',
+    ['completed', championshipId, circuitId, 'race']
   );
 
   return resultsSummary;

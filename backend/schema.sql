@@ -168,17 +168,18 @@ INSERT INTO championship_circuits (championship_id, circuit_id, "order") VALUES
 (1, 11, 7),
 (1, 15, 8);
 
--- Table of race weekends (weather and state of simulation)
+-- Table of race weekends (weather per session: practice, qualifying, race)
 CREATE TABLE race_weekends (
     id SERIAL PRIMARY KEY,
     championship_id INT REFERENCES championships(id) ON DELETE CASCADE,
     circuit_id INT REFERENCES circuits(id) ON DELETE CASCADE,
+    session_type VARCHAR(15) NOT NULL DEFAULT 'practice', -- 'practice', 'qualifying', 'race'
     status VARCHAR(50) DEFAULT 'scheduled', -- 'scheduled', 'completed'
     weather_condition VARCHAR(20) NOT NULL DEFAULT 'sunny', -- 'sunny', 'cloudy', 'rainy'
     rain_percentage INT DEFAULT 0, -- 0 to 100
     temp_ambient INT DEFAULT 25,
     temp_asphalt INT DEFAULT 30,
-    CONSTRAINT unique_champ_circuit_weekend UNIQUE (championship_id, circuit_id)
+    CONSTRAINT unique_champ_circuit_session UNIQUE (championship_id, circuit_id, session_type)
 );
 
 -- Table of participation and status for each team in the Gran Premio

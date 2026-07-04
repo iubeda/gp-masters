@@ -1,17 +1,17 @@
 const db = require('../config/database');
 
-// 1. Obtener o crear el fin de semana de carrera (con clima aleatorio)
-const getOrCreateWeekend = async (championshipId, circuitId) => {
+// 1. Obtener o crear el clima de una sesión del fin de semana (independiente por sesión)
+const getOrCreateWeekend = async (championshipId, circuitId, sessionType) => {
   const selectQuery = `
     SELECT * FROM race_weekends 
-    WHERE championship_id = $1 AND circuit_id = $2
+    WHERE championship_id = $1 AND circuit_id = $2 AND session_type = $3
   `;
-  const existing = await db.query(selectQuery, [championshipId, circuitId]);
+  const existing = await db.query(selectQuery, [championshipId, circuitId, sessionType]);
   if (existing.rows.length > 0) {
     return existing.rows[0];
   }
 
-  // Generar climatología aleatoria
+  // Generar climatología aleatoria independiente para esta sesión
   const randWeather = Math.random();
   let weatherCondition = 'sunny';
   let rainPercentage = 0;
@@ -29,13 +29,14 @@ const getOrCreateWeekend = async (championshipId, circuitId) => {
   }
 
   const insertQuery = `
-    INSERT INTO race_weekends (championship_id, circuit_id, weather_condition, rain_percentage, temp_ambient, temp_asphalt)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    INSERT INTO race_weekends (championship_id, circuit_id, session_type, weather_condition, rain_percentage, temp_ambient, temp_asphalt)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING *
   `;
   const result = await db.query(insertQuery, [
     championshipId,
     circuitId,
+    sessionType,
     weatherCondition,
     rainPercentage,
     tempAmbient,
