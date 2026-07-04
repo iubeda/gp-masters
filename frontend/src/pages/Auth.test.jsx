@@ -21,7 +21,7 @@ describe('Auth Component', () => {
   it('renders login tab by default with email and password inputs', () => {
     render(<Auth showToast={vi.fn()} />);
     
-    expect(screen.getByRole('button', { name: /sign in/i })).toHaveClass('text-red-500');
+    expect(screen.getByRole('button', { name: /^sign in$/i })).toHaveClass('text-red-500');
     expect(screen.getByPlaceholderText(/manager@motogp.com/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/••••••••/i)).toBeInTheDocument();
     expect(screen.queryByPlaceholderText(/ManagerName/i)).not.toBeInTheDocument();
@@ -30,7 +30,7 @@ describe('Auth Component', () => {
   it('switches to register tab when clicking register', () => {
     render(<Auth showToast={vi.fn()} />);
     
-    const registerTab = screen.getByRole('button', { name: /register/i });
+    const registerTab = screen.getByRole('button', { name: /^register$/i });
     fireEvent.click(registerTab);
     
     expect(registerTab).toHaveClass('text-red-500');
@@ -41,8 +41,10 @@ describe('Auth Component', () => {
     const mockShowToast = vi.fn();
     render(<Auth showToast={mockShowToast} />);
     
+    // Submit the form directly to bypass HTML5 validation blocks in JSDOM
     const submitBtn = screen.getByRole('button', { name: /sign in manager/i });
-    fireEvent.click(submitBtn);
+    const form = submitBtn.closest('form');
+    fireEvent.submit(form);
     
     expect(mockShowToast).toHaveBeenCalledWith('Please fill in all fields', 'error');
   });

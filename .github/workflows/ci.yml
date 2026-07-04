@@ -1,0 +1,75 @@
+name: CI MotoGP Manager
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: motogp_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: testpassword
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install Backend dependencies
+        run: |
+          cd backend
+          npm install --legacy-peer-deps --no-audit --no-fund
+
+      - name: Run Backend integration tests
+        env:
+          DATABASE_URL: postgresql://postgres:testpassword@localhost:5432/motogp_test
+          JWT_SECRET: supersecretmotogpkey
+          PORT: 5000
+        run: |
+          cd backend
+          npm run test
+
+  frontend-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Frontend dependencies
+        run: |
+          cd frontend
+          npm install --legacy-peer-deps --no-audit --no-fund
+
+      - name: Run Frontend unit tests
+        run: |
+          cd frontend
+          npm run test
