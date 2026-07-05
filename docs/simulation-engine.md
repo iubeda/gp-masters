@@ -22,20 +22,40 @@ El sistema de simulación implementa un **Gran Premio completo de MotoGP** con t
 
 ```mermaid
 flowchart TD
-    A["🏁 Inicio del Fin de Semana GP"] --> B["Generar Clima Aleatorio<br/>(race_weekends)"]
-    B --> C["Crear Estado Equipo<br/>(gp_team_status)"]
-    C --> D["🔧 Entrenamientos Libres<br/>Máx 15 vueltas"]
-    D --> E["Feedback del Piloto<br/>(orientación de setup)"]
-    E --> F{"¿Quedan<br/>vueltas?"}
+    A["🏁 Inicio del Fin de Semana GP"] --> B1["☁️ Clima Entrenamientos
+(race_weekends: practice)"]
+    A --> B2["☁️ Clima Clasificación
+(race_weekends: qualifying)"]
+    A --> B3["☁️ Clima Carrera
+(race_weekends: race)"]
+    B1 --> C["Crear Estado Equipo
+(gp_team_status)"]
+    B2 --> C
+    B3 --> C
+    C --> D["🔧 Entrenamientos Libres
+Máx 15 vueltas"]
+    D --> E["Feedback del Piloto
+(orientación de setup)"]
+    E --> F{"¿Quedan
+vueltas?"}
     F -- Sí --> D
-    F -- No --> G["⏱️ Clasificación<br/>Máx 3 vueltas"]
-    G --> H["Ordenar Parrilla<br/>por mejor tiempo"]
-    H --> I["💾 Guardar Estrategia<br/>de Carrera"]
-    I --> J["🏎️ Carrera<br/>12 vueltas"]
-    J --> K["Clasificación Final<br/>+ Puntos + Premios"]
-    K --> L["💰 Actualizar Balance<br/>de Equipos"]
+    F -- No --> G["⏱️ Clasificación
+Máx 3 vueltas"]
+    G --> H["Ordenar Parrilla
+por mejor tiempo"]
+    H --> I["💾 Guardar Estrategia
+de Carrera"]
+    I --> J["🏎️ Carrera
+12 vueltas"]
+    J --> K["Clasificación Final
++ Puntos + Premios"]
+    K --> L["💰 Actualizar Balance
+de Equipos"]
 
     style A fill:#e74c3c,color:#fff
+    style B1 fill:#2980b9,color:#fff
+    style B2 fill:#8e44ad,color:#fff
+    style B3 fill:#16a085,color:#fff
     style D fill:#3498db,color:#fff
     style G fill:#f39c12,color:#fff
     style J fill:#2ecc71,color:#fff
@@ -46,13 +66,28 @@ flowchart TD
 
 ## 1. Generación del Clima
 
-Definida en [`getOrCreateWeekend()`](../backend/models/simulation.model.js). Se genera **una sola vez** por GP y se reutiliza en todas las sesiones.
+Definida en [`getOrCreateWeekend(championshipId, circuitId, sessionType)`](../backend/models/simulation.model.js).
+
+El clima se genera **de forma independiente para cada sesión** del GP. Esto significa que puede llover en clasificación pero lucir el sol en carrera. La función recibe el `session_type` como tercer parámetro y la clave única en BD es `(championship_id, circuit_id, session_type)`.
+
+El endpoint `getGPStatus` obtiene los 3 climas al cargar el Race Center y los devuelve agrupados:
+```json
+{
+  "weather": {
+    "practice":   { "weather_condition": "sunny", "temp_ambient": 28, ... },
+    "qualifying": { "weather_condition": "rainy", "rain_percentage": 65, ... },
+    "race":       { "weather_condition": "cloudy", "temp_ambient": 22, ... }
+  }
+}
+```
 
 | Condición | Probabilidad | Temp. Ambiente | Temp. Asfalto | Lluvia (%) |
 |-----------|:------------:|:--------------:|:-------------:|:----------:|
 | ☀️ Soleado | 50% | 18–35 °C | Ambiente + 10 | 0% |
 | ☁️ Nublado | 30% | 18–35 °C | Ambiente + 2 | 0% |
 | 🌧️ Lluvioso | 20% | 12–22 °C | Ambiente − 2 | 30–100% |
+
+> **Nota:** Cada sesión tira sus propios dados de clima de forma independiente. El clima de entrenamientos **no influye** en el de carrera.
 
 ---
 
@@ -447,6 +482,7 @@ erDiagram
     
     race_weekends {
         int id PK
+        string session_type "'practice' | 'qualifying' | 'race'"
         string weather_condition
         int rain_percentage
         int temp_ambient

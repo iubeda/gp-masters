@@ -214,8 +214,13 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole }) =>
     );
   }
 
-  const { weekend, teamStatus, practiceLaps, qualifyingLaps, raceLaps, gridStatus, teamId } = gpData;
-  const isRaceFinished = weekend.status === 'completed';
+  const { weather, teamStatus, practiceLaps, qualifyingLaps, raceLaps, gridStatus, teamId } = gpData;
+  const isRaceFinished = weather.race?.status === 'completed';
+
+  // Clima correspondiente a la sesión activa
+  const sessionWeatherMap = { practice: weather.practice, qualifying: weather.qualifying, race: weather.race };
+  const currentWeather = sessionWeatherMap[activeTab];
+  const sessionLabel = activeTab === 'practice' ? 'Entrenamientos' : activeTab === 'qualifying' ? 'Clasificación' : 'Carrera';
 
   return (
     <div className="glass border border-gray-850 rounded-3xl overflow-hidden shadow-2xl space-y-6 bg-gradient-to-b from-[#13131A] to-[#0D0D12] text-white">
@@ -232,24 +237,42 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole }) =>
           </p>
         </div>
 
-        {/* Climatología Widget */}
-        <div className="flex items-center gap-4 bg-[#161622]/60 border border-gray-800 px-4 py-3 rounded-2xl">
-          {weekend.weather_condition === 'rainy' ? (
-            <CloudRain className="w-10 h-10 text-blue-400 animate-pulse" />
-          ) : (
-            <Sun className="w-10 h-10 text-amber-500 animate-spin-slow" />
-          )}
-          <div className="text-xs space-y-0.5">
-            <div className="font-bold uppercase tracking-wider text-gray-300">
-              Clima: <span className={weekend.weather_condition === 'rainy' ? 'text-blue-400' : 'text-amber-500'}>
-                {weekend.weather_condition === 'rainy' ? `Lluvia (${weekend.rain_percentage}%)` : weekend.weather_condition === 'cloudy' ? 'Nublado' : 'Soleado'}
-              </span>
-            </div>
-            <div className="flex gap-3 text-gray-400">
-              <span className="flex items-center gap-0.5"><Thermometer className="w-3.5 h-3.5 text-red-400" /> Aire: <strong>{weekend.temp_ambient}ºC</strong></span>
-              <span className="flex items-center gap-0.5"><Thermometer className="w-3.5 h-3.5 text-orange-400" /> Asfalto: <strong>{weekend.temp_asphalt}ºC</strong></span>
-            </div>
+        {/* Climatología Widget — por sesión */}
+        <div className="flex flex-col gap-1.5 bg-[#161622]/60 border border-gray-800 px-4 py-3 rounded-2xl min-w-[200px]">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+            Clima &mdash; {sessionLabel}
           </div>
+          {currentWeather ? (
+            <div className="flex items-center gap-3">
+              {currentWeather.weather_condition === 'rainy' ? (
+                <CloudRain className="w-8 h-8 text-blue-400 animate-pulse flex-shrink-0" />
+              ) : currentWeather.weather_condition === 'cloudy' ? (
+                <Sun className="w-8 h-8 text-gray-400 flex-shrink-0" />
+              ) : (
+                <Sun className="w-8 h-8 text-amber-500 animate-spin-slow flex-shrink-0" />
+              )}
+              <div className="text-xs space-y-0.5">
+                <div className="font-bold uppercase tracking-wider text-gray-300">
+                  <span className={currentWeather.weather_condition === 'rainy' ? 'text-blue-400' : currentWeather.weather_condition === 'cloudy' ? 'text-gray-300' : 'text-amber-500'}>
+                    {currentWeather.weather_condition === 'rainy'
+                      ? `Lluvia (${currentWeather.rain_percentage}%)`
+                      : currentWeather.weather_condition === 'cloudy'
+                      ? 'Nublado'
+                      : 'Soleado'}
+                  </span>
+                </div>
+                <div className="flex gap-3 text-gray-400">
+                  <span className="flex items-center gap-0.5"><Thermometer className="w-3.5 h-3.5 text-red-400" /> Aire: <strong>{currentWeather.temp_ambient}ºC</strong></span>
+                  <span className="flex items-center gap-0.5"><Thermometer className="w-3.5 h-3.5 text-orange-400" /> Asfalto: <strong>{currentWeather.temp_asphalt}ºC</strong></span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-gray-500 text-xs">
+              <HelpCircle className="w-4 h-4" />
+              <span>Pendiente de revelarse</span>
+            </div>
+          )}
         </div>
       </div>
 

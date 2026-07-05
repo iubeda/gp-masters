@@ -1,14 +1,14 @@
 const db = require('../config/database');
 const { generateWeather } = require('../services/simulation.engine');
 
-// 1. Obtener o crear el fin de semana de carrera
+// 1. Obtener o crear el clima de una sesión del fin de semana (independiente por sesión)
 // El clima se genera mediante generateWeather() del engine y se persiste aquí.
-const getOrCreateWeekend = async (championshipId, circuitId) => {
+const getOrCreateWeekend = async (championshipId, circuitId, sessionType) => {
   const selectQuery = `
     SELECT * FROM race_weekends 
-    WHERE championship_id = $1 AND circuit_id = $2
+    WHERE championship_id = $1 AND circuit_id = $2 AND session_type = $3
   `;
-  const existing = await db.query(selectQuery, [championshipId, circuitId]);
+  const existing = await db.query(selectQuery, [championshipId, circuitId, sessionType]);
   if (existing.rows.length > 0) {
     return existing.rows[0];
   }
@@ -17,13 +17,14 @@ const getOrCreateWeekend = async (championshipId, circuitId) => {
   const weather = generateWeather();
 
   const insertQuery = `
-    INSERT INTO race_weekends (championship_id, circuit_id, weather_condition, rain_percentage, temp_ambient, temp_asphalt)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    INSERT INTO race_weekends (championship_id, circuit_id, session_type, weather_condition, rain_percentage, temp_ambient, temp_asphalt)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING *
   `;
   const result = await db.query(insertQuery, [
     championshipId,
     circuitId,
+    sessionType,
     weather.weather_condition,
     weather.rain_percentage,
     weather.temp_ambient,
@@ -279,10 +280,10 @@ const updateGridPositions = async (circuitId, sortedTeams) => {
   }
 };
 
-// 12. Marcar el fin de semana como completado
+// 12. Marcar el fin de semana como completado para la sesión de carrera
 const markWeekendCompleted = async (championshipId, circuitId) => {
   await db.query(
-    "UPDATE race_weekends SET status = 'completed' WHERE championship_id = $1 AND circuit_id = $2",
+    "UPDATE race_weekends SET status = 'completed' WHERE championship_id = $1 AND circuit_id = $2 AND session_type = 'race'",
     [championshipId, circuitId]
   );
 };

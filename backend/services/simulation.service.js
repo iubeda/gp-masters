@@ -99,7 +99,7 @@ const runStint = async (sessionType, params, userEmail) => {
   // Circuito y clima
   const circuitRes = await db.query('SELECT * FROM circuits WHERE id = $1', [circuit_id]);
   const circuit = circuitRes.rows[0];
-  const weekend = await simulationModel.getOrCreateWeekend(championship_id, circuit_id);
+  const weekend = await simulationModel.getOrCreateWeekend(championship_id, circuit_id, sessionType);
 
   const stintNumber = await simulationModel.getNextStintNumber(team.team_id, circuit_id, sessionType);
 
@@ -208,7 +208,7 @@ const runRaceInternal = async (championshipId, circuitId) => {
   const circuit = circuitRes.rows[0];
   if (!circuit) throw new Error('Circuito no encontrado.');
 
-  const weekend = await simulationModel.getOrCreateWeekend(championshipId, circuitId);
+  const weekend = await simulationModel.getOrCreateWeekend(championshipId, circuitId, 'race');
 
   // Inicializar estados de los pilotos y ordenar la parrilla
   const pilotStates = [];

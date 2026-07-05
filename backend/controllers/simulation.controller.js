@@ -21,20 +21,35 @@ const getGPStatus = asyncHandler(async (req, res) => {
 
   if (teamRes.rows.length > 0) {
     teamId = teamRes.rows[0].id;
-    teamStatus  = await simulationModel.getOrCreateTeamStatus(championshipId, circuitId, teamId);
-    practiceLaps   = await simulationModel.getLapHistory(championshipId, circuitId, teamId, 'practice');
+    teamStatus = await simulationModel.getOrCreateTeamStatus(championshipId, circuitId, teamId);
+    practiceLaps = await simulationModel.getLapHistory(championshipId, circuitId, teamId, 'practice');
     qualifyingLaps = await simulationModel.getLapHistory(championshipId, circuitId, teamId, 'qualifying');
-    raceLaps       = await simulationModel.getLapHistory(championshipId, circuitId, teamId, 'race');
+    raceLaps = await simulationModel.getLapHistory(championshipId, circuitId, teamId, 'race');
   } else {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'No tienes un equipo registrado en este campeonato.' });
     }
   }
 
-  const weekend     = await simulationModel.getOrCreateWeekend(championshipId, circuitId);
-  const gridStatus     = await simulationModel.getGPStatusForAllTeams(championshipId, circuitId);
+  // Obtener/Crear clima para cada sesión de forma independiente
+  const practiceWeather = await simulationModel.getOrCreateWeekend(championshipId, circuitId, 'practice');
+  const qualifyingWeather = await simulationModel.getOrCreateWeekend(championshipId, circuitId, 'qualifying');
+  const raceWeather = await simulationModel.getOrCreateWeekend(championshipId, circuitId, 'race');
+  const gridStatus = await simulationModel.getGPStatusForAllTeams(championshipId, circuitId);
 
-  res.json({ weekend, teamStatus, practiceLaps, qualifyingLaps, raceLaps, gridStatus, teamId });
+  res.json({
+    weather: {
+      practice: practiceWeather,
+      qualifying: qualifyingWeather,
+      race: raceWeather
+    },
+    teamStatus,
+    practiceLaps,
+    qualifyingLaps,
+    raceLaps,
+    gridStatus,
+    teamId
+  });
 });
 
 // 2. Simular Tanda de Entrenamientos Libres (Máx 15 vueltas total)
@@ -71,7 +86,7 @@ const saveRaceStrategy = asyncHandler(async (req, res) => {
   const userEmail = req.user.email;
 
   const teams = await simulationModel.getGPTeamsDetails(championship_id);
-  const team  = teams.find(t => t.user_email.toLowerCase() === userEmail.toLowerCase());
+  const team = teams.find(t => t.user_email.toLowerCase() === userEmail.toLowerCase());
   if (!team) {
     return res.status(403).json({ error: 'No tienes un equipo registrado en este campeonato.' });
   }
