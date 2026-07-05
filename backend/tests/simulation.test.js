@@ -98,7 +98,10 @@ describe('GET /api/simulation/status/:championshipId/:circuitId', () => {
       .set('Authorization', `Bearer ${playerToken}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toHaveProperty('weekend');
+    expect(res.body).toHaveProperty('weather');
+    expect(res.body.weather).toHaveProperty('practice');
+    expect(res.body.weather).toHaveProperty('qualifying');
+    expect(res.body.weather).toHaveProperty('race');
     expect(res.body).toHaveProperty('teamStatus');
     expect(res.body).toHaveProperty('practiceLaps');
     expect(res.body).toHaveProperty('qualifyingLaps');
