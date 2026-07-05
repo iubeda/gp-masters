@@ -44,6 +44,7 @@ Pensado para administradores de ligas privadas completas o comunidades cerradas.
 
 ### 4. Admin (Administrador Global de la Plataforma)
 Control total sobre la aplicación para mantenimiento y pruebas.
+* **Gestión de Diccionarios**: Tiene acceso exclusivo al panel de administración para consultar y añadir nuevos registros a los datos maestros de la plataforma (motocicletas, pilotos y circuitos).
 * **Creación**: Puede crear campeonatos de cualquier tipo.
 * **Gestión de Calendarios**: Puede añadir o modificar el calendario de circuitos en **cualquier** campeonato de la plataforma, sea o no el creador.
 * **Gestión de Participantes (Expulsiones con Reglas de Seguridad)**: Puede expulsar a usuarios de cualquier campeonato con total flexibilidad, pero sujeto a estrictas medidas de seguridad:
