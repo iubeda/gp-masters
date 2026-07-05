@@ -35,14 +35,14 @@ INSERT INTO championships (name, season, start_date, created_by, is_public, pin,
 
 -- Seed Championship Circuits (map 8 circuits to championship id=1)
 INSERT INTO championship_circuits (championship_id, circuit_id, "order") VALUES
-(1, 1, 1),
-(1, 2, 2),
-(1, 4, 3),
-(1, 5, 4),
-(1, 7, 5),
-(1, 8, 6),
-(1, 11, 7),
-(1, 15, 8);
+(2, 1, 1),
+(2, 2, 2),
+(2, 4, 3),
+(2, 5, 4),
+(2, 7, 5),
+(2, 8, 6),
+(2, 11, 7),
+(2, 15, 8);
 
 -- Optionally, seed a team to have some active participant
 INSERT INTO teams (name, user_email, championship_id, pilot_id, motorcycle_id, balance) VALUES
