@@ -42,7 +42,7 @@ beforeAll(async () => {
   playerToken = await registerAndLogin('player@sim.test', 'simplayer', 'pass1234', 'player');
 
   // Obtener un circuito existente del seed
-  const circuitRes = await db.query('SELECT id FROM circuits LIMIT 1');
+  const circuitRes = await db.query('SELECT id FROM dictionary_circuits LIMIT 1');
   circuitId = circuitRes.rows[0].id;
 
   // Crear campeonato como admin

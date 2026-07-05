@@ -97,7 +97,7 @@ const runStint = async (sessionType, params, userEmail) => {
   const lapsToSimulate = Math.min(laps, remainingLaps);
 
   // Circuito y clima
-  const circuitRes = await db.query('SELECT * FROM circuits WHERE id = $1', [circuit_id]);
+  const circuitRes = await db.query('SELECT * FROM dictionary_circuits WHERE id = $1', [circuit_id]);
   const circuit = circuitRes.rows[0];
   const weekend = await simulationModel.getOrCreateWeekend(championship_id, circuit_id, sessionType);
 
@@ -204,7 +204,7 @@ const runRaceInternal = async (championshipId, circuitId) => {
   const teams = await simulationModel.getGPTeamsDetails(championshipId);
   if (teams.length === 0) throw Object.assign(new Error('No hay equipos inscritos en este campeonato.'), { status: 400 });
 
-  const circuitRes = await db.query('SELECT * FROM circuits WHERE id = $1', [circuitId]);
+  const circuitRes = await db.query('SELECT * FROM dictionary_circuits WHERE id = $1', [circuitId]);
   const circuit = circuitRes.rows[0];
   if (!circuit) throw new Error('Circuito no encontrado.');
 

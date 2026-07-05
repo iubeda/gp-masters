@@ -211,7 +211,7 @@ describe('Championship Endpoints', () => {
 
     it('should fail to kick a team/user that has already disputed a race', async () => {
       // Simulate a completed race status for PlayerTeam in gp_team_status
-      const circuitRes = await db.query('SELECT id FROM circuits LIMIT 1');
+      const circuitRes = await db.query('SELECT id FROM dictionary_circuits LIMIT 1');
       const circuitId = circuitRes.rows[0].id;
       
       // Seed a completed race weekend
