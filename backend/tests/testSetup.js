@@ -40,8 +40,22 @@ const setupTestDatabase = async () => {
 };
 
 const cleanTestDatabase = async () => {
-  await database.pool.end();
+  // Do NOT call pool.end() here — the pool is a singleton shared across all test files.
+  // Closing it in one file's afterAll breaks subsequent test files.
+  // The pool will be naturally closed when the test process exits.
+  //
+  // Instead, truncate all tables to leave a clean state for the next test file.
+  try {
+    await database.pool.query(`
+      TRUNCATE TABLE gp_lap_history, gp_team_status, race_weekends,
+        championship_circuits, teams, championships, users
+      RESTART IDENTITY CASCADE
+    `);
+  } catch (e) {
+    // If truncation fails (e.g., pool already closed), ignore — setupTestDatabase will reinitialize anyway
+  }
 };
+
 
 module.exports = {
   setupTestDatabase,
