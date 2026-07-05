@@ -436,14 +436,19 @@ flowchart TD
 
 ## 5. Simulación Automática (Scheduler)
 
-El [`scheduler.js`](../backend/utils/scheduler.js) ejecuta un chequeo **cada 60 segundos** buscando carreras pendientes:
+El [`scheduler.js`](../backend/utils/scheduler.js) ejecuta un chequeo **cada 60 segundos** buscando carreras pendientes. 
 
+Para identificar qué carreras están pendientes de simulación, el scheduler:
+1. Consulta el calendario oficial (`championship_circuits`) de los campeonatos activos.
+2. Filtra aquellos Grandes Premios donde los equipos aún no tienen resultados de carrera (no existe `finishing_position` en `gp_team_status`).
+
+Para cada carrera pendiente, evalúa la fecha teórica:
 - **Condición A**: La fecha de carrera ya pasó (`raceDateStr < today`)
-- **Condición B**: Es hoy y ya son las 15:00h o más
+- **Condición B**: Es hoy y ya son las 15:00h o más (dando 1 hora de margen desde las 14:00h)
 
-Si se cumple alguna, ejecuta `runRaceSimulationInternal()` automáticamente.
+Si se cumple alguna de estas condiciones, el scheduler ejecuta `runRaceInternal()` de forma completamente automática, procesando la carrera para todos los equipos inscritos, incluso si ningún usuario ha entrado al fin de semana del GP.
 
-> **⚠️ Importante:** La fecha de cada carrera se calcula como: `start_date + (order - 1) × 4 + 2 días`. Es decir, los circuitos se separan 4 días entre sí, y la carrera es siempre el **tercer día** del bloque.
+> **⚠️ Importante:** La fecha de cada carrera se calcula dinámicamente como: `start_date + (order - 1) × 4 + 2 días`. Es decir, los circuitos se separan 4 días entre sí, y la carrera es siempre el **tercer día** del bloque (offset de 2 días).
 
 ---
 

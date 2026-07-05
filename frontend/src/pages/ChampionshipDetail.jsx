@@ -214,13 +214,15 @@ const ChampionshipDetail = ({ showToast }) => {
                     onSelectCircuit={(circ) => {
                       if (circ.status === 'completed') {
                         setSelectedCompletedCircuit(circ);
+                      } else if (activeGP && circ.id === activeGP.id) {
+                        setActiveTab('gp');
                       } else {
                         showToast(`El GP de ${circ.name} está programado pero aún no se ha disputado.`, 'info');
                       }
                     }}
                   />
                   <div className="p-4 bg-[#161622]/40 border-t border-gray-850 text-[11px] text-gray-450 italic text-center">
-                    Haz click sobre una carrera realizada (verde) para ver su clasificación y telemetría.
+                    Haz click sobre una carrera realizada (verde) o en curso (azul) para acceder a su panel.
                   </div>
                 </div>
               </div>

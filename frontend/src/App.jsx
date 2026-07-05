@@ -83,7 +83,7 @@ const NavigationHeader = ({ showToast }) => {
               }}
               className={`flex items-center gap-2 px-3.5 py-1.5 border rounded-xl transition-all select-none ${
                 location.pathname === '/admin'
-                  ? 'bg-red-655/15 border-red-500/35 text-red-400 font-bold shadow-lg shadow-red-600/5'
+                  ? 'bg-red-600/15 border-red-500/35 text-red-400 font-bold shadow-lg shadow-red-600/5'
                   : 'bg-gray-800/40 hover:bg-gray-850 border-gray-800 text-gray-250'
               }`}
               title="Panel de Administración"

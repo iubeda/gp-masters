@@ -61,16 +61,6 @@ const NextRaceCard = ({ activeGP, hasCircuits, isMember, userRole, todayStr, isC
               </div>
             ))}
           </div>
-
-          {canSimulate && (
-            <button
-              onClick={onSimulate}
-              className="w-full mt-2 py-3 bg-red-650 hover:bg-red-550 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5"
-            >
-              <Play className="w-4 h-4" />
-              Simular este circuito
-            </button>
-          )}
         </div>
       </div>
     );

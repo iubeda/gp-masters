@@ -10,15 +10,22 @@ const startScheduler = () => {
       const localDateStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
       const currentHour = now.getHours();
 
-      // Query all scheduled races (active race weekends)
+      // Query all pending races from active championships
       const queryText = `
-        SELECT rw.championship_id, rw.circuit_id, c.name AS circuit_name, ch.name AS champ_name,
+        SELECT cc.championship_id, cc.circuit_id, c.name AS circuit_name, ch.name AS champ_name,
                cc.order, ch.start_date
-        FROM race_weekends rw
-        JOIN circuits c ON rw.circuit_id = c.id
-        JOIN championships ch ON rw.championship_id = ch.id
-        JOIN championship_circuits cc ON cc.championship_id = rw.championship_id AND cc.circuit_id = rw.circuit_id
-        WHERE rw.status = 'scheduled'
+        FROM championship_circuits cc
+        JOIN circuits c ON cc.circuit_id = c.id
+        JOIN championships ch ON cc.championship_id = ch.id
+        WHERE EXISTS (
+            SELECT 1 FROM teams t WHERE t.championship_id = cc.championship_id
+          )
+          AND NOT EXISTS (
+            SELECT 1 FROM gp_team_status gts
+            WHERE gts.championship_id = cc.championship_id
+              AND gts.circuit_id = cc.circuit_id
+              AND gts.finishing_position IS NOT NULL
+          )
       `;
       const scheduledRes = await db.query(queryText);
       const scheduledRaces = scheduledRes.rows;

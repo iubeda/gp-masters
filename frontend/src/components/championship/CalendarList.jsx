@@ -10,11 +10,14 @@ const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit }) => {
     );
   }
 
+  const activeGpId = circuits.find(c => c.status === 'scheduled')?.id;
+
   return (
     <div className="p-4 space-y-4 max-h-[500px] overflow-y-auto">
       {circuits.map((circ, idx) => {
         const isSelected = selectedCircuit && selectedCircuit.id === circ.id;
         const isCompleted = circ.status === 'completed';
+        const isActive = circ.id === activeGpId;
 
         return (
           <div 
@@ -56,6 +59,14 @@ const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit }) => {
                   <span className="px-2 py-0.5 bg-emerald-600/10 border border-emerald-500/20 text-emerald-400 text-[9px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3 text-emerald-500" />
                     Realizada
+                  </span>
+                ) : isActive ? (
+                  <span className="px-2 py-0.5 bg-blue-600/10 border border-blue-500/20 text-blue-400 text-[9px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                    </span>
+                    En curso
                   </span>
                 ) : (
                   <span className="px-2 py-0.5 bg-gray-800/60 border border-gray-700/60 text-gray-400 text-[9px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">

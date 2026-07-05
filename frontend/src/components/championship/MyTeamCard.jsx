@@ -11,7 +11,7 @@ const StatBar = ({ label, value }) => (
       <span className="text-red-400 font-bold">{value}%</span>
     </div>
     <div className="h-1.5 w-full bg-gray-900 rounded-full overflow-hidden">
-      <div style={{ width: `${value}%` }} className="h-full bg-red-655 rounded-full" />
+      <div style={{ width: `${value}%` }} className="h-full bg-red-600 rounded-full" />
     </div>
   </div>
 );

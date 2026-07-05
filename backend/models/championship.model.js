@@ -50,7 +50,7 @@ const findCalendarCircuits = async (championshipId, startDate) => {
            COALESCE(rw.status, 'scheduled') AS status
     FROM championship_circuits cc
     JOIN circuits c ON cc.circuit_id = c.id
-    LEFT JOIN race_weekends rw ON rw.championship_id = cc.championship_id AND rw.circuit_id = cc.circuit_id
+    LEFT JOIN race_weekends rw ON rw.championship_id = cc.championship_id AND rw.circuit_id = cc.circuit_id AND rw.session_type = 'race'
     WHERE cc.championship_id = $1
     ORDER BY cc.order ASC
   `;
@@ -87,7 +87,7 @@ const countCircuits = async (championshipId) => {
 
 const countCompletedRaces = async (championshipId) => {
   const result = await db.query(
-    "SELECT COUNT(*)::int FROM race_weekends WHERE championship_id = $1 AND status = 'completed'",
+    "SELECT COUNT(*)::int FROM race_weekends WHERE championship_id = $1 AND session_type = 'race' AND status = 'completed'",
     [championshipId]
   );
   return result.rows[0].count;
