@@ -4,7 +4,7 @@ const db = require('../config/database');
 const asyncHandler = require('../utils/asyncHandler');
 
 const createChampionship = asyncHandler(async (req, res) => {
-  const { name, season, start_date, is_public, pin } = req.body;
+  const { name, season, start_date, is_public, pin, max_circuits, max_teams, time_restricted } = req.body;
   const createdBy = req.user.email;
   const userRole = req.user.role || 'player';
 
@@ -18,9 +18,27 @@ const createChampionship = asyncHandler(async (req, res) => {
     return res.status(403).json({ error: 'Managers are only allowed to create public championships.' });
   }
 
+  // Validate max_circuits (2–15)
+  const parsedMaxCircuits = parseInt(max_circuits) || 15;
+  if (parsedMaxCircuits < 2 || parsedMaxCircuits > 15) {
+    return res.status(400).json({ error: 'El número máximo de carreras debe estar entre 2 y 15.' });
+  }
+
+  // Validate max_teams (2–12)
+  const parsedMaxTeams = parseInt(max_teams) || 10;
+  if (parsedMaxTeams < 2 || parsedMaxTeams > 12) {
+    return res.status(400).json({ error: 'El número máximo de participantes debe estar entre 2 y 12.' });
+  }
+
+  // Validate time_restricted (boolean)
+  const isTimeRestricted = time_restricted !== false && time_restricted !== 'false';
+
   const privatePin = isPublic ? null : pin;
 
-  const championship = await championshipModel.create(name, season, start_date, createdBy, isPublic, privatePin);
+  const championship = await championshipModel.create(
+    name, season, start_date, createdBy, isPublic, privatePin,
+    parsedMaxCircuits, parsedMaxTeams, isTimeRestricted
+  );
   res.status(201).json(championship);
 });
 
@@ -96,10 +114,10 @@ const addCalendarCircuit = asyncHandler(async (req, res) => {
     return res.status(403).json({ error: 'Only the championship creator or an administrator can define the calendar and race order.' });
   }
 
-  // 2. Validation: ensure no more than 15 circuits are added
+  // 2. Validation: ensure no more than max_circuits are added
   const circuitCount = await championshipModel.countCircuits(championship_id);
-  if (circuitCount >= 15) {
-    return res.status(400).json({ error: 'Championship calendar is full (max 15 circuits)' });
+  if (circuitCount >= championship.max_circuits) {
+    return res.status(400).json({ error: `El calendario del campeonato está completo (máx. ${championship.max_circuits} circuitos)` });
   }
 
   // 3. Add mapping

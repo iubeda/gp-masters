@@ -1,7 +1,7 @@
 import React from 'react';
 import { CheckCircle2, CalendarDays } from 'lucide-react';
 
-const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit }) => {
+const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit, todayStr }) => {
   if (!circuits || circuits.length === 0) {
     return (
       <div className="p-8 text-center text-gray-500 text-sm">
@@ -17,7 +17,9 @@ const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit }) => {
       {circuits.map((circ, idx) => {
         const isSelected = selectedCircuit && selectedCircuit.id === circ.id;
         const isCompleted = circ.status === 'completed';
-        const isActive = circ.id === activeGpId;
+        const isNextGp = circ.id === activeGpId;
+        const hasStarted = todayStr >= circ.practice_date;
+        const isActive = isNextGp && hasStarted;
 
         return (
           <div 

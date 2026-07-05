@@ -12,9 +12,6 @@ const ChampionshipTabs = ({ activeTab, onTabChange, activeGP, isMember, userRole
         : 'border-transparent text-gray-400 hover:text-white'
     }`;
 
-  const showGPTab =
-    activeGP && ((isMember && todayStr >= activeGP.practice_date) || userRole === 'admin');
-
   return (
     <div className="flex border-b border-gray-800 gap-6 text-sm font-semibold select-none">
       <button
@@ -31,15 +28,15 @@ const ChampionshipTabs = ({ activeTab, onTabChange, activeGP, isMember, userRole
         Calendario
       </button>
 
-      {showGPTab && (
+      {activeGP && (
         <button
           onClick={() => onTabChange('gp')}
           className={`${tabClass('gp')} flex items-center gap-1.5`}
         >
-          {isMember && (
+          {isMember && todayStr >= activeGP.practice_date && (
             <span className="w-2 h-2 rounded-full bg-red-500 animate-ping shrink-0" />
           )}
-          GP Activo: {activeGP.name}
+          {todayStr >= activeGP.practice_date ? 'GP Activo: ' : 'Próximo GP: '} {activeGP.name}
         </button>
       )}
     </div>

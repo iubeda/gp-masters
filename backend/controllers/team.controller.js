@@ -49,10 +49,10 @@ const registerTeam = asyncHandler(async (req, res) => {
     }
   }
 
-  // 1. Validation: count existing teams in this championship
+  // 1. Validation: count existing (non-kicked) teams in this championship
   const teamCount = await teamModel.countTeams(championship_id);
-  if (teamCount >= 10) {
-    return res.status(400).json({ error: 'Championship is full' });
+  if (teamCount >= championship.max_teams) {
+    return res.status(400).json({ error: `El campeonato está completo (máx. ${championship.max_teams} equipos).` });
   }
 
   // 2. Validation: check if user already has a team in this championship (active or kicked)

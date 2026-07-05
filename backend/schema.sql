@@ -41,7 +41,10 @@ CREATE TABLE championships (
     start_date DATE NOT NULL,
     created_by VARCHAR(255) REFERENCES users(email) ON DELETE SET NULL,
     is_public BOOLEAN DEFAULT TRUE,
-    pin VARCHAR(10) DEFAULT NULL
+    pin VARCHAR(10) DEFAULT NULL,
+    max_circuits INT NOT NULL DEFAULT 15 CHECK (max_circuits >= 2 AND max_circuits <= 15),
+    max_teams INT NOT NULL DEFAULT 10 CHECK (max_teams >= 2 AND max_teams <= 12),
+    time_restricted BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 -- Pilots table

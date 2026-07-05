@@ -26,6 +26,9 @@ const Dashboard = ({ showToast }) => {
   const [startDate, setStartDate] = useState(getTomorrowStr());
   const [isPublic, setIsPublic] = useState(true);
   const [pin, setPin] = useState('');
+  const [maxCircuits, setMaxCircuits] = useState(15);
+  const [maxTeams, setMaxTeams] = useState(10);
+  const [timeRestricted, setTimeRestricted] = useState(true);
   const [creating, setCreating] = useState(false);
 
   const fetchChampionships = async () => {
@@ -82,14 +85,20 @@ const Dashboard = ({ showToast }) => {
           season: parseInt(season),
           start_date: startDate,
           is_public: isPublic,
-          pin: isPublic ? null : pin
+          pin: isPublic ? null : pin,
+          max_circuits: maxCircuits,
+          max_teams: maxTeams,
+          time_restricted: timeRestricted,
         }),
       });
       showToast('Championship created successfully!', 'success');
       setName('');
       setPin('');
       setIsPublic(true);
-      setStartDate(getTomorrowStr()); // Reset to valid tomorrow
+      setMaxCircuits(15);
+      setMaxTeams(10);
+      setTimeRestricted(true);
+      setStartDate(getTomorrowStr());
       setShowCreateForm(false);
       fetchChampionships();
     } catch (error) {
@@ -127,14 +136,14 @@ const Dashboard = ({ showToast }) => {
 
       {/* Create Championship Modal */}
       {showCreateForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-md glass rounded-2xl border border-gray-800 shadow-2xl overflow-hidden">
-            <div className="bg-gradient-to-r from-red-600/20 to-transparent p-6 border-b border-gray-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn !mt-0">
+          <div className="w-full max-w-md glass rounded-2xl border border-gray-800 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            <div className="bg-gradient-to-r from-red-600/20 to-transparent p-6 border-b border-gray-800 shrink-0">
               <h2 className="text-xl font-bold text-white">Create Championship</h2>
               <p className="text-xs text-gray-400 mt-1">Initialize a new motorsport league calendar</p>
             </div>
             
-            <form onSubmit={handleCreate} className="p-6 space-y-4">
+            <form onSubmit={handleCreate} className="p-6 space-y-4 overflow-y-auto">
               <div className="space-y-1">
                 <label className="text-xs font-semibold uppercase text-gray-400">Championship Name</label>
                 <input
@@ -228,6 +237,53 @@ const Dashboard = ({ showToast }) => {
                   )}
                 </>
               )}
+
+              {/* Race & team limits */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold uppercase text-gray-400">Máx. Carreras</label>
+                  <input
+                    type="number"
+                    min="2"
+                    max="15"
+                    value={maxCircuits}
+                    onChange={(e) => setMaxCircuits(Math.min(15, Math.max(2, parseInt(e.target.value) || 2)))}
+                    className="w-full px-4 py-3 bg-[#0F0F12] border border-gray-800 rounded-xl focus:border-red-500 focus:outline-none text-white text-sm"
+                    required
+                  />
+                  <p className="text-[10px] text-gray-500">Entre 2 y 15 GPs</p>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold uppercase text-gray-400">Máx. Participantes</label>
+                  <input
+                    type="number"
+                    min="2"
+                    max="12"
+                    value={maxTeams}
+                    onChange={(e) => setMaxTeams(Math.min(12, Math.max(2, parseInt(e.target.value) || 2)))}
+                    className="w-full px-4 py-3 bg-[#0F0F12] border border-gray-800 rounded-xl focus:border-red-500 focus:outline-none text-white text-sm"
+                    required
+                  />
+                  <p className="text-[10px] text-gray-500">Entre 2 y 12 equipos</p>
+                </div>
+              </div>
+
+              {/* Time restriction toggle */}
+              <div className="flex items-center justify-between p-4 bg-[#0F0F12] border border-gray-800 rounded-xl">
+                <div>
+                  <p className="text-xs font-semibold text-gray-300">Limitación Horaria (12h–15h)</p>
+                  <p className="text-[10px] text-gray-500 mt-0.5">Si está activo, los entrenamientos y clasificación solo se pueden simular entre las 12:00h y las 15:00h.</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer ml-4 flex-shrink-0">
+                  <input
+                    type="checkbox"
+                    checked={timeRestricted}
+                    onChange={(e) => setTimeRestricted(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-10 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-500"></div>
+                </label>
+              </div>
 
               <div className="flex gap-3 pt-4">
                 <button
@@ -383,19 +439,20 @@ const Dashboard = ({ showToast }) => {
                     </div>
 
                     {/* Card Stats */}
+                    {/* Card Stats */}
                     <div className="px-6 py-4 bg-[#0F0F12]/40 border-t border-gray-800/50 grid grid-cols-2 gap-4">
                       <div className="flex items-center gap-2">
                         <Users className="w-4 h-4 text-gray-550" />
                         <div>
                           <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Equipos</p>
-                          <p className="text-sm font-semibold text-gray-200">{champ.team_count} / 10</p>
+                          <p className="text-sm font-semibold text-gray-200">{champ.team_count} / {champ.max_teams ?? 10}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-gray-555" />
                         <div>
                           <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Circuitos</p>
-                          <p className="text-sm font-semibold text-gray-200">{champ.circuit_count} / 15</p>
+                          <p className="text-sm font-semibold text-gray-200">{champ.circuit_count} / {champ.max_circuits ?? 15}</p>
                         </div>
                       </div>
                     </div>

@@ -429,6 +429,13 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
 
         {/* COL 2 & 3: Sessions Navigation & Telemetry/Leaderboard */}
         <div className="lg:col-span-2 space-y-6">
+          {(() => {
+            const isPracticeFuture = todayStr && todayStr < circuit.practice_date;
+            const isQualifyingFuture = todayStr && todayStr < circuit.qualifying_date;
+            const isRaceFuture = todayStr && todayStr < circuit.race_date;
+
+            return (
+              <>
           {/* Navigation tabs */}
           <div className="flex bg-[#101017] p-1.5 rounded-2xl border border-gray-850">
             {[
@@ -457,7 +464,13 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
           {activeTab === 'practice' && (
             <div className="space-y-6">
               {teamId ? (
-                isPracticeFinished ? (
+                isPracticeFuture ? (
+                  <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic tracking-wider flex flex-col items-center gap-2">
+                    <CalendarDays className="w-6 h-6 text-blue-400 mb-1" />
+                    <span>Los entrenamientos libres aún no han comenzado.</span>
+                    <span className="text-xs text-gray-500 font-normal">Programados para el {circuit.practice_date}</span>
+                  </div>
+                ) : isPracticeFinished ? (
                   <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic uppercase tracking-wider">
                     Sesión de entrenamientos libres finalizada
                   </div>
@@ -582,7 +595,13 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
           {activeTab === 'qualifying' && (
             <div className="space-y-6">
               {teamId ? (
-                isQualifyingFinished ? (
+                isQualifyingFuture ? (
+                  <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic tracking-wider flex flex-col items-center gap-2">
+                    <CalendarDays className="w-6 h-6 text-blue-400 mb-1" />
+                    <span>La sesión de clasificación aún no ha comenzado.</span>
+                    <span className="text-xs text-gray-500 font-normal">Programada para el {circuit.qualifying_date}</span>
+                  </div>
+                ) : isQualifyingFinished ? (
                   <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic uppercase tracking-wider">
                     Sesión de clasificación finalizada
                   </div>
@@ -873,6 +892,9 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
               )}
             </div>
           )}
+              </>
+            );
+          })()}
         </div>
       </div>
     </div>

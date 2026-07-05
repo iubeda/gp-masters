@@ -43,13 +43,21 @@ const validateSessionTime = async (championshipId, circuitId, sessionType, bypas
     throw new Error(`Esta sesión está programada para la fecha: ${targetDateStr}. Hoy es: ${localDateStr}.`);
   }
 
-  if (sessionType === 'practice' || sessionType === 'qualifying') {
-    if (currentHour < 12 || currentHour >= 15) {
-      const label = sessionType === 'practice' ? 'Entrenamientos' : 'Clasificación';
-      throw new Error(`La sesión de ${label} sólo está abierta de 12:00h a 15:00h.`);
+  // Apply hour restriction only if the championship has time_restricted enabled
+  if (championship.time_restricted) {
+    if (sessionType === 'practice' || sessionType === 'qualifying') {
+      if (currentHour < 12 || currentHour >= 15) {
+        const label = sessionType === 'practice' ? 'Entrenamientos' : 'Clasificación';
+        throw new Error(`La sesión de ${label} sólo está abierta de 12:00h a 15:00h.`);
+      }
+    } else if (sessionType === 'race' && currentHour < 14) {
+      throw new Error('La Carrera sólo se puede simular a partir de las 14:00h.');
     }
-  } else if (sessionType === 'race' && currentHour < 14) {
-    throw new Error('La Carrera sólo se puede simular a partir de las 14:00h.');
+  } else {
+    // Without time restriction, race can still only be simulated from 14:00h on race day
+    if (sessionType === 'race' && currentHour < 14) {
+      throw new Error('La Carrera sólo se puede simular a partir de las 14:00h.');
+    }
   }
 };
 
