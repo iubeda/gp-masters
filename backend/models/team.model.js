@@ -33,9 +33,9 @@ const findRegisteredTeams = async (championshipId) => {
             FROM gp_team_status s 
             WHERE s.team_id = t.id AND s.championship_id = $1) AS total_points
     FROM teams t
-    JOIN pilots p ON t.pilot_id = p.id
+    JOIN dictionary_pilots p ON t.pilot_id = p.id
     JOIN users u ON t.user_email = u.email
-    JOIN motorcycles m ON t.motorcycle_id = m.id
+    JOIN dictionary_motorcycles m ON t.motorcycle_id = m.id
     WHERE t.championship_id = $1
     ORDER BY total_points DESC, t.id ASC
   `;
@@ -54,12 +54,12 @@ const createTeam = async (name, userEmail, championshipId, pilotId, motorcycleId
 };
 
 const findAllPilots = async () => {
-  const result = await db.query('SELECT id, name FROM pilots');
+  const result = await db.query('SELECT id, name FROM dictionary_pilots');
   return result.rows;
 };
 
 const findAllMotorcycles = async () => {
-  const result = await db.query('SELECT id, model_name FROM motorcycles');
+  const result = await db.query('SELECT id, model_name FROM dictionary_motorcycles');
   return result.rows;
 };
 

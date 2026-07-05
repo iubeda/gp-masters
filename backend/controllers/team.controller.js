@@ -164,13 +164,13 @@ const getChampionshipTeams = asyncHandler(async (req, res) => {
 
 const getPilots = asyncHandler(async (req, res) => {
   // Return all pilots with detailed stats
-  const result = await db.query('SELECT * FROM pilots ORDER BY name ASC');
+  const result = await db.query('SELECT * FROM dictionary_pilots ORDER BY name ASC');
   res.json(result.rows);
 });
 
 const getCircuits = asyncHandler(async (req, res) => {
   // Return all circuits with detailed stats
-  const result = await db.query('SELECT * FROM circuits ORDER BY name ASC');
+  const result = await db.query('SELECT * FROM dictionary_circuits ORDER BY name ASC');
   res.json(result.rows);
 });
 
