@@ -28,7 +28,7 @@ const ChampionshipTabs = ({ activeTab, onTabChange, activeGP, isMember, userRole
         Calendario
       </button>
 
-      {activeGP && (
+      {(isMember || userRole === 'admin') && activeGP && (
         <button
           onClick={() => onTabChange('gp')}
           className={`${tabClass('gp')} flex items-center gap-1.5`}
