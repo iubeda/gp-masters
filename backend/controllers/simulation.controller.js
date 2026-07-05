@@ -35,7 +35,6 @@ const getGPStatus = asyncHandler(async (req, res) => {
   const practiceWeather = await simulationModel.getOrCreateWeekend(championshipId, circuitId, 'practice');
   const qualifyingWeather = await simulationModel.getOrCreateWeekend(championshipId, circuitId, 'qualifying');
   const raceWeather = await simulationModel.getOrCreateWeekend(championshipId, circuitId, 'race');
-  const weekend = await simulationModel.getOrCreateWeekend(championshipId, circuitId);
   const gridStatus = await simulationModel.getGPStatusForAllTeams(championshipId, circuitId);
 
   res.json({
