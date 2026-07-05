@@ -269,7 +269,7 @@ const Dashboard = ({ showToast }) => {
                 : 'text-gray-400 hover:text-white'
             }`}
           >
-            Mis Campeonatos ({championships.filter(c => c.is_member).length})
+            Mis Campeonatos ({championships.filter(c => c.is_member && !c.is_kicked).length})
           </button>
           <button
             onClick={() => {
@@ -282,7 +282,7 @@ const Dashboard = ({ showToast }) => {
                 : 'text-gray-400 hover:text-white'
             }`}
           >
-            Campeonatos Disponibles ({championships.filter(c => !c.is_member).length})
+            Campeonatos Disponibles ({championships.filter(c => !c.is_member && !c.is_kicked).length})
           </button>
         </div>
 
@@ -307,8 +307,8 @@ const Dashboard = ({ showToast }) => {
         </div>
       ) : (
         (() => {
-          const myChampionships = championships.filter(c => c.is_member);
-          const availableChampionships = championships.filter(c => !c.is_member);
+          const myChampionships = championships.filter(c => c.is_member && !c.is_kicked);
+          const availableChampionships = championships.filter(c => !c.is_member && !c.is_kicked);
           const listToFilter = activeTab === 'my-championships' ? myChampionships : availableChampionships;
           
           const filtered = listToFilter.filter(champ => {

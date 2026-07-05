@@ -85,11 +85,29 @@ const countCircuits = async (championshipId) => {
   return result.rows[0].count;
 };
 
+const countCompletedRaces = async (championshipId) => {
+  const result = await db.query(
+    "SELECT COUNT(*)::int FROM race_weekends WHERE championship_id = $1 AND status = 'completed'",
+    [championshipId]
+  );
+  return result.rows[0].count;
+};
+
+const getKickStatus = async (userEmail, championshipId) => {
+  const result = await db.query(
+    'SELECT id, is_kicked, kick_reason FROM teams WHERE user_email = $1 AND championship_id = $2',
+    [userEmail.toLowerCase(), championshipId]
+  );
+  return result.rows[0] || null;
+};
+
 module.exports = {
   create,
   findAll,
   findById,
   findCalendarCircuits,
   addCircuit,
-  countCircuits
+  countCircuits,
+  countCompletedRaces,
+  getKickStatus,
 };

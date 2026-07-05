@@ -1,6 +1,7 @@
 const express = require('express');
 const simulationController = require('../controllers/simulation.controller');
 const authMiddleware = require('../middleware/auth');
+const { validateSetupOffsets } = require('../middleware/validation');
 
 const router = express.Router();
 
@@ -8,9 +9,10 @@ const router = express.Router();
 router.use(authMiddleware);
 
 router.get('/status/:championshipId/:circuitId', simulationController.getGPStatus);
-router.post('/practice-stint', simulationController.runPracticeStint);
-router.post('/qualifying-stint', simulationController.runQualifyingStint);
-router.post('/save-strategy', simulationController.saveRaceStrategy);
+router.post('/practice-stint',  validateSetupOffsets, simulationController.runPracticeStint);
+router.post('/qualifying-stint', validateSetupOffsets, simulationController.runQualifyingStint);
+router.post('/save-strategy',   validateSetupOffsets, simulationController.saveRaceStrategy);
 router.post('/race', simulationController.runRaceSimulation);
 
 module.exports = router;
+

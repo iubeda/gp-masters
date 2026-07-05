@@ -1,5 +1,5 @@
 const db = require('../config/database');
-const { runRaceSimulationInternal } = require('../controllers/simulation.controller');
+const { runRaceInternal } = require('../services/simulation.service');
 
 const startScheduler = () => {
   // Check every 60 seconds
@@ -43,7 +43,7 @@ const startScheduler = () => {
           console.log(`[Auto-Scheduler] Starting automatic race simulation for Championship: "${race.champ_name}" (ID: ${race.championship_id}), Circuit: "${race.circuit_name}" (ID: ${race.circuit_id}), scheduled for ${raceDateStr}`);
           
           try {
-            const results = await runRaceSimulationInternal(race.championship_id, race.circuit_id);
+            const results = await runRaceInternal(race.championship_id, race.circuit_id);
             console.log(`[Auto-Scheduler] Automatic simulation completed successfully. Results calculated for ${results.length} teams.`);
           } catch (simError) {
             console.error(`[Auto-Scheduler] Error simulating race automatically for champ_id ${race.championship_id}, circuit_id ${race.circuit_id}:`, simError.message);

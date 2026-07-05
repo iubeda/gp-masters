@@ -18,7 +18,14 @@ const initializeDatabase = async () => {
     
     // Execute DDL
     await pool.query(schemaSql);
-    console.log('Database initialized successfully with schema and seeds.');
+    console.log('Database initialized successfully with schema and base seeds.');
+
+    if (process.env.SEED_TEST_DATA === 'true') {
+      const seedPath = path.join(__dirname, '..', 'seed_championship.sql');
+      const seedSql = fs.readFileSync(seedPath, 'utf8');
+      await pool.query(seedSql);
+      console.log('Test championship data seeded successfully.');
+    }
   } catch (error) {
     console.error('Error initializing database:', error);
   }

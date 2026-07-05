@@ -21,7 +21,7 @@ const SetupCell = ({ value }) => {
   return <span className={`font-mono font-bold ${color}`}>{v > 0 ? `+${v}` : v}</span>;
 };
 
-const RaceCenter = ({ championship, circuit, apiFetch, showToast }) => {
+const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole }) => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('practice'); // 'practice', 'qualifying', 'race'
   
@@ -277,23 +277,25 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast }) => {
       </div>
 
       {/* Bypass Horario para Dev testing */}
-      <div className="px-6 flex items-center justify-between bg-yellow-500/5 border border-yellow-500/10 p-3 rounded-2xl mx-6">
-        <div className="flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-yellow-500" />
-          <span className="text-xs text-gray-400">
-            <strong>Bypass de restricciones horarias:</strong> Actívalo para simular en cualquier momento sin esperar la ventana horaria (12h-15h).
-          </span>
+      {userRole === 'admin' && (
+        <div className="px-6 flex items-center justify-between bg-yellow-500/5 border border-yellow-500/10 p-3 rounded-2xl mx-6">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-yellow-500" />
+            <span className="text-xs text-gray-400">
+              <strong>Bypass de restricciones horarias:</strong> Actívalo para simular en cualquier momento sin esperar la ventana horaria (12h-15h).
+            </span>
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input 
+              type="checkbox" 
+              checked={bypassTime} 
+              onChange={(e) => setBypassTime(e.target.checked)}
+              className="sr-only peer"
+            />
+            <div className="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-yellow-500"></div>
+          </label>
         </div>
-        <label className="relative inline-flex items-center cursor-pointer">
-          <input 
-            type="checkbox" 
-            checked={bypassTime} 
-            onChange={(e) => setBypassTime(e.target.checked)}
-            className="sr-only peer"
-          />
-          <div className="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-yellow-500"></div>
-        </label>
-      </div>
+      )}
 
       {/* Main Grid: Left strategy form, Right session logs & leaderboard */}
       <div className="px-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -707,7 +709,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast }) => {
               )}
 
               {/* Botón de Simulación de Carrera */}
-              {!isRaceFinished && (
+              {!isRaceFinished && userRole === 'admin' && (
                 <div className="bg-gradient-to-r from-yellow-600/10 to-[#101017] border border-yellow-500/20 p-5 rounded-2xl space-y-4">
                   <div className="flex items-center gap-2">
                     <CalendarDays className="w-5 h-5 text-yellow-500" />

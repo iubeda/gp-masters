@@ -1,6 +1,8 @@
 const db = require('../config/database');
+const { generateWeather } = require('../services/simulation.engine');
 
 // 1. Obtener o crear el clima de una sesión del fin de semana (independiente por sesión)
+// El clima se genera mediante generateWeather() del engine y se persiste aquí.
 const getOrCreateWeekend = async (championshipId, circuitId, sessionType) => {
   const selectQuery = `
     SELECT * FROM race_weekends 
@@ -11,22 +13,8 @@ const getOrCreateWeekend = async (championshipId, circuitId, sessionType) => {
     return existing.rows[0];
   }
 
-  // Generar climatología aleatoria independiente para esta sesión
-  const randWeather = Math.random();
-  let weatherCondition = 'sunny';
-  let rainPercentage = 0;
-  let tempAmbient = Math.floor(Math.random() * (35 - 18 + 1)) + 18; // 18 a 35 ºC
-  let tempAsphalt = tempAmbient + 10;
-
-  if (randWeather < 0.20) { // 20% lluvia
-    weatherCondition = 'rainy';
-    rainPercentage = Math.floor(Math.random() * (100 - 30 + 1)) + 30; // 30% a 100%
-    tempAmbient = Math.floor(Math.random() * (22 - 12 + 1)) + 12; // 12 a 22 ºC (lluvioso es más frío)
-    tempAsphalt = tempAmbient - 2;
-  } else if (randWeather < 0.50) { // 30% nublado
-    weatherCondition = 'cloudy';
-    tempAsphalt = tempAmbient + 2;
-  }
+  // Generar climatología mediante el motor puro (sin lógica de dominio en el model)
+  const weather = generateWeather();
 
   const insertQuery = `
     INSERT INTO race_weekends (championship_id, circuit_id, session_type, weather_condition, rain_percentage, temp_ambient, temp_asphalt)
@@ -37,10 +25,10 @@ const getOrCreateWeekend = async (championshipId, circuitId, sessionType) => {
     championshipId,
     circuitId,
     sessionType,
-    weatherCondition,
-    rainPercentage,
-    tempAmbient,
-    tempAsphalt
+    weather.weather_condition,
+    weather.rain_percentage,
+    weather.temp_ambient,
+    weather.temp_asphalt
   ]);
 
   return result.rows[0];
@@ -273,6 +261,33 @@ const saveRaceResults = async (championshipId, circuitId, teamId, results) => {
   }
 };
 
+// 10 (bis). Obtener el número del siguiente stint para un equipo en una sesión
+const getNextStintNumber = async (teamId, circuitId, sessionType) => {
+  const result = await db.query(
+    'SELECT COALESCE(MAX(stint_number), 0) + 1 AS next_stint FROM gp_lap_history WHERE team_id = $1 AND circuit_id = $2 AND session_type = $3',
+    [teamId, circuitId, sessionType]
+  );
+  return result.rows[0].next_stint;
+};
+
+// 11. Actualizar posiciones de la parrilla de salida tras la clasificación
+const updateGridPositions = async (circuitId, sortedTeams) => {
+  for (let idx = 0; idx < sortedTeams.length; idx++) {
+    await db.query(
+      'UPDATE gp_team_status SET grid_position = $1 WHERE team_id = $2 AND circuit_id = $3',
+      [idx + 1, sortedTeams[idx].team_id, circuitId]
+    );
+  }
+};
+
+// 12. Marcar el fin de semana como completado para la sesión de carrera
+const markWeekendCompleted = async (championshipId, circuitId) => {
+  await db.query(
+    "UPDATE race_weekends SET status = 'completed' WHERE championship_id = $1 AND circuit_id = $2 AND session_type = 'race'",
+    [championshipId, circuitId]
+  );
+};
+
 module.exports = {
   getOrCreateWeekend,
   getOrCreateTeamStatus,
@@ -283,5 +298,8 @@ module.exports = {
   getLapHistory,
   getGPTeamsDetails,
   getGPStatusForAllTeams,
-  saveRaceResults
+  saveRaceResults,
+  getNextStintNumber,
+  updateGridPositions,
+  markWeekendCompleted,
 };
