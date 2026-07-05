@@ -281,8 +281,8 @@ const Landing = () => {
             © {new Date().getFullYear()} MotoGP Manager MVP. All rights reserved.
           </div>
           <div className="flex gap-4 text-sm text-gray-500">
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
+            <button onClick={() => navigate('/privacy')} className="hover:text-white transition-colors">Privacy</button>
+            <button onClick={() => navigate('/terms')} className="hover:text-white transition-colors">Terms</button>
           </div>
         </div>
       </footer>

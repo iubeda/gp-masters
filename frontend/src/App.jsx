@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Auth from './pages/Auth';
 import Landing from './pages/Landing';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
 import Dashboard from './pages/Dashboard';
 import ChampionshipDetail from './pages/ChampionshipDetail';
 import Profile from './pages/Profile';
@@ -154,6 +156,14 @@ const MainApp = ({ showToast }) => {
                 <Landing />
               </PublicRoute>
             } 
+          />
+          <Route 
+            path="/privacy" 
+            element={<Privacy />} 
+          />
+          <Route 
+            path="/terms" 
+            element={<Terms />} 
           />
           <Route 
             path="/dashboard" 
