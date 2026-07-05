@@ -181,9 +181,9 @@ const getGPTeamsDetails = async (championshipId) => {
            m.model_name AS motorcycle_name,
            m.engine, m.gearbox, m.suspension, m.chassis, m.wings
     FROM teams t
-    JOIN pilots p ON t.pilot_id = p.id
+    JOIN dictionary_pilots p ON t.pilot_id = p.id
     JOIN users u ON t.user_email = u.email
-    JOIN motorcycles m ON t.motorcycle_id = m.id
+    JOIN dictionary_motorcycles m ON t.motorcycle_id = m.id
     WHERE t.championship_id = $1
     ORDER BY t.id ASC
   `;
@@ -202,8 +202,8 @@ const getGPStatusForAllTeams = async (championshipId, circuitId) => {
            s.grid_position, s.finishing_position, s.race_time, s.status, s.earnings, s.points_earned
     FROM teams t
     JOIN users u ON t.user_email = u.email
-    JOIN pilots p ON t.pilot_id = p.id
-    JOIN motorcycles m ON t.motorcycle_id = m.id
+    JOIN dictionary_pilots p ON t.pilot_id = p.id
+    JOIN dictionary_motorcycles m ON t.motorcycle_id = m.id
     LEFT JOIN gp_team_status s ON s.team_id = t.id AND s.circuit_id = $2
     WHERE t.championship_id = $1
     ORDER BY s.finishing_position ASC NULLS LAST, s.best_qualifying_time ASC NULLS LAST, t.id ASC

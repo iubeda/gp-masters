@@ -49,7 +49,7 @@ const findCalendarCircuits = async (championshipId, startDate) => {
     SELECT c.id, c.name, c.distance, c.curves_right, c.curves_left, c.curves_rects_ratio, c.asphalt_wear, cc.order,
            COALESCE(rw.status, 'scheduled') AS status
     FROM championship_circuits cc
-    JOIN circuits c ON cc.circuit_id = c.id
+    JOIN dictionary_circuits c ON cc.circuit_id = c.id
     LEFT JOIN race_weekends rw ON rw.championship_id = cc.championship_id AND rw.circuit_id = cc.circuit_id AND rw.session_type = 'race'
     WHERE cc.championship_id = $1
     ORDER BY cc.order ASC

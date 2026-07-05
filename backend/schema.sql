@@ -4,9 +4,9 @@ DROP TABLE IF EXISTS gp_team_status CASCADE;
 DROP TABLE IF EXISTS race_weekends CASCADE;
 DROP TABLE IF EXISTS championship_circuits CASCADE;
 DROP TABLE IF EXISTS teams CASCADE;
-DROP TABLE IF EXISTS circuits CASCADE;
-DROP TABLE IF EXISTS pilots CASCADE;
-DROP TABLE IF EXISTS motorcycles CASCADE;
+DROP TABLE IF EXISTS dictionary_circuits CASCADE;
+DROP TABLE IF EXISTS dictionary_pilots CASCADE;
+DROP TABLE IF EXISTS dictionary_motorcycles CASCADE;
 DROP TABLE IF EXISTS championships CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 
@@ -23,7 +23,7 @@ CREATE TABLE users (
 CREATE UNIQUE INDEX idx_users_username_lower ON users (LOWER(username));
 
 -- Motorcycles table
-CREATE TABLE motorcycles (
+CREATE TABLE dictionary_motorcycles (
     id SERIAL PRIMARY KEY,
     model_name VARCHAR(255) NOT NULL,
     engine INT NOT NULL CHECK (engine >= 0 AND engine <= 100),
@@ -45,7 +45,7 @@ CREATE TABLE championships (
 );
 
 -- Pilots table
-CREATE TABLE pilots (
+CREATE TABLE dictionary_pilots (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     talent INT NOT NULL CHECK (talent >= 0 AND talent <= 100),
@@ -56,7 +56,7 @@ CREATE TABLE pilots (
 );
 
 -- Circuits table
-CREATE TABLE circuits (
+CREATE TABLE dictionary_circuits (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     distance INT NOT NULL, -- Longitud
@@ -72,8 +72,8 @@ CREATE TABLE teams (
     name VARCHAR(255) NOT NULL,
     user_email VARCHAR(255) REFERENCES users(email) ON DELETE CASCADE,
     championship_id INT REFERENCES championships(id) ON DELETE CASCADE,
-    pilot_id INT REFERENCES pilots(id) ON DELETE CASCADE,
-    motorcycle_id INT REFERENCES motorcycles(id) ON DELETE CASCADE,
+    pilot_id INT REFERENCES dictionary_pilots(id) ON DELETE CASCADE,
+    motorcycle_id INT REFERENCES dictionary_motorcycles(id) ON DELETE CASCADE,
     balance INT DEFAULT 100000, -- Added financial balance
     is_kicked BOOLEAN DEFAULT FALSE,
     kick_reason TEXT DEFAULT NULL,
@@ -86,13 +86,13 @@ CREATE UNIQUE INDEX idx_teams_name_championship_lower ON teams (championship_id,
 -- Championship Circuits table
 CREATE TABLE championship_circuits (
     championship_id INT REFERENCES championships(id) ON DELETE CASCADE,
-    circuit_id INT REFERENCES circuits(id) ON DELETE CASCADE,
+    circuit_id INT REFERENCES dictionary_circuits(id) ON DELETE CASCADE,
     "order" INT NOT NULL,
     PRIMARY KEY (championship_id, circuit_id)
 );
 
 -- Seed Predefined Motorcycles catalog
-INSERT INTO motorcycles (model_name, engine, gearbox, suspension, chassis, wings) VALUES
+INSERT INTO dictionary_motorcycles (model_name, engine, gearbox, suspension, chassis, wings) VALUES
 ('Ducati Desmosedici GP24', 99, 95, 92, 94, 98),
 ('KTM RC16 Factory', 96, 93, 94, 92, 94),
 ('Aprilia RS-GP24 Factory', 93, 92, 93, 96, 95),
@@ -105,7 +105,7 @@ INSERT INTO motorcycles (model_name, engine, gearbox, suspension, chassis, wings
 ('Honda RC213V (LCR satellite)', 89, 87, 87, 84, 85);
 
 -- Seed Pilots
-INSERT INTO pilots (name, talent, consistency, aggressiveness, experience, fitness) VALUES 
+INSERT INTO dictionary_pilots (name, talent, consistency, aggressiveness, experience, fitness) VALUES 
 ('Marc Marquez', 95, 88, 92, 95, 90),
 ('Francesco Bagnaia', 94, 92, 80, 85, 92),
 ('Jorge Martin', 93, 85, 95, 80, 94),
@@ -128,7 +128,7 @@ INSERT INTO pilots (name, talent, consistency, aggressiveness, experience, fitne
 ('Luca Marini', 80, 85, 68, 75, 82);
 
 -- Seed Circuits
-INSERT INTO circuits (name, distance, curves_right, curves_left, curves_rects_ratio, asphalt_wear) VALUES
+INSERT INTO dictionary_circuits (name, distance, curves_right, curves_left, curves_rects_ratio, asphalt_wear) VALUES
 ('Jerez - Angel Nieto', 4423, 8, 5, 1.20, 75),
 ('Mugello Circuit', 5245, 9, 6, 1.40, 60),
 ('Silverstone Circuit', 5900, 10, 8, 1.05, 80),
@@ -153,7 +153,7 @@ INSERT INTO circuits (name, distance, curves_right, curves_left, curves_rects_ra
 CREATE TABLE race_weekends (
     id SERIAL PRIMARY KEY,
     championship_id INT REFERENCES championships(id) ON DELETE CASCADE,
-    circuit_id INT REFERENCES circuits(id) ON DELETE CASCADE,
+    circuit_id INT REFERENCES dictionary_circuits(id) ON DELETE CASCADE,
     session_type VARCHAR(15) NOT NULL DEFAULT 'practice', -- 'practice', 'qualifying', 'race'
     status VARCHAR(50) DEFAULT 'scheduled', -- 'scheduled', 'completed'
     weather_condition VARCHAR(20) NOT NULL DEFAULT 'sunny', -- 'sunny', 'cloudy', 'rainy'
@@ -166,7 +166,7 @@ CREATE TABLE race_weekends (
 -- Table of participation and status for each team in the Gran Premio
 CREATE TABLE gp_team_status (
     championship_id INT REFERENCES championships(id) ON DELETE CASCADE,
-    circuit_id INT REFERENCES circuits(id) ON DELETE CASCADE,
+    circuit_id INT REFERENCES dictionary_circuits(id) ON DELETE CASCADE,
     team_id INT REFERENCES teams(id) ON DELETE CASCADE,
     
     -- Practice

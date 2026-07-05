@@ -15,7 +15,7 @@ const startScheduler = () => {
         SELECT cc.championship_id, cc.circuit_id, c.name AS circuit_name, ch.name AS champ_name,
                cc.order, ch.start_date
         FROM championship_circuits cc
-        JOIN circuits c ON cc.circuit_id = c.id
+        JOIN dictionary_circuits c ON cc.circuit_id = c.id
         JOIN championships ch ON cc.championship_id = ch.id
         WHERE EXISTS (
             SELECT 1 FROM teams t WHERE t.championship_id = cc.championship_id
