@@ -92,11 +92,26 @@ const validatePasswordUpdate = (req, res, next) => {
   next();
 };
 
+const validateSetupOffsets = (req, res, next) => {
+  const { setup_engine, setup_gearbox, setup_suspension, setup_chassis, setup_wings } = req.body;
+  const offsets = [setup_engine, setup_gearbox, setup_suspension, setup_chassis, setup_wings].map(Number);
+
+  const sum = offsets.reduce((acc, v) => acc + v, 0);
+  if (sum !== 0) {
+    return res.status(400).json({ error: 'La suma de los offsets del setup debe ser exactamente 0.' });
+  }
+  if (offsets.some(v => v < -10 || v > 10)) {
+    return res.status(400).json({ error: 'Los valores de setup deben estar entre -10 y +10.' });
+  }
+  next();
+};
+
 module.exports = {
   validateRegister,
   validateLogin,
   validateChampionship,
   validateTeam,
   validateCalendar,
-  validatePasswordUpdate
+  validatePasswordUpdate,
+  validateSetupOffsets,
 };
