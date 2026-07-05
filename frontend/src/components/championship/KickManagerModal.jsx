@@ -30,7 +30,7 @@ const KickManagerModal = ({ team, kickReason, setKickReason, kicking, onSubmit, 
           <div className="bg-red-600/5 border border-red-500/10 p-3.5 rounded-xl text-xs text-red-400">
             Estás a punto de expulsar a{' '}
             <strong className="text-white">{team.owner_name}</strong> (Equipo: {team.team_name}). Su
-            coche y piloto quedarán inactivos pero mantendrá su puntuación histórica.
+            moto y piloto quedarán inactivos pero mantendrá su puntuación histórica.
           </div>
 
           {/* Reason textarea */}
