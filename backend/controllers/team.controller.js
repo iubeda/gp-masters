@@ -19,10 +19,10 @@ const registerTeam = asyncHandler(async (req, res) => {
     return res.status(400).json({ error: 'El nombre del equipo debe tener entre 3 y 20 caracteres.' });
   }
 
-  // Regex validation: alphanumeric, underscores, dots
-  const nameRegex = /^[a-zA-Z0-9_.]+$/;
+  // Regex validation: alphanumeric, spaces, underscores, dots
+  const nameRegex = /^[a-zA-Z0-9_. ]+$/;
   if (!nameRegex.test(trimmedName)) {
-    return res.status(400).json({ error: 'El nombre del equipo solo puede contener caracteres alfanuméricos, guiones bajos (_) y puntos (.).' });
+    return res.status(400).json({ error: 'El nombre del equipo solo puede contener caracteres alfanuméricos, espacios, guiones bajos (_) y puntos (.).' });
   }
 
   // Duplicate team name check in the same championship (case-insensitive)

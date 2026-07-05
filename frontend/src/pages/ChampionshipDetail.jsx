@@ -195,6 +195,7 @@ const ChampionshipDetail = ({ showToast }) => {
                 apiFetch={apiFetch}
                 showToast={showToast}
                 userRole={user.role}
+                todayStr={todayStr}
               />
             </div>
           ) : (
@@ -263,6 +264,7 @@ const ChampionshipDetail = ({ showToast }) => {
               apiFetch={apiFetch}
               showToast={showToast}
               userRole={user.role}
+              todayStr={todayStr}
             />
           ) : (
             <div className="glass rounded-2xl border border-gray-800 p-8 text-center space-y-4 max-w-2xl mx-auto bg-gradient-to-r from-red-600/10 via-transparent to-transparent">
