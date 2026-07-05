@@ -130,6 +130,8 @@ Cuando modifiques cualquiera de los siguientes archivos:
 - Añadir nuevas secciones si se introduce funcionalidad nueva.
 - Eliminar o marcar como obsoleto cualquier contenido que ya no sea válido.
 
+Asimismo, si modificas lógica de roles, permisos o expulsiones (ej. en `backend/controllers/championship.controller.js` o `backend/controllers/simulation.controller.js`), **actualiza `docs/roles-permissions.md`**.
+
 ---
 
 ## 5. Tests
