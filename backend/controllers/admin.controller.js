@@ -39,7 +39,70 @@ const updateUserRole = asyncHandler(async (req, res) => {
   res.json({ message: `Role updated to ${role} successfully for user ${userEmail}.` });
 });
 
+const validDictionaries = ['motorcycles', 'pilots', 'circuits'];
+
+const getDictionary = asyncHandler(async (req, res) => {
+  const { type } = req.params;
+  if (!validDictionaries.includes(type)) {
+    return res.status(400).json({ error: 'Invalid dictionary type' });
+  }
+
+  const result = await db.query(`SELECT * FROM dictionary_${type} ORDER BY id ASC`);
+  res.json(result.rows);
+});
+
+const addDictionaryRecord = asyncHandler(async (req, res) => {
+  const { type } = req.params;
+  const data = req.body;
+
+  if (!validDictionaries.includes(type)) {
+    return res.status(400).json({ error: 'Invalid dictionary type' });
+  }
+
+  let queryText = '';
+  let queryValues = [];
+
+  if (type === 'motorcycles') {
+    const { model_name, engine, gearbox, suspension, chassis, wings } = data;
+    if (!model_name || engine === undefined || gearbox === undefined || suspension === undefined || chassis === undefined || wings === undefined) {
+      return res.status(400).json({ error: 'All motorcycle fields are required' });
+    }
+    const attributes = [engine, gearbox, suspension, chassis, wings];
+    if (attributes.some(attr => attr < 0 || attr > 100)) {
+      return res.status(400).json({ error: 'Attributes must be between 0 and 100' });
+    }
+    queryText = 'INSERT INTO dictionary_motorcycles (model_name, engine, gearbox, suspension, chassis, wings) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+    queryValues = [model_name, engine, gearbox, suspension, chassis, wings];
+  } else if (type === 'pilots') {
+    const { name, talent, consistency, aggressiveness, experience, fitness } = data;
+    if (!name || talent === undefined || consistency === undefined || aggressiveness === undefined || experience === undefined || fitness === undefined) {
+      return res.status(400).json({ error: 'All pilot fields are required' });
+    }
+    const attributes = [talent, consistency, aggressiveness, experience, fitness];
+    if (attributes.some(attr => attr < 0 || attr > 100)) {
+      return res.status(400).json({ error: 'Attributes must be between 0 and 100' });
+    }
+    queryText = 'INSERT INTO dictionary_pilots (name, talent, consistency, aggressiveness, experience, fitness) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+    queryValues = [name, talent, consistency, aggressiveness, experience, fitness];
+  } else if (type === 'circuits') {
+    const { name, distance } = data;
+    if (!name || distance === undefined) {
+      return res.status(400).json({ error: 'All circuit fields are required' });
+    }
+    if (distance <= 0) {
+      return res.status(400).json({ error: 'Distance must be greater than 0' });
+    }
+    queryText = 'INSERT INTO dictionary_circuits (name, distance) VALUES ($1, $2) RETURNING *';
+    queryValues = [name, distance];
+  }
+
+  const result = await db.query(queryText, queryValues);
+  res.status(201).json(result.rows[0]);
+});
+
 module.exports = {
   getUsers,
-  updateUserRole
+  updateUserRole,
+  getDictionary,
+  addDictionaryRecord
 };
