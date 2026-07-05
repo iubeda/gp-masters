@@ -12,16 +12,26 @@ const getGPStatus = asyncHandler(async (req, res) => {
     'SELECT id FROM teams WHERE user_email = $1 AND championship_id = $2',
     [userEmail, championshipId]
   );
-  if (teamRes.rows.length === 0) {
-    return res.status(403).json({ error: 'No tienes un equipo registrado en este campeonato.' });
+
+  let teamId = null;
+  let teamStatus = null;
+  let practiceLaps = [];
+  let qualifyingLaps = [];
+  let raceLaps = [];
+
+  if (teamRes.rows.length > 0) {
+    teamId = teamRes.rows[0].id;
+    teamStatus  = await simulationModel.getOrCreateTeamStatus(championshipId, circuitId, teamId);
+    practiceLaps   = await simulationModel.getLapHistory(championshipId, circuitId, teamId, 'practice');
+    qualifyingLaps = await simulationModel.getLapHistory(championshipId, circuitId, teamId, 'qualifying');
+    raceLaps       = await simulationModel.getLapHistory(championshipId, circuitId, teamId, 'race');
+  } else {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'No tienes un equipo registrado en este campeonato.' });
+    }
   }
-  const teamId = teamRes.rows[0].id;
 
   const weekend     = await simulationModel.getOrCreateWeekend(championshipId, circuitId);
-  const teamStatus  = await simulationModel.getOrCreateTeamStatus(championshipId, circuitId, teamId);
-  const practiceLaps   = await simulationModel.getLapHistory(championshipId, circuitId, teamId, 'practice');
-  const qualifyingLaps = await simulationModel.getLapHistory(championshipId, circuitId, teamId, 'qualifying');
-  const raceLaps       = await simulationModel.getLapHistory(championshipId, circuitId, teamId, 'race');
   const gridStatus     = await simulationModel.getGPStatusForAllTeams(championshipId, circuitId);
 
   res.json({ weekend, teamStatus, practiceLaps, qualifyingLaps, raceLaps, gridStatus, teamId });
