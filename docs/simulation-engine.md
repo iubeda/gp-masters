@@ -3,7 +3,9 @@
 > Documentación técnica del motor de simulación de Gran Premio de MotoGP Manager.
 > 
 > **Archivos clave:**
-> - [`backend/controllers/simulation.controller.js`](../backend/controllers/simulation.controller.js) — Lógica principal y endpoints
+> - [`backend/controllers/simulation.controller.js`](../backend/controllers/simulation.controller.js) — Endpoints HTTP y validación de requests
+> - [`backend/services/simulation.service.js`](../backend/services/simulation.service.js) — Capa de servicio y coordinación
+> - [`backend/services/simulation.engine.js`](../backend/services/simulation.engine.js) — Motor puro de cálculo físico
 > - [`backend/models/simulation.model.js`](../backend/models/simulation.model.js) — Modelo de datos y queries
 > - [`backend/utils/scheduler.js`](../backend/utils/scheduler.js) — Simulación automática de carreras
 > - [`backend/schema.sql`](../backend/schema.sql) — Esquema de base de datos
@@ -56,7 +58,7 @@ Definida en [`getOrCreateWeekend()`](../backend/models/simulation.model.js). Se 
 
 ## 2. Motor de Simulación: `simulateLap()`
 
-Este es el **núcleo matemático** del sistema, ubicado en [`simulation.controller.js`](../backend/controllers/simulation.controller.js). Calcula el tiempo de cada vuelta individual considerando 7 factores.
+Este es el **núcleo matemático** del sistema, ubicado en [`simulation.engine.js`](../backend/services/simulation.engine.js). Calcula el tiempo de cada vuelta individual considerando 7 factores.
 
 ```mermaid
 flowchart LR
@@ -265,7 +267,8 @@ Donde `noise = random(0, 0.3)` introduce variabilidad natural.
 
 ### 3.1. Entrenamientos Libres
 
-**Endpoint:** `runPracticeStint()` en [`simulation.controller.js`](../backend/controllers/simulation.controller.js)
+**Endpoint HTTP:** `runPracticeStint()` en [`simulation.controller.js`](../backend/controllers/simulation.controller.js)
+**Lógica de Negocio:** `runStint()` en [`simulation.service.js`](../backend/services/simulation.service.js)
 
 | Parámetro | Valor |
 |-----------|-------|
@@ -281,7 +284,8 @@ Donde `noise = random(0, 0.3)` introduce variabilidad natural.
 
 ### 3.2. Clasificación
 
-**Endpoint:** `runQualifyingStint()` en [`simulation.controller.js`](../backend/controllers/simulation.controller.js)
+**Endpoint HTTP:** `runQualifyingStint()` en [`simulation.controller.js`](../backend/controllers/simulation.controller.js)
+**Lógica de Negocio:** `runStint()` en [`simulation.service.js`](../backend/services/simulation.service.js)
 
 | Parámetro | Valor |
 |-----------|-------|
@@ -296,7 +300,8 @@ Donde `noise = random(0, 0.3)` introduce variabilidad natural.
 
 ### 3.3. Carrera
 
-**Endpoint:** `runRaceSimulationInternal()` en [`simulation.controller.js`](../backend/controllers/simulation.controller.js)
+**Endpoint HTTP:** `runRaceSimulation()` en [`simulation.controller.js`](../backend/controllers/simulation.controller.js)
+**Lógica de Negocio:** `runRaceInternal()` en [`simulation.service.js`](../backend/services/simulation.service.js)
 
 | Parámetro | Valor |
 |-----------|-------|
@@ -367,7 +372,7 @@ Si `Math.random() < pOvertake`:
 
 ## 4. Sistema de Feedback
 
-Definido en `generateFeedback()` en [`simulation.controller.js`](../backend/controllers/simulation.controller.js). Compara la mejor vuelta del stint con el **tiempo óptimo teórico** (setup perfecto +10, neumático blando, piloto agresivo).
+Definido en `generateFeedback()` en [`simulation.engine.js`](../backend/services/simulation.engine.js). Compara la mejor vuelta del stint con el **tiempo óptimo teórico** (setup perfecto +10, neumático blando, piloto agresivo).
 
 ```mermaid
 flowchart TD

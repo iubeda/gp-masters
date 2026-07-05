@@ -10,12 +10,15 @@ No es necesario explorar la estructura del proyecto desde cero en cada tarea. Es
 motogp-manager/
 ├── backend/                        # API REST — Node.js + Express
 │   ├── controllers/
-│   │   ├── simulation.controller.js  # Motor de simulación (lógica principal)
+│   │   ├── simulation.controller.js  # Endpoints HTTP y validación
 │   │   ├── championship.controller.js
 │   │   ├── team.controller.js
 │   │   ├── auth.controller.js
 │   │   ├── profile.controller.js
 │   │   └── admin.controller.js
+│   ├── services/
+│   │   ├── simulation.service.js     # Coordinación de la simulación y base de datos
+│   │   ├── simulation.engine.js      # Motor puro de cálculo físico
 │   ├── models/
 │   │   ├── simulation.model.js       # Queries de simulación (BD)
 │   │   ├── championship.model.js
@@ -121,6 +124,8 @@ docker compose up --build
 Cuando modifiques cualquiera de los siguientes archivos:
 
 - `backend/controllers/simulation.controller.js`
+- `backend/services/simulation.service.js`
+- `backend/services/simulation.engine.js`
 - `backend/models/simulation.model.js`
 - `backend/utils/scheduler.js`
 
