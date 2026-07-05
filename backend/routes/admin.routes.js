@@ -12,4 +12,8 @@ router.use(checkRole(['admin']));
 router.get('/users', adminController.getUsers);
 router.put('/users/:email/role', adminController.updateUserRole);
 
+// Dictionary routes
+router.get('/dictionaries/:type', adminController.getDictionary);
+router.post('/dictionaries/:type', adminController.addDictionaryRecord);
+
 module.exports = router;

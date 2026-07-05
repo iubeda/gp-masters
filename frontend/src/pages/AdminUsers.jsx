@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Shield, Search, Loader, User, Mail, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { Shield, Search, Loader, User, Mail, ShieldAlert, CheckCircle2, Users, Database } from 'lucide-react';
+import DictionaryManager from '../components/admin/DictionaryManager';
 
 const AdminUsers = ({ showToast }) => {
   const { apiFetch, user: currentUser } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [updatingEmails, setUpdatingEmails] = useState({}); // email -> boolean (saving state)
+  const [updatingEmails, setUpdatingEmails] = useState({});
+  const [activeTab, setActiveTab] = useState('users'); // users, pilots, motorcycles, circuits
 
   const fetchUsers = async () => {
     try {
@@ -22,8 +24,10 @@ const AdminUsers = ({ showToast }) => {
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (activeTab === 'users') {
+      fetchUsers();
+    }
+  }, [activeTab]);
 
   const handleRoleChange = async (email, newRole) => {
     setUpdatingEmails(prev => ({ ...prev, [email]: true }));
@@ -33,7 +37,6 @@ const AdminUsers = ({ showToast }) => {
         body: JSON.stringify({ role: newRole })
       });
       showToast(`Rol de ${email} actualizado a ${newRole.toUpperCase()} correctamente.`, 'success');
-      // Update local state
       setUsers(prevUsers => 
         prevUsers.map(u => u.email === email ? { ...u, role: newRole } : u)
       );
@@ -79,19 +82,9 @@ const AdminUsers = ({ showToast }) => {
     );
   });
 
-  return (
-    <div className="max-w-6xl mx-auto px-4 py-8 space-y-8 animate-fadeIn">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-extrabold text-white flex items-center gap-3">
-            <Shield className="text-red-505 w-8 h-8" />
-            Panel de Administración
-          </h1>
-          <p className="text-gray-400 text-sm">Gestiona los usuarios de la plataforma MotoGP Manager y asigna roles globales.</p>
-        </div>
-
-        {/* Search Bar */}
+  const renderUsersTab = () => (
+    <>
+      <div className="flex justify-end mb-4">
         <div className="relative w-full sm:max-w-xs">
           <Search className="w-4 h-4 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
@@ -149,7 +142,6 @@ const AdminUsers = ({ showToast }) => {
                           isSelf ? 'bg-red-955/5' : ''
                         }`}
                       >
-                        {/* Usuario */}
                         <td className="p-4 pl-6">
                           <div className="flex items-center gap-2.5">
                             <div className="w-8 h-8 rounded-full bg-gray-800 border border-gray-750 flex items-center justify-center text-xs font-extrabold text-gray-300 select-none">
@@ -167,26 +159,18 @@ const AdminUsers = ({ showToast }) => {
                             </div>
                           </div>
                         </td>
-
-                        {/* Email */}
                         <td className="p-4 font-mono text-gray-400 text-xs">
                           <div className="flex items-center gap-1.5">
                             <Mail className="w-3.5 h-3.5 text-gray-600" />
                             {userItem.email}
                           </div>
                         </td>
-
-                        {/* Creado el */}
                         <td className="p-4 text-gray-400 text-xs">
                           {formatDate(userItem.created_at)}
                         </td>
-
-                        {/* Última Conexión */}
                         <td className="p-4 text-gray-400 text-xs">
                           {formatDate(userItem.last_login)}
                         </td>
-
-                        {/* Rol Global */}
                         <td className="p-4 text-center">
                           <div className="flex items-center justify-center gap-2">
                             {isSaving ? (
@@ -194,7 +178,6 @@ const AdminUsers = ({ showToast }) => {
                             ) : (
                               <CheckCircle2 className="w-4 h-4 text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                             )}
-                            
                             <select
                               value={userItem.role}
                               disabled={isSelf || isSaving}
@@ -219,6 +202,52 @@ const AdminUsers = ({ showToast }) => {
           )}
         </div>
       )}
+    </>
+  );
+
+  const tabs = [
+    { id: 'users', label: 'Usuarios', icon: Users },
+    { id: 'pilots', label: 'Diccionario: Pilotos', icon: Database },
+    { id: 'motorcycles', label: 'Diccionario: Motocicletas', icon: Database },
+    { id: 'circuits', label: 'Diccionario: Circuitos', icon: Database },
+  ];
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-8 space-y-8 animate-fadeIn">
+      {/* Header */}
+      <div className="space-y-1">
+        <h1 className="text-3xl font-extrabold text-white flex items-center gap-3">
+          <Shield className="text-red-505 w-8 h-8" />
+          Panel de Administración
+        </h1>
+        <p className="text-gray-400 text-sm">Gestiona los usuarios y diccionarios de la plataforma MotoGP Manager.</p>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex space-x-2 overflow-x-auto border-b border-gray-800 pb-px">
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold whitespace-nowrap transition-colors border-b-2 ${
+              activeTab === tab.id
+                ? 'border-red-500 text-red-400 bg-red-600/5'
+                : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-700'
+            }`}
+          >
+            <tab.icon className="w-4 h-4" />
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Content */}
+      <div className="pt-2">
+        {activeTab === 'users' && renderUsersTab()}
+        {activeTab === 'pilots' && <DictionaryManager type="pilots" showToast={showToast} />}
+        {activeTab === 'motorcycles' && <DictionaryManager type="motorcycles" showToast={showToast} />}
+        {activeTab === 'circuits' && <DictionaryManager type="circuits" showToast={showToast} />}
+      </div>
     </div>
   );
 };
