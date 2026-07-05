@@ -13,7 +13,7 @@ const ChampionshipTabs = ({ activeTab, onTabChange, activeGP, isMember, userRole
     }`;
 
   const showGPTab =
-    activeGP && (isMember || userRole === 'admin') && todayStr >= activeGP.practice_date;
+    activeGP && ((isMember && todayStr >= activeGP.practice_date) || userRole === 'admin');
 
   return (
     <div className="flex border-b border-gray-800 gap-6 text-sm font-semibold select-none">

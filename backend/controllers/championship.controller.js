@@ -159,6 +159,18 @@ const kickUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ error: 'No puedes expulsarte a ti mismo del campeonato.' });
   }
 
+  if (championship.created_by && targetEmail.toLowerCase() === championship.created_by.toLowerCase()) {
+    return res.status(400).json({ error: 'No se puede expulsar al creador del campeonato.' });
+  }
+
+  const disputedRes = await db.query(
+    "SELECT COUNT(*)::int FROM gp_team_status WHERE team_id = $1 AND (finishing_position IS NOT NULL OR status IN ('finished', 'DNF_crash'))",
+    [team_id]
+  );
+  if (disputedRes.rows[0].count > 0) {
+    return res.status(400).json({ error: 'No se puede expulsar a un usuario que ya ha disputado una carrera.' });
+  }
+
   if (teamRes.rows[0].is_kicked) {
     return res.status(400).json({ error: 'El equipo ya ha sido expulsado de este campeonato.' });
   }

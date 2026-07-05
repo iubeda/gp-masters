@@ -28,6 +28,7 @@
 | Documento | Descripción |
 |-----------|-------------|
 | [Motor de Simulación de Carreras](docs/simulation-engine.md) | Análisis completo del motor de simulación: fórmulas matemáticas, lógica de neumáticos, adelantamientos, feedback del piloto y diagramas de flujo |
+| [Roles y Permisos de Usuarios](docs/roles-permissions.md) | Guía detallada sobre los roles de la plataforma (admin, master, manager, player) y los permisos asignados a cada uno para la gestión de campeonatos y simulación |
 
 ---
 
