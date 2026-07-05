@@ -20,7 +20,7 @@ import { CalendarDays, Calendar, Trophy, Play } from 'lucide-react';
 const NextRaceCard = ({ activeGP, hasCircuits, isMember, userRole, todayStr, isCreator, onSimulate }) => {
   // State 1: active (upcoming) GP
   if (activeGP) {
-    const canSimulate = (isMember || userRole === 'admin') && todayStr >= activeGP.practice_date;
+    const canSimulate = (isMember && todayStr >= activeGP.practice_date) || userRole === 'admin';
 
     return (
       <div className="glass rounded-2xl border border-gray-800 overflow-hidden shadow-xl bg-gradient-to-br from-[#161622]/20 to-transparent">
