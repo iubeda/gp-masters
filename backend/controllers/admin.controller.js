@@ -85,15 +85,18 @@ const addDictionaryRecord = asyncHandler(async (req, res) => {
     queryText = 'INSERT INTO dictionary_pilots (name, talent, consistency, aggressiveness, experience, fitness) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
     queryValues = [name, talent, consistency, aggressiveness, experience, fitness];
   } else if (type === 'circuits') {
-    const { name, distance } = data;
-    if (!name || distance === undefined) {
+    const { name, distance, curves_right, curves_left, curves_rects_ratio, asphalt_wear } = data;
+    if (!name || distance === undefined || curves_right === undefined || curves_left === undefined || curves_rects_ratio === undefined || asphalt_wear === undefined) {
       return res.status(400).json({ error: 'All circuit fields are required' });
     }
     if (distance <= 0) {
       return res.status(400).json({ error: 'Distance must be greater than 0' });
     }
-    queryText = 'INSERT INTO dictionary_circuits (name, distance) VALUES ($1, $2) RETURNING *';
-    queryValues = [name, distance];
+    if (curves_right < 0 || curves_left < 0 || curves_rects_ratio < 0 || asphalt_wear < 0 || asphalt_wear > 100) {
+      return res.status(400).json({ error: 'Invalid circuit attributes' });
+    }
+    queryText = 'INSERT INTO dictionary_circuits (name, distance, curves_right, curves_left, curves_rects_ratio, asphalt_wear) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+    queryValues = [name, distance, curves_right, curves_left, curves_rects_ratio, asphalt_wear];
   }
 
   const result = await db.query(queryText, queryValues);

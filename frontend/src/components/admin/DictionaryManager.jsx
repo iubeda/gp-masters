@@ -36,7 +36,11 @@ const DictionaryManager = ({ type, showToast }) => {
       title: 'Circuitos',
       fields: [
         { name: 'name', label: 'Nombre', type: 'text' },
-        { name: 'distance', label: 'Distancia (KM)', type: 'number', min: 1 }
+        { name: 'distance', label: 'Distancia (Mts)', type: 'number', min: 1 },
+        { name: 'curves_right', label: 'Curvas a Derechas', type: 'number', min: 0 },
+        { name: 'curves_left', label: 'Curvas a Izquierdas', type: 'number', min: 0 },
+        { name: 'curves_rects_ratio', label: 'Ratio Curvas/Rectas', type: 'number', min: 0, step: "0.01" },
+        { name: 'asphalt_wear', label: 'Desgaste Asfalto', type: 'number', min: 0, max: 100 }
       ]
     }
   };
@@ -124,6 +128,7 @@ const DictionaryManager = ({ type, showToast }) => {
                   onChange={handleInputChange}
                   min={field.min}
                   max={field.max}
+                  step={field.step}
                   required
                   className="w-full px-4 py-2 bg-[#0F0F12] border border-gray-800 rounded-xl focus:border-red-500 focus:outline-none text-white transition-all"
                   placeholder={`Introduce ${field.label.toLowerCase()}`}
