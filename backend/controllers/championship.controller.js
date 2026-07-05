@@ -109,20 +109,16 @@ const addCalendarCircuit = asyncHandler(async (req, res) => {
 
 const kickUser = asyncHandler(async (req, res) => {
   const { id } = req.params; // championship id
-  const { user_email, reason } = req.body;
+  const { team_id, reason } = req.body;
   const currentUser = req.user.email;
   const currentRole = req.user.role;
 
-  if (!user_email) {
-    return res.status(400).json({ error: 'El email del usuario a expulsar es obligatorio.' });
+  if (!team_id) {
+    return res.status(400).json({ error: 'El ID del equipo a expulsar es obligatorio.' });
   }
 
   if (!reason || !reason.trim()) {
     return res.status(400).json({ error: 'El motivo de la expulsión es obligatorio.' });
-  }
-
-  if (user_email.toLowerCase() === currentUser.toLowerCase()) {
-    return res.status(400).json({ error: 'No puedes expulsarte a ti mismo del campeonato.' });
   }
 
   // Fetch championship details
@@ -131,20 +127,11 @@ const kickUser = asyncHandler(async (req, res) => {
     return res.status(404).json({ error: 'Championship not found.' });
   }
 
-  // Authorize: Admin can kick anyone. Master can only kick from their private championships that have not started.
+  // Authorize: Admin can kick anyone. Creator can kick before championship has started.
   if (currentRole !== 'admin') {
-    if (currentRole !== 'master') {
-      return res.status(403).json({ error: 'No tienes permisos para expulsar usuarios.' });
-    }
-
     // Check if they created the championship
     if (!championship.created_by || championship.created_by.toLowerCase() !== currentUser.toLowerCase()) {
       return res.status(403).json({ error: 'Solo el creador del campeonato puede expulsar usuarios.' });
-    }
-
-    // Check if the championship is private
-    if (championship.is_public) {
-      return res.status(403).json({ error: 'Un Master no puede expulsar usuarios de campeonatos públicos.' });
     }
 
     // Check if the championship has started (at least one GP completed)
@@ -157,23 +144,29 @@ const kickUser = asyncHandler(async (req, res) => {
     }
   }
 
-  // Check if target user has a team in this championship
+  // Check if target team exists in this championship
   const teamRes = await db.query(
-    'SELECT id, is_kicked FROM teams WHERE user_email = $1 AND championship_id = $2',
-    [user_email.toLowerCase(), id]
+    'SELECT id, is_kicked, user_email FROM teams WHERE id = $1 AND championship_id = $2',
+    [team_id, id]
   );
   if (teamRes.rows.length === 0) {
-    return res.status(404).json({ error: 'El usuario no está inscrito en este campeonato.' });
+    return res.status(404).json({ error: 'El equipo no está inscrito en este campeonato.' });
+  }
+
+  const targetEmail = teamRes.rows[0].user_email;
+
+  if (targetEmail.toLowerCase() === currentUser.toLowerCase()) {
+    return res.status(400).json({ error: 'No puedes expulsarte a ti mismo del campeonato.' });
   }
 
   if (teamRes.rows[0].is_kicked) {
-    return res.status(400).json({ error: 'El usuario ya ha sido expulsado de este campeonato.' });
+    return res.status(400).json({ error: 'El equipo ya ha sido expulsado de este campeonato.' });
   }
 
   // Perform kick
   await db.query(
-    'UPDATE teams SET is_kicked = TRUE, kick_reason = $1 WHERE user_email = $2 AND championship_id = $3',
-    [reason.trim(), user_email.toLowerCase(), id]
+    'UPDATE teams SET is_kicked = TRUE, kick_reason = $1 WHERE id = $2',
+    [reason.trim(), team_id]
   );
 
   res.json({ message: 'Usuario expulsado correctamente con el motivo especificado.' });
