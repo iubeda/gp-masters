@@ -19,10 +19,10 @@ const registerTeam = asyncHandler(async (req, res) => {
     return res.status(400).json({ error: 'El nombre del equipo debe tener entre 3 y 20 caracteres.' });
   }
 
-  // Regex validation: alphanumeric, underscores, dots
-  const nameRegex = /^[a-zA-Z0-9_.]+$/;
+  // Regex validation: alphanumeric, spaces, underscores, dots
+  const nameRegex = /^[a-zA-Z0-9_. ]+$/;
   if (!nameRegex.test(trimmedName)) {
-    return res.status(400).json({ error: 'El nombre del equipo solo puede contener caracteres alfanuméricos, guiones bajos (_) y puntos (.).' });
+    return res.status(400).json({ error: 'El nombre del equipo solo puede contener caracteres alfanuméricos, espacios, guiones bajos (_) y puntos (.).' });
   }
 
   // Duplicate team name check in the same championship (case-insensitive)
@@ -49,10 +49,10 @@ const registerTeam = asyncHandler(async (req, res) => {
     }
   }
 
-  // 1. Validation: count existing teams in this championship
+  // 1. Validation: count existing (non-kicked) teams in this championship
   const teamCount = await teamModel.countTeams(championship_id);
-  if (teamCount >= 10) {
-    return res.status(400).json({ error: 'Championship is full' });
+  if (teamCount >= championship.max_teams) {
+    return res.status(400).json({ error: `El campeonato está completo (máx. ${championship.max_teams} equipos).` });
   }
 
   // 2. Validation: check if user already has a team in this championship (active or kicked)

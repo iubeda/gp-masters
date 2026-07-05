@@ -43,7 +43,7 @@ describe('ChampionshipTabs Component', () => {
     expect(screen.getByText(/GP Activo: Jerez/)).toBeInTheDocument();
   });
 
-  it('does NOT show GP Activo tab for a regular member if today is before the practice date', () => {
+  it('shows Próximo GP tab for a regular member if today is before the practice date', () => {
     render(
       <ChampionshipTabs
         activeTab="dashboard"
@@ -55,10 +55,10 @@ describe('ChampionshipTabs Component', () => {
       />
     );
 
-    expect(screen.queryByText(/GP Activo/)).not.toBeInTheDocument();
+    expect(screen.getByText(/Próximo GP: Jerez/)).toBeInTheDocument();
   });
 
-  it('shows GP Activo tab for an admin even if today is before the practice date', () => {
+  it('shows Próximo GP tab for an admin even if today is before the practice date', () => {
     render(
       <ChampionshipTabs
         activeTab="dashboard"
@@ -70,7 +70,7 @@ describe('ChampionshipTabs Component', () => {
       />
     );
 
-    expect(screen.getByText(/GP Activo: Jerez/)).toBeInTheDocument();
+    expect(screen.getByText(/Próximo GP: Jerez/)).toBeInTheDocument();
   });
 
   it('triggers onTabChange when tabs are clicked', () => {

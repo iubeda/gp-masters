@@ -452,6 +452,21 @@ Si se cumple alguna de estas condiciones, el scheduler ejecuta `runRaceInternal(
 
 ---
 
+## 5.1. Restricciones Horarias (`validateSessionTime`)
+
+La función `validateSessionTime` en `simulation.service.js` valida que una sesión se simule en la fecha y hora correcta. Su comportamiento depende del campo `time_restricted` del campeonato:
+
+| `time_restricted` | Practice / Qualifying | Race |
+|---|---|---|
+| `true` (default) | Solo entre **12:00h y 15:00h** del día de la sesión | Solo a partir de **14:00h** del día de carrera |
+| `false` | Sin restricción de hora (cualquier momento del día correcto) | Solo a partir de **14:00h** del día de carrera |
+
+> **💡 Nota:** La restricción de la hora de la carrera (≥ 14:00h) aplica siempre, independientemente de `time_restricted`. Solo los entrenamientos y clasificación se ven afectados por el toggle.
+
+El parámetro `bypass = true` (usado por administradores) omite **todas** las validaciones de hora y fecha.
+
+---
+
 ## 6. Restricciones del Sistema de Setup
 
 El sistema de **setup de la moto** funciona como un juego de **suma cero**:

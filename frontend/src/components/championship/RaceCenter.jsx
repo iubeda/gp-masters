@@ -21,9 +21,19 @@ const SetupCell = ({ value }) => {
   return <span className={`font-mono font-bold ${color}`}>{v > 0 ? `+${v}` : v}</span>;
 };
 
-const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole }) => {
+const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, todayStr }) => {
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('practice'); // 'practice', 'qualifying', 'race'
+  
+  const determineInitialTab = () => {
+    if (circuit?.status === 'completed') return 'race';
+    if (!todayStr) return 'practice';
+    
+    if (todayStr >= circuit.race_date) return 'race';
+    if (todayStr === circuit.qualifying_date) return 'qualifying';
+    return 'practice';
+  };
+
+  const [activeTab, setActiveTab] = useState(determineInitialTab); // 'practice', 'qualifying', 'race'
   
   // GP State from backend
   const [gpData, setGpData] = useState(null);
@@ -222,6 +232,9 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole }) =>
   const currentWeather = sessionWeatherMap[activeTab];
   const sessionLabel = activeTab === 'practice' ? 'Entrenamientos' : activeTab === 'qualifying' ? 'Clasificación' : 'Carrera';
 
+  const isPracticeFinished = circuit.status === 'completed' || (todayStr && todayStr > circuit.practice_date);
+  const isQualifyingFinished = circuit.status === 'completed' || (todayStr && todayStr > circuit.qualifying_date);
+
   return (
     <div className="glass border border-gray-850 rounded-3xl overflow-hidden shadow-2xl space-y-6 bg-gradient-to-b from-[#13131A] to-[#0D0D12] text-white">
       {/* GP Header & Climatología */}
@@ -416,6 +429,13 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole }) =>
 
         {/* COL 2 & 3: Sessions Navigation & Telemetry/Leaderboard */}
         <div className="lg:col-span-2 space-y-6">
+          {(() => {
+            const isPracticeFuture = todayStr && todayStr < circuit.practice_date;
+            const isQualifyingFuture = todayStr && todayStr < circuit.qualifying_date;
+            const isRaceFuture = todayStr && todayStr < circuit.race_date;
+
+            return (
+              <>
           {/* Navigation tabs */}
           <div className="flex bg-[#101017] p-1.5 rounded-2xl border border-gray-850">
             {[
@@ -444,33 +464,45 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole }) =>
           {activeTab === 'practice' && (
             <div className="space-y-6">
               {teamId ? (
-                <div className="bg-[#101017] border border-gray-850 p-5 rounded-2xl space-y-4">
-                  <h4 className="text-sm font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
-                    <Play className="w-4 h-4 text-red-500" />
-                    Simular Tanda de Entrenamientos
-                  </h4>
-                  
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1 space-y-1">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Vueltas a realizar (Máx: {15 - teamStatus.practice_laps_used})</label>
-                      <input 
-                        type="number" 
-                        min="1" 
-                        max={15 - teamStatus.practice_laps_used}
-                        value={practiceLapsInput}
-                        onChange={(e) => setPracticeLapsInput(Math.min(15 - teamStatus.practice_laps_used, Math.max(1, parseInt(e.target.value) || 1)))}
-                        className="w-full bg-[#161622] border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white font-bold"
-                      />
-                    </div>
-                    <button
-                      disabled={simulating || (15 - teamStatus.practice_laps_used) <= 0 || !isSetupBalanced}
-                      onClick={handlePracticeStint}
-                      className="h-[46px] self-end px-6 bg-red-600 hover:bg-red-500 text-xs font-bold rounded-xl transition-all disabled:bg-gray-800 disabled:text-gray-500 flex items-center justify-center gap-1.5"
-                    >
-                      {simulating ? 'Simulando...' : 'Rodar Tanda'}
-                    </button>
+                isPracticeFuture ? (
+                  <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic tracking-wider flex flex-col items-center gap-2">
+                    <CalendarDays className="w-6 h-6 text-blue-400 mb-1" />
+                    <span>Los entrenamientos libres aún no han comenzado.</span>
+                    <span className="text-xs text-gray-500 font-normal">Programados para el {circuit.practice_date}</span>
                   </div>
-                </div>
+                ) : isPracticeFinished ? (
+                  <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic uppercase tracking-wider">
+                    Sesión de entrenamientos libres finalizada
+                  </div>
+                ) : (
+                  <div className="bg-[#101017] border border-gray-850 p-5 rounded-2xl space-y-4">
+                    <h4 className="text-sm font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                      <Play className="w-4 h-4 text-red-500" />
+                      Simular Tanda de Entrenamientos
+                    </h4>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="flex-1 space-y-1">
+                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Vueltas a realizar (Máx: {15 - teamStatus.practice_laps_used})</label>
+                        <input 
+                          type="number" 
+                          min="1" 
+                          max={15 - teamStatus.practice_laps_used}
+                          value={practiceLapsInput}
+                          onChange={(e) => setPracticeLapsInput(Math.min(15 - teamStatus.practice_laps_used, Math.max(1, parseInt(e.target.value) || 1)))}
+                          className="w-full bg-[#161622] border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white font-bold"
+                        />
+                      </div>
+                      <button
+                        disabled={simulating || (15 - teamStatus.practice_laps_used) <= 0 || !isSetupBalanced}
+                        onClick={handlePracticeStint}
+                        className="h-[46px] self-end px-6 bg-red-600 hover:bg-red-500 text-xs font-bold rounded-xl transition-all disabled:bg-gray-800 disabled:text-gray-500 flex items-center justify-center gap-1.5"
+                      >
+                        {simulating ? 'Simulando...' : 'Rodar Tanda'}
+                      </button>
+                    </div>
+                  </div>
+                )
               ) : (
                 <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-xs text-gray-450 italic">
                   Los entrenamientos libres solo están disponibles para los participantes del campeonato.
@@ -563,33 +595,45 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole }) =>
           {activeTab === 'qualifying' && (
             <div className="space-y-6">
               {teamId ? (
-                <div className="bg-[#101017] border border-gray-850 p-5 rounded-2xl space-y-4">
-                  <h4 className="text-sm font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
-                    <Play className="w-4 h-4 text-red-500" />
-                    Simular Clasificación (Time Attack)
-                  </h4>
-                  
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1 space-y-1">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Vueltas a realizar (Máx: {3 - teamStatus.qualifying_laps_used})</label>
-                      <input 
-                        type="number" 
-                        min="1" 
-                        max={3 - teamStatus.qualifying_laps_used}
-                        value={qualifyingLapsInput}
-                        onChange={(e) => setQualifyingLapsInput(Math.min(3 - teamStatus.qualifying_laps_used, Math.max(1, parseInt(e.target.value) || 1)))}
-                        className="w-full bg-[#161622] border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white font-bold"
-                      />
-                    </div>
-                    <button
-                      disabled={simulating || (3 - teamStatus.qualifying_laps_used) <= 0 || !isSetupBalanced}
-                      onClick={handleQualifyingStint}
-                      className="h-[46px] self-end px-6 bg-red-600 hover:bg-red-500 text-xs font-bold rounded-xl transition-all disabled:bg-gray-800 disabled:text-gray-500 flex items-center justify-center gap-1.5"
-                    >
-                      {simulating ? 'Simulando...' : 'Rodar Clasificación'}
-                    </button>
+                isQualifyingFuture ? (
+                  <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic tracking-wider flex flex-col items-center gap-2">
+                    <CalendarDays className="w-6 h-6 text-blue-400 mb-1" />
+                    <span>La sesión de clasificación aún no ha comenzado.</span>
+                    <span className="text-xs text-gray-500 font-normal">Programada para el {circuit.qualifying_date}</span>
                   </div>
-                </div>
+                ) : isQualifyingFinished ? (
+                  <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic uppercase tracking-wider">
+                    Sesión de clasificación finalizada
+                  </div>
+                ) : (
+                  <div className="bg-[#101017] border border-gray-850 p-5 rounded-2xl space-y-4">
+                    <h4 className="text-sm font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                      <Play className="w-4 h-4 text-red-500" />
+                      Simular Clasificación (Time Attack)
+                    </h4>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="flex-1 space-y-1">
+                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Vueltas a realizar (Máx: {3 - teamStatus.qualifying_laps_used})</label>
+                        <input 
+                          type="number" 
+                          min="1" 
+                          max={3 - teamStatus.qualifying_laps_used}
+                          value={qualifyingLapsInput}
+                          onChange={(e) => setQualifyingLapsInput(Math.min(3 - teamStatus.qualifying_laps_used, Math.max(1, parseInt(e.target.value) || 1)))}
+                          className="w-full bg-[#161622] border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white font-bold"
+                        />
+                      </div>
+                      <button
+                        disabled={simulating || (3 - teamStatus.qualifying_laps_used) <= 0 || !isSetupBalanced}
+                        onClick={handleQualifyingStint}
+                        className="h-[46px] self-end px-6 bg-red-600 hover:bg-red-500 text-xs font-bold rounded-xl transition-all disabled:bg-gray-800 disabled:text-gray-500 flex items-center justify-center gap-1.5"
+                      >
+                        {simulating ? 'Simulando...' : 'Rodar Clasificación'}
+                      </button>
+                    </div>
+                  </div>
+                )
               ) : (
                 <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-xs text-gray-450 italic">
                   La clasificación solo está disponible para los participantes del campeonato.
@@ -848,6 +892,9 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole }) =>
               )}
             </div>
           )}
+              </>
+            );
+          })()}
         </div>
       </div>
     </div>

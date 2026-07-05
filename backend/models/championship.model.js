@@ -7,13 +7,13 @@ const addDays = (startDateStr, days) => {
   return date.toISOString().split('T')[0];
 };
 
-const create = async (name, season, startDate, createdBy, isPublic = true, pin = null) => {
+const create = async (name, season, startDate, createdBy, isPublic = true, pin = null, maxCircuits = 15, maxTeams = 10, timeRestricted = true) => {
   const queryText = `
-    INSERT INTO championships (name, season, start_date, created_by, is_public, pin)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    INSERT INTO championships (name, season, start_date, created_by, is_public, pin, max_circuits, max_teams, time_restricted)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
     RETURNING *
   `;
-  const result = await db.query(queryText, [name, season, startDate, createdBy, isPublic, pin]);
+  const result = await db.query(queryText, [name, season, startDate, createdBy, isPublic, pin, maxCircuits, maxTeams, timeRestricted]);
   return result.rows[0];
 };
 

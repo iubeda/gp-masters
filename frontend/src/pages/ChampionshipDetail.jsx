@@ -106,7 +106,7 @@ const ChampionshipDetail = ({ showToast }) => {
       </button>
 
       {/* Title + metadata */}
-      <ChampionshipHeader championship={championship} isCreator={isCreator} />
+      <ChampionshipHeader championship={championship} isCreator={isCreator} userRole={user.role} />
 
       {/* Tab bar */}
       <ChampionshipTabs
@@ -195,6 +195,7 @@ const ChampionshipDetail = ({ showToast }) => {
                 apiFetch={apiFetch}
                 showToast={showToast}
                 userRole={user.role}
+                todayStr={todayStr}
               />
             </div>
           ) : (
@@ -205,12 +206,13 @@ const ChampionshipDetail = ({ showToast }) => {
                   <div className="p-6 bg-gradient-to-r from-yellow-600/10 via-transparent to-transparent border-b border-gray-800 flex items-center justify-between">
                     <h2 className="text-xl font-bold text-white">Calendario de Carreras</h2>
                     <span className="px-3 py-1 bg-[#0F0F12] border border-gray-805 text-xs font-semibold rounded-full text-gray-300">
-                      {championship.circuits?.length || 0} / 15 Grandes Premios
+                      {championship.circuits?.length || 0} / {championship.max_circuits ?? 15} Grandes Premios
                     </span>
                   </div>
                   <CalendarList
                     circuits={championship.circuits}
                     selectedCircuit={null}
+                    todayStr={todayStr}
                     onSelectCircuit={(circ) => {
                       if (circ.status === 'completed') {
                         setSelectedCompletedCircuit(circ);
@@ -229,7 +231,7 @@ const ChampionshipDetail = ({ showToast }) => {
 
               {/* Add circuit form (creator only) */}
               <div className="lg:col-span-1 space-y-6">
-                {isCreator && (!championship.circuits || championship.circuits.length < 15) && (
+                {isCreator && (!championship.circuits || championship.circuits.length < (championship.max_circuits ?? 15)) && (
                   <AddCircuitForm
                     onSubmit={handleAddCircuit}
                     circuits={circuits}
@@ -239,11 +241,11 @@ const ChampionshipDetail = ({ showToast }) => {
                     addingCircuit={addingCircuit}
                   />
                 )}
-                {championship.circuits?.length >= 15 && (
+                {championship.circuits?.length >= (championship.max_circuits ?? 15) && (
                   <div className="p-4 bg-yellow-950/20 border border-yellow-900/30 rounded-2xl flex items-center gap-3">
                     <Check className="w-5 h-5 text-yellow-500 shrink-0" />
                     <p className="text-xs text-yellow-350 leading-relaxed">
-                      Este campeonato ha alcanzado el límite máximo de 15 circuitos.
+                      Este campeonato ha alcanzado el límite máximo de {championship.max_circuits ?? 15} circuitos.
                     </p>
                   </div>
                 )}
@@ -263,6 +265,7 @@ const ChampionshipDetail = ({ showToast }) => {
               apiFetch={apiFetch}
               showToast={showToast}
               userRole={user.role}
+              todayStr={todayStr}
             />
           ) : (
             <div className="glass rounded-2xl border border-gray-800 p-8 text-center space-y-4 max-w-2xl mx-auto bg-gradient-to-r from-red-600/10 via-transparent to-transparent">
