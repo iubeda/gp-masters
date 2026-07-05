@@ -2,6 +2,9 @@ import React, { useState, useCallback } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Auth from './pages/Auth';
+import Landing from './pages/Landing';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
 import Dashboard from './pages/Dashboard';
 import ChampionshipDetail from './pages/ChampionshipDetail';
 import Profile from './pages/Profile';
@@ -18,23 +21,23 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-// Route Guard: redirects to / if already authenticated
+// Route Guard: redirects to /dashboard if already authenticated
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
   return children;
 };
 
-// Route Guard: redirects to / if not admin
+// Route Guard: redirects to /dashboard if not admin
 const AdminRoute = ({ children }) => {
   const { isAuthenticated, user } = useAuth();
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
   if (user?.role !== 'admin') {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
   return children;
 };
@@ -53,7 +56,7 @@ const NavigationHeader = ({ showToast }) => {
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <div 
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/dashboard')}
           className="flex items-center gap-2.5 cursor-pointer select-none group"
         >
           <div className="w-9 h-9 bg-gradient-to-br from-red-600 to-orange-600 rounded-lg flex items-center justify-center text-white font-extrabold shadow-lg shadow-red-600/10 group-hover:scale-105 transition-all">
@@ -76,7 +79,7 @@ const NavigationHeader = ({ showToast }) => {
             <button
               onClick={() => {
                 if (location.pathname === '/admin') {
-                  navigate('/');
+                  navigate('/dashboard');
                 } else {
                   navigate('/admin');
                 }
@@ -97,7 +100,7 @@ const NavigationHeader = ({ showToast }) => {
           <button
             onClick={() => {
               if (isProfileActive) {
-                navigate('/');
+                navigate('/dashboard');
               } else {
                 navigate('/profile');
               }
@@ -149,6 +152,22 @@ const MainApp = ({ showToast }) => {
           <Route 
             path="/" 
             element={
+              <PublicRoute>
+                <Landing />
+              </PublicRoute>
+            } 
+          />
+          <Route 
+            path="/privacy" 
+            element={<Privacy />} 
+          />
+          <Route 
+            path="/terms" 
+            element={<Terms />} 
+          />
+          <Route 
+            path="/dashboard" 
+            element={
               <ProtectedRoute>
                 <Dashboard showToast={showToast} />
               </ProtectedRoute>
@@ -179,7 +198,7 @@ const MainApp = ({ showToast }) => {
             } 
           />
           {/* Catch-all redirects to Dashboard */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </main>
     </div>
