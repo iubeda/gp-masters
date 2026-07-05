@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
 import Auth from './Auth';
 
 const mockLogin = vi.fn();
@@ -19,7 +20,7 @@ describe('Auth Component', () => {
   });
 
   it('renders login tab by default with email and password inputs', () => {
-    render(<Auth showToast={vi.fn()} />);
+    render(<MemoryRouter><Auth showToast={vi.fn()} /></MemoryRouter>);
     
     expect(screen.getByRole('button', { name: /^sign in$/i })).toHaveClass('text-red-500');
     expect(screen.getByPlaceholderText(/manager@motogp.com/i)).toBeInTheDocument();
@@ -28,7 +29,7 @@ describe('Auth Component', () => {
   });
 
   it('switches to register tab when clicking register', () => {
-    render(<Auth showToast={vi.fn()} />);
+    render(<MemoryRouter><Auth showToast={vi.fn()} /></MemoryRouter>);
     
     const registerTab = screen.getByRole('button', { name: /^register$/i });
     fireEvent.click(registerTab);
@@ -39,7 +40,7 @@ describe('Auth Component', () => {
 
   it('triggers showToast error if fields are missing on submit', async () => {
     const mockShowToast = vi.fn();
-    render(<Auth showToast={mockShowToast} />);
+    render(<MemoryRouter><Auth showToast={mockShowToast} /></MemoryRouter>);
     
     // Submit the form directly to bypass HTML5 validation blocks in JSDOM
     const submitBtn = screen.getByRole('button', { name: /sign in manager/i });
@@ -61,7 +62,7 @@ describe('Auth Component', () => {
       })
     });
 
-    render(<Auth showToast={mockShowToast} />);
+    render(<MemoryRouter><Auth showToast={mockShowToast} /></MemoryRouter>);
     
     fireEvent.change(screen.getByPlaceholderText(/manager@motogp.com/i), {
       target: { value: 'manager@motogp.com' }
@@ -89,7 +90,7 @@ describe('Auth Component', () => {
       json: async () => ({ error: 'Invalid credentials' })
     });
 
-    render(<Auth showToast={mockShowToast} />);
+    render(<MemoryRouter><Auth showToast={mockShowToast} /></MemoryRouter>);
     
     fireEvent.change(screen.getByPlaceholderText(/manager@motogp.com/i), {
       target: { value: 'manager@motogp.com' }
