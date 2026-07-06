@@ -17,7 +17,7 @@ describe('Admin Endpoints', () => {
     await request(app).post('/api/auth/register').send({
       email: 'admin@example.com',
       username: 'adminuser',
-      password: 'password123'
+      password: 'AdminPass123!'
     });
     // Set role to admin directly in DB for testing
     await db.query("UPDATE users SET role = 'admin' WHERE email = 'admin@example.com'");
@@ -25,7 +25,7 @@ describe('Admin Endpoints', () => {
     // Login admin
     const adminLogin = await request(app).post('/api/auth/login').send({
       email: 'admin@example.com',
-      password: 'password123'
+      password: 'AdminPass123!'
     });
     adminToken = adminLogin.body.token;
 
@@ -33,13 +33,13 @@ describe('Admin Endpoints', () => {
     await request(app).post('/api/auth/register').send({
       email: 'user@example.com',
       username: 'normaluser',
-      password: 'password123'
+      password: 'UserPass123!'
     });
     
     // Login normal user
     const userLogin = await request(app).post('/api/auth/login').send({
       email: 'user@example.com',
-      password: 'password123'
+      password: 'UserPass123!'
     });
     userToken = userLogin.body.token;
   });

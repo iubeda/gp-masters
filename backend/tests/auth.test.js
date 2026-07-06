@@ -17,7 +17,7 @@ describe('Auth Endpoints', () => {
   const testUser = {
     email: 'test@example.com',
     username: 'testuser',
-    password: 'password123'
+    password: 'Password123!'
   };
 
   it('should register a new user successfully', async () => {
@@ -37,7 +37,7 @@ describe('Auth Endpoints', () => {
       .send({
         email: testUser.email,
         username: 'otherusername',
-        password: 'password123'
+        password: 'Password123!'
       });
 
     expect(res.statusCode).toBe(400);
@@ -50,7 +50,7 @@ describe('Auth Endpoints', () => {
       .send({
         email: 'other@example.com',
         username: testUser.username,
-        password: 'password123'
+        password: 'Password123!'
       });
 
     expect(res.statusCode).toBe(400);

@@ -1,6 +1,7 @@
 const championshipModel = require('../models/championship.model');
 const teamModel = require('../models/team.model');
 const db = require('../config/database');
+const bcrypt = require('bcryptjs');
 const asyncHandler = require('../utils/asyncHandler');
 
 const createChampionship = asyncHandler(async (req, res) => {
@@ -33,10 +34,15 @@ const createChampionship = asyncHandler(async (req, res) => {
   // Validate time_restricted (boolean)
   const isTimeRestricted = time_restricted !== false && time_restricted !== 'false';
 
-  const privatePin = isPublic ? null : pin;
+  // Hash PIN for private championships (security: never store PINs in plaintext)
+  let hashedPin = null;
+  if (!isPublic && pin) {
+    const salt = await bcrypt.genSalt(10);
+    hashedPin = await bcrypt.hash(pin, salt);
+  }
 
   const championship = await championshipModel.create(
-    name, season, start_date, createdBy, isPublic, privatePin,
+    name, season, start_date, createdBy, isPublic, hashedPin,
     parsedMaxCircuits, parsedMaxTeams, isTimeRestricted
   );
   res.status(201).json(championship);

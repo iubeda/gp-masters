@@ -51,7 +51,12 @@ const login = asyncHandler(async (req, res) => {
   await userModel.updateLastLogin(email);
 
   const token = jwt.sign(
-    { email: user.email, username: user.username, role: user.role },
+    { 
+      email: user.email, 
+      username: user.username, 
+      role: user.role,
+      tokenVersion: user.token_version || 0  // Include token version for revocation
+    },
     JWT_SECRET,
     { expiresIn: '24h' }
   );

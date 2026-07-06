@@ -38,14 +38,14 @@ beforeAll(async () => {
   await setupTestDatabase();
 
   // Crear usuarios
-  adminToken  = await registerAndLogin('admin@sim.test',  'simadmin',  'pass1234', 'admin');
-  playerToken = await registerAndLogin('player@sim.test', 'simplayer', 'pass1234', 'player');
+  adminToken  = await registerAndLogin('admin@sim.test',  'simadmin',  'AdminSim123!', 'admin');
+  playerToken = await registerAndLogin('player@sim.test', 'simplayer', 'PlayerSim123!', 'player');
 
   // Obtener un circuito existente del seed
   const circuitRes = await db.query('SELECT id FROM dictionary_circuits LIMIT 1');
   circuitId = circuitRes.rows[0].id;
 
-  // Crear campeonato como admin
+  // Crear campeonato como admin - usar fecha futura para pasar validación
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const champRes = await request(app)
@@ -57,6 +57,10 @@ beforeAll(async () => {
       start_date: tomorrow.toISOString().split('T')[0],
       is_public: true
     });
+  
+  if (!champRes.body.id) {
+    console.error('[Test Setup] Championship creation failed:', JSON.stringify(champRes.body));
+  }
   championshipId = champRes.body.id;
 
   // Añadir circuito al calendario (ruta raíz: POST /api/calendar)
@@ -110,7 +114,7 @@ describe('GET /api/simulation/status/:championshipId/:circuitId', () => {
   });
 
   it('usuario sin equipo → 403', async () => {
-    const noTeamToken = await registerAndLogin('noteam@sim.test', 'noteamuser', 'pass1234', 'player');
+    const noTeamToken = await registerAndLogin('noteam@sim.test', 'noteamuser', 'NoTeam123!', 'player');
     const res = await request(app)
       .get(`/api/simulation/status/${championshipId}/${circuitId}`)
       .set('Authorization', `Bearer ${noTeamToken}`);

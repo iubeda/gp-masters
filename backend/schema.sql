@@ -16,6 +16,7 @@ CREATE TABLE users (
     username VARCHAR(100) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     role VARCHAR(20) DEFAULT 'player' CHECK (role IN ('admin', 'master', 'manager', 'player')),
+    token_version INT DEFAULT 0, -- For token revocation mechanism
     last_login TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -41,7 +42,7 @@ CREATE TABLE championships (
     start_date DATE NOT NULL,
     created_by VARCHAR(255) REFERENCES users(email) ON DELETE SET NULL,
     is_public BOOLEAN DEFAULT TRUE,
-    pin VARCHAR(10) DEFAULT NULL,
+    pin VARCHAR(255) DEFAULT NULL, -- Bcrypt hash storage (60 chars)
     max_circuits INT NOT NULL DEFAULT 15 CHECK (max_circuits >= 2 AND max_circuits <= 15),
     max_teams INT NOT NULL DEFAULT 10 CHECK (max_teams >= 2 AND max_teams <= 12),
     time_restricted BOOLEAN NOT NULL DEFAULT TRUE

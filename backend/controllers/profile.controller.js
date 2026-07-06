@@ -16,9 +16,22 @@ const getProfile = asyncHandler(async (req, res) => {
 });
 
 const updatePassword = asyncHandler(async (req, res) => {
-  const { new_password } = req.body;
+  const { current_password, new_password } = req.body;
   const userEmail = req.user.email;
 
+  // Fetch user to verify current password
+  const user = await userModel.findByEmail(userEmail);
+  if (!user) {
+    return res.status(404).json({ error: 'User not found.' });
+  }
+
+  // Verify current password
+  const isMatch = await bcrypt.compare(current_password, user.password_hash);
+  if (!isMatch) {
+    return res.status(400).json({ error: 'Current password is incorrect.' });
+  }
+
+  // Hash new password
   const salt = await bcrypt.genSalt(10);
   const passwordHash = await bcrypt.hash(new_password, salt);
 
