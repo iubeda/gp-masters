@@ -46,8 +46,9 @@ El proyecto está construido sobre una arquitectura moderna desacoplada en Front
 ### ⚙️ Backend (Servidor y API)
 *   **Node.js & Express:** Servidor HTTP y API REST robusta y ligera.
 *   **PostgreSQL:** Base de datos relacional para el almacenamiento persistente de usuarios, campeonatos, equipos y relaciones.
-*   **JSON Web Tokens (JWT):** Autenticación y control de accesos sin estado.
-*   **bcryptjs:** Encriptación y hashing de contraseñas de usuario en base de datos.
+*   **JWT en Cookies HTTP-Only:** Autenticación sin estado, almacenando los JWT en cookies seguras (con protección CSRF) eliminando el uso de LocalStorage.
+*   **Seguridad y Trazabilidad:** Uso de `helmet` para headers HTTP, `express-rate-limit` contra fuerza bruta y `winston` para logging estructurado en producción.
+*   **bcryptjs:** Encriptación y hashing de contraseñas de usuario y PINs de campeonato en la base de datos.
 *   **pg (node-postgres):** Cliente no bloqueante para interactuar con la base de datos PostgreSQL.
 
 ### 🐳 Infraestructura y Despliegue
@@ -95,7 +96,7 @@ Si deseas modificar el código en tiempo real con recarga automática sin recons
     ```env
     PORT=5000
     DATABASE_URL=postgresql://motogp_user:motogp_password@localhost:5432/motogp_db
-    JWT_SECRET=supersecretmotogpkey
+    JWT_SECRET=pon_aqui_una_cadena_aleatoria_muy_larga_y_segura
     ```
     *(Ajusta `motogp_user` y `motogp_password` según las credenciales de tu Postgres local).*
 4.  Arranca el servidor en modo de desarrollo:
