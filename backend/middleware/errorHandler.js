@@ -1,5 +1,7 @@
-module.exports = (err, req, res, next) => {
-  console.error('API Error Catch:', err.message || err);
+const logger = require('../utils/logger');
+
+const errorHandler = (err, req, res, next) => {
+  logger.error(`[${req.method} ${req.url}] ${err.message}`, { stack: process.env.NODE_ENV !== 'production' ? err.stack : undefined });
 
   // Catch database constraint violations
   if (err.code === '23505') {
@@ -31,3 +33,5 @@ module.exports = (err, req, res, next) => {
     : (err.message || 'Internal server error.');
   res.status(statusCode).json({ error: errMessage });
 };
+
+module.exports = errorHandler;

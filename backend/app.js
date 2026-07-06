@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const apiRouter = require('./routes/api');
 const errorHandler = require('./middleware/errorHandler');
+const csrfProtection = require('./middleware/csrf');
 require('dotenv').config();
 
 const app = express();
@@ -41,6 +42,9 @@ app.use(cookieParser());
 
 // Apply strict rate limiting to auth routes
 app.use('/api/auth', authLimiter);
+
+// Apply CSRF protection
+app.use('/api', csrfProtection);
 
 // Mount central API router mapping
 app.use('/api', apiRouter);

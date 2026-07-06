@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const db = require('../config/database');
+const logger = require('../utils/logger');
 require('dotenv').config();
 
 module.exports = async (req, res, next) => {
@@ -42,7 +43,7 @@ module.exports = async (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    console.error('JWT Verification Error:', error.message);
+    logger.error(`JWT Verification Error: ${error.message}`);
     res.status(401).json({ error: 'Invalid or expired token.' });
   }
 };

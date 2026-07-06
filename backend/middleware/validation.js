@@ -8,7 +8,8 @@ const validateRegister = (req, res, next) => {
   username = username.trim();
   req.body.username = username;
 
-  if (!email.includes('@')) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
     return res.status(400).json({ error: 'Invalid email address format.' });
   }
   

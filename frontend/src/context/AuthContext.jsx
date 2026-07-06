@@ -29,6 +29,7 @@ export const AuthProvider = ({ children }) => {
   const apiFetch = useCallback(async (url, options = {}) => {
     const headers = {
       'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
       ...options.headers,
     };
 

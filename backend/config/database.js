@@ -1,6 +1,7 @@
 const { Pool } = require('pg');
 const fs = require('fs');
 const path = require('path');
+const logger = require('../utils/logger');
 require('dotenv').config();
 
 const pool = new Pool({
@@ -8,12 +9,12 @@ const pool = new Pool({
 });
 
 pool.on('error', (err) => {
-  console.error('Unexpected error on idle pg client', err);
+  logger.error('Unexpected error on idle pg client', err);
 });
 
 const initializeDatabase = async () => {
   if (process.env.NODE_ENV === 'production') {
-    console.log('Skipping schema initialization in production environment.');
+    logger.info('Skipping schema initialization in production environment.');
     return;
   }
   try {
@@ -22,16 +23,17 @@ const initializeDatabase = async () => {
     
     // Execute DDL
     await pool.query(schemaSql);
-    console.log('Database initialized successfully with schema and base seeds.');
+    logger.info('Database initialized successfully with schema and base seeds.');
 
     if (process.env.SEED_TEST_DATA === 'true') {
       const seedPath = path.join(__dirname, '..', 'seed_championship.sql');
       const seedSql = fs.readFileSync(seedPath, 'utf8');
       await pool.query(seedSql);
-      console.log('Test championship data seeded successfully.');
+      logger.info('Test championship data seeded successfully.');
     }
   } catch (error) {
-    console.error('Error initializing database:', error);
+    logger.error(`Error initializing database: ${error.message}`, { stack: error.stack });
+    process.exit(1);
   }
 };
 
