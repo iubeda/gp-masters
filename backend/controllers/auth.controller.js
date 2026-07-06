@@ -11,13 +11,13 @@ const register = asyncHandler(async (req, res) => {
   // Check if email already exists
   const existingUserByEmail = await userModel.findByEmail(email);
   if (existingUserByEmail) {
-    return res.status(400).json({ error: 'Email is already registered.' });
+    return res.status(400).json({ error: 'Registration failed. Username or email may already be in use.' });
   }
 
   // Check if username already exists
   const existingUserByUsername = await userModel.findByUsername(username);
   if (existingUserByUsername) {
-    return res.status(400).json({ error: 'Username is already taken.' });
+    return res.status(400).json({ error: 'Registration failed. Username or email may already be in use.' });
   }
 
   const salt = await bcrypt.genSalt(10);

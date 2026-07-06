@@ -41,7 +41,7 @@ describe('Auth Endpoints', () => {
       });
 
     expect(res.statusCode).toBe(400);
-    expect(res.body.error).toBe('Email is already registered.');
+    expect(res.body.error).toBe('Registration failed. Username or email may already be in use.');
   });
 
   it('should fail to register an existing username', async () => {
@@ -54,7 +54,7 @@ describe('Auth Endpoints', () => {
       });
 
     expect(res.statusCode).toBe(400);
-    expect(res.body.error).toBe('Username is already taken.');
+    expect(res.body.error).toBe('Registration failed. Username or email may already be in use.');
   });
 
   it('should log in successfully with correct credentials', async () => {

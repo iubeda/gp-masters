@@ -50,6 +50,9 @@ const validateChampionship = (req, res, next) => {
   if (!name || !season || !start_date) {
     return res.status(400).json({ error: 'Championship name, season, and start date are required.' });
   }
+  if (name.length > 100) {
+    return res.status(400).json({ error: 'Championship name must be 100 characters or less.' });
+  }
 
   // Validate start_date is in the future
   const start = new Date(start_date);
@@ -77,6 +80,9 @@ const validateTeam = (req, res, next) => {
   const { name, championship_id } = req.body;
   if (!name || !championship_id) {
     return res.status(400).json({ error: 'Team name and championship_id are required.' });
+  }
+  if (name.length > 100) {
+    return res.status(400).json({ error: 'Team name must be 100 characters or less.' });
   }
   next();
 };

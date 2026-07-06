@@ -12,6 +12,10 @@ pool.on('error', (err) => {
 });
 
 const initializeDatabase = async () => {
+  if (process.env.NODE_ENV === 'production') {
+    console.log('Skipping schema initialization in production environment.');
+    return;
+  }
   try {
     const schemaPath = path.join(__dirname, '..', 'schema.sql');
     const schemaSql = fs.readFileSync(schemaPath, 'utf8');
