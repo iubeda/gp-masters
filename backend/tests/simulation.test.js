@@ -27,7 +27,7 @@ const registerAndLogin = async (email, username, password, role = 'player') => {
     [email, username, hashed, role]
   );
   const res = await request(app).post('/api/auth/login').send({ email, password });
-  return res.body.token;
+  return res.headers['set-cookie'][0].split(';')[0].split('=')[1];
 };
 
 // ---------------------------------------------------------------------------

@@ -33,7 +33,7 @@ describe('Championship Endpoints', () => {
         password: userCredentials.password
       });
       
-    token = loginRes.body.token;
+    token = loginRes.headers['set-cookie'][0].split(';')[0].split('=')[1];
   });
 
   afterAll(async () => {
@@ -140,7 +140,7 @@ describe('Championship Endpoints', () => {
         email: 'creator@kick.test',
         password: 'CreatorPass123!'
       });
-      creatorToken = cRes.body.token;
+      creatorToken = cRes.headers['set-cookie'][0].split(';')[0].split('=')[1];
 
       // Register regular player
       await request(app).post('/api/auth/register').send({
@@ -152,7 +152,7 @@ describe('Championship Endpoints', () => {
         email: 'player@kick.test',
         password: 'PlayerPass123!'
       });
-      anotherToken = pRes.body.token;
+      anotherToken = pRes.headers['set-cookie'][0].split(';')[0].split('=')[1];
 
       // Register admin
       await request(app).post('/api/auth/register').send({
@@ -165,7 +165,7 @@ describe('Championship Endpoints', () => {
         email: 'admin@kick.test',
         password: 'AdminKick123!'
       });
-      adminToken = aRes.body.token;
+      adminToken = aRes.headers['set-cookie'][0].split(';')[0].split('=')[1];
 
       // Creator creates a championship
       const tomorrow = new Date();

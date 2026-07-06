@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const cookieParser = require('cookie-parser');
 const apiRouter = require('./routes/api');
 const errorHandler = require('./middleware/errorHandler');
 require('dotenv').config();
@@ -31,8 +32,12 @@ const authLimiter = rateLimit({
 });
 
 // Core HTTP Middlewares
-app.use(cors());
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3000'],
+  credentials: true,
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 // Apply strict rate limiting to auth routes
 app.use('/api/auth', authLimiter);

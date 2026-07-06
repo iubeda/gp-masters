@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const userModel = require('../models/user.model');
 const asyncHandler = require('../utils/asyncHandler');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecretmotogpkey';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const register = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
@@ -61,9 +61,15 @@ const login = asyncHandler(async (req, res) => {
     { expiresIn: '24h' }
   );
 
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  });
+
   res.json({
     message: 'Login successful.',
-    token,
     user: {
       email: user.email,
       username: user.username,
@@ -72,7 +78,17 @@ const login = asyncHandler(async (req, res) => {
   });
 });
 
+const logout = asyncHandler(async (req, res) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict'
+  });
+  res.json({ message: 'Logged out successfully.' });
+});
+
 module.exports = {
   register,
-  login
+  login,
+  logout
 };

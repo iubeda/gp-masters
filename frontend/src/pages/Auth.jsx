@@ -42,7 +42,7 @@ const Auth = ({ showToast }) => {
       }
 
       if (isLogin) {
-        login(data.token, data.user);
+        login(data.user);
         showToast('Welcome back to MotoGP Manager!', 'success');
       } else {
         showToast('Registration successful! Please log in.', 'success');

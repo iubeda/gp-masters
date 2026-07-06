@@ -27,7 +27,7 @@ describe('Admin Endpoints', () => {
       email: 'admin@example.com',
       password: 'AdminPass123!'
     });
-    adminToken = adminLogin.body.token;
+    adminToken = adminLogin.headers['set-cookie'][0].split(';')[0].split('=')[1];
 
     // Register normal user
     await request(app).post('/api/auth/register').send({
@@ -41,7 +41,7 @@ describe('Admin Endpoints', () => {
       email: 'user@example.com',
       password: 'UserPass123!'
     });
-    userToken = userLogin.body.token;
+    userToken = userLogin.headers['set-cookie'][0].split(';')[0].split('=')[1];
   });
 
   afterAll(async () => {

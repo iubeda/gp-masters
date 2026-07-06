@@ -93,7 +93,7 @@ describe('Security Fixes - Password Change Verification', () => {
         password: 'OldPass123!'
       });
     
-    authToken = loginResponse.body.token;
+    authToken = loginResponse.headers['set-cookie'][0].split(';')[0].split('=')[1];
   });
 
   it('should require current password for password change', async () => {

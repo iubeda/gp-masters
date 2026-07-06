@@ -37,6 +37,12 @@ const updatePassword = asyncHandler(async (req, res) => {
 
   await userModel.updatePassword(userEmail, passwordHash);
 
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict'
+  });
+
   res.json({ message: 'Password updated successfully. Session will be closed.' });
 });
 

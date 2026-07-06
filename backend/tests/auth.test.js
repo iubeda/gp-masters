@@ -67,7 +67,7 @@ describe('Auth Endpoints', () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe('Login successful.');
-    expect(res.body).toHaveProperty('token');
+    // token is now in cookies
     expect(res.body.user).toHaveProperty('email', testUser.email);
   });
 
