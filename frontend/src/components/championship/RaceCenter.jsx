@@ -59,6 +59,23 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
   }, [circuit.bypass_restrictions]);
   const [simulating, setSimulating] = useState(false);
 
+  const handleToggleGlobalBypass = async () => {
+    try {
+      setSimulating(true);
+      const res = await apiFetch(`/api/championships/${championship.id}/circuits/${circuit.id}/bypass`, {
+        method: 'PUT',
+        body: JSON.stringify({ status: !isGlobalBypass })
+      });
+      setIsGlobalBypass(res.bypass_restrictions);
+      showToast(res.bypass_restrictions ? 'Bypass activado: Sesiones abiertas.' : 'Bypass desactivado.', 'success');
+      fetchGPStatus(); // Refresh to update dates/permissions locally if needed
+    } catch (error) {
+      showToast(error.message, 'error');
+    } finally {
+      setSimulating(false);
+    }
+  };
+
   // Fetch GP simulation status
   const fetchGPStatus = async () => {
     try {
