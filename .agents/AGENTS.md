@@ -44,7 +44,7 @@ motogp-manager/
 │   │   ├── auth.test.js
 │   │   ├── championship.test.js
 │   │   └── testSetup.js
-│   ├── schema.sql                    # DDL completo + seeds (pilotos, motos, circuitos)
+│   ├── migrations/                   # Archivos de migración de BBDD (node-pg-migrate)
 │   ├── server.js                     # Punto de entrada
 │   └── app.js
 │
@@ -112,8 +112,8 @@ docker compose up --build
 
 ## 3. Base de Datos
 
-- El esquema completo está en `backend/schema.sql`. Si se añade o modifica una tabla, **actualizar este archivo**.
-- No usar migraciones — el schema se aplica completo en el arranque (desarrollo) o se gestiona manualmente (producción).
+- **Se utilizan migraciones** con `node-pg-migrate`. A partir de ahora, cualquier cambio en la BBDD (añadir, modificar o eliminar tablas) debe crear una nueva migración en `backend/migrations/`.
+- El comando para crear una migración es `npm run migrate:create <nombre>` (desde `/backend`).
 - Las transacciones se hacen con `db.pool.connect()` + `BEGIN/COMMIT/ROLLBACK` (ver `simulation.model.js → saveRaceResults`).
 - **Nunca commitear el archivo `.env`**. Las variables de entorno son: `PORT`, `DATABASE_URL`, `JWT_SECRET`.
 
@@ -151,6 +151,5 @@ Asimismo, si modificas lógica de roles, permisos o expulsiones (ej. en `backend
 ## 6. Restricciones Importantes
 
 - **No instalar nuevas dependencias** sin confirmar con el usuario.
-- **No modificar `schema.sql`** sin avisar explícitamente al usuario de que necesitará re-inicializar la base de datos.
 - El archivo `ChampionshipDetail.jsx` es el más complejo del frontend (~38KB). Antes de modificarlo, leer su estructura completa.
 
