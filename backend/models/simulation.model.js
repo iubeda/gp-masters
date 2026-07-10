@@ -288,6 +288,14 @@ const markWeekendCompleted = async (championshipId, circuitId) => {
   );
 };
 
+// 13. Marcar el fin de semana como en progreso para la sesión de carrera
+const markWeekendInProgress = async (championshipId, circuitId) => {
+  await db.query(
+    "UPDATE race_weekends SET status = 'in_progress' WHERE championship_id = $1 AND circuit_id = $2 AND session_type = 'race'",
+    [championshipId, circuitId]
+  );
+};
+
 module.exports = {
   getOrCreateWeekend,
   getOrCreateTeamStatus,
@@ -302,4 +310,5 @@ module.exports = {
   getNextStintNumber,
   updateGridPositions,
   markWeekendCompleted,
+  markWeekendInProgress,
 };

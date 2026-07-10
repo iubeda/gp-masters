@@ -10,7 +10,7 @@ const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit, todayStr }) 
     );
   }
 
-  const activeGpId = circuits.find(c => c.status === 'scheduled')?.id;
+  const activeGpId = circuits.find(c => c.status === 'scheduled' || c.status === 'in_progress')?.id;
 
   return (
     <div className="p-4 space-y-4 max-h-[500px] overflow-y-auto">
@@ -18,7 +18,7 @@ const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit, todayStr }) 
         const isSelected = selectedCircuit && selectedCircuit.id === circ.id;
         const isCompleted = circ.status === 'completed';
         const isNextGp = circ.id === activeGpId;
-        const hasStarted = todayStr >= circ.practice_date;
+        const hasStarted = todayStr >= circ.practice_date || circ.status === 'in_progress' || circ.bypass_restrictions;
         const isActive = isNextGp && hasStarted;
 
         return (

@@ -43,14 +43,24 @@ const initSocket = (server) => {
     // Permitir a un cliente unirse a una sala específica de un Gran Premio
     socket.on('join-gp-room', async ({ championshipId, circuitId }) => {
       try {
-        // Verificar si el usuario pertenece al campeonato
-        const checkQuery = `
-          SELECT 1 FROM teams 
-          WHERE championship_id = $1 AND user_email = $2 AND is_kicked = false
-        `;
-        const result = await db.query(checkQuery, [championshipId, socket.user.email]);
-        
-        if (result.rows.length === 0) {
+        let isAllowed = false;
+
+        // Si es admin, permitir siempre
+        if (socket.user.role === 'admin') {
+          isAllowed = true;
+        } else {
+          // Verificar si el usuario pertenece al campeonato
+          const checkQuery = `
+            SELECT 1 FROM teams 
+            WHERE championship_id = $1 AND user_email = $2 AND is_kicked = false
+          `;
+          const result = await db.query(checkQuery, [championshipId, socket.user.email]);
+          if (result.rows.length > 0) {
+            isAllowed = true;
+          }
+        }
+
+        if (!isAllowed) {
           console.warn(`[Socket] Usuario ${socket.user.email} intentó unirse al GP ${championshipId} sin permiso.`);
           socket.emit('error', { message: 'No tienes permiso para ver este Gran Premio.' });
           return;

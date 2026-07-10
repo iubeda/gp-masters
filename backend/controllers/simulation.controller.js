@@ -38,6 +38,12 @@ const getGPStatus = asyncHandler(async (req, res) => {
   const raceWeather = await simulationModel.getOrCreateWeekend(championshipId, circuitId, 'race');
   const gridStatus = await simulationModel.getGPStatusForAllTeams(championshipId, circuitId);
 
+  const maxLapRes = await db.query(
+    'SELECT MAX(lap_number) as max_lap FROM gp_lap_history WHERE championship_id = $1 AND circuit_id = $2 AND session_type = $3',
+    [championshipId, circuitId, 'race']
+  );
+  const currentRaceLap = maxLapRes.rows[0].max_lap || 0;
+
   res.json({
     weather: {
       practice: practiceWeather,
@@ -49,7 +55,8 @@ const getGPStatus = asyncHandler(async (req, res) => {
     qualifyingLaps,
     raceLaps,
     gridStatus,
-    teamId
+    teamId,
+    currentRaceLap
   });
 });
 

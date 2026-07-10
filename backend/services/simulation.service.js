@@ -247,6 +247,9 @@ const runRaceInternal = async (championshipId, circuitId, progressive = false) =
     emitToGP(championshipId, circuitId, 'race-started', { totalLaps });
   }
 
+  // Marcar el fin de semana como 'in_progress' para que se sepa que la carrera ha comenzado
+  await simulationModel.markWeekendInProgress(championshipId, circuitId);
+
   // Loop vuelta a vuelta
   for (let lap = 1; lap <= totalLaps; lap++) {
     // A) Simular cada piloto

@@ -96,13 +96,11 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
         });
       }
       // Detectar si la carrera está en curso (mid-race join)
-      if (data.raceLaps?.length > 0 && data.weather?.race?.status !== 'completed') {
-        // Encontraremos la última vuelta en la telemetría para saber por dónde va
-        const maxLap = Math.max(...data.raceLaps.map(l => l.lap_number));
+      if (data.weather?.race?.status === 'in_progress' || (data.currentRaceLap > 0 && data.weather?.race?.status !== 'completed')) {
         setLiveRace(prev => ({
           ...prev,
           isActive: true,
-          currentLap: maxLap,
+          currentLap: data.currentRaceLap || 0,
           totalLaps: 12
         }));
       }
