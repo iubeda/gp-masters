@@ -4,23 +4,12 @@ import {
   CheckCircle2, HelpCircle, History, MessageSquare, Award, Coins, CalendarDays, Timer, Activity
 } from 'lucide-react';
 import { useSocket } from '../../context/SocketContext';
-
-const formatLapTime = (timeInSeconds) => {
-  if (timeInSeconds === null || timeInSeconds === undefined || isNaN(timeInSeconds) || timeInSeconds === 0) {
-    return '--';
-  }
-  const totalMs = Math.round(parseFloat(timeInSeconds) * 1000);
-  const minutes = Math.floor(totalMs / 60000);
-  const seconds = Math.floor((totalMs % 60000) / 1000);
-  const milliseconds = totalMs % 1000;
-  return `${minutes}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
-};
-
-const SetupCell = ({ value }) => {
-  const v = parseInt(value) || 0;
-  const color = v > 0 ? 'text-emerald-400' : v < 0 ? 'text-rose-400' : 'text-gray-500';
-  return <span className={`font-mono font-bold ${color}`}>{v > 0 ? `+${v}` : v}</span>;
-};
+import { formatLapTime } from '../../utils/timeFormat';
+import LiveTimingTable from './LiveTimingTable';
+import RaceResultsTable from './RaceResultsTable';
+import QualifyingResultsTable from './QualifyingResultsTable';
+import SessionLapsHistory from './SessionLapsHistory';
+import QualifyingLapsHistory from './QualifyingLapsHistory';
 
 const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, todayStr }) => {
   const [loading, setLoading] = useState(true);
@@ -715,106 +704,11 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
 
               {/* Tu Telemetría de Clasificación */}
               {teamId && qualifyingLaps.length > 0 && (
-                <div className="bg-[#101017] border border-gray-850 rounded-2xl overflow-hidden">
-                  <div className="p-4 border-b border-gray-850 flex items-center justify-between">
-                    <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
-                      <History className="w-4 h-4 text-gray-500" />
-                      Tu Telemetría de Clasificación
-                    </span>
-                    <span className="text-xs text-gray-400">
-                      Mejor tiempo: <strong className="text-red-400">{teamStatus ? formatLapTime(teamStatus.best_qualifying_time) : '--'}</strong>
-                    </span>
-                  </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs">
-                      <thead className="bg-[#161622] text-gray-400 uppercase tracking-wider font-bold">
-                        <tr>
-                          <th className="p-3" rowSpan={2}>Vuelta</th>
-                          <th className="p-3" rowSpan={2}>Tanda</th>
-                          <th className="p-3" rowSpan={2}>Tiempo de Vuelta</th>
-                          <th className="p-3" rowSpan={2}>Desgaste Neumático</th>
-                          <th className="p-3" rowSpan={2}>Neumático</th>
-                          <th className="p-3" rowSpan={2}>Enfoque</th>
-                          <th className="p-3 text-center border-l border-gray-800" colSpan={5}>
-                            <span className="flex items-center justify-center gap-1">
-                              <Wrench className="w-3 h-3 text-red-500" />
-                              Setup de Moto
-                            </span>
-                          </th>
-                        </tr>
-                        <tr>
-                          <th className="p-2 text-center text-[9px] border-l border-gray-800">Motor</th>
-                          <th className="p-2 text-center text-[9px]">Caja</th>
-                          <th className="p-2 text-center text-[9px]">Susp.</th>
-                          <th className="p-2 text-center text-[9px]">Chasis</th>
-                          <th className="p-2 text-center text-[9px]">Alerón</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-850">
-                        {qualifyingLaps.map((lap) => (
-                          <tr key={lap.id} className={lap.has_crashed ? 'bg-red-950/10 text-red-400' : ''}>
-                            <td className="p-3 font-mono">#{lap.lap_number}</td>
-                            <td className="p-3">Tanda {lap.stint_number}</td>
-                            <td className="p-3 font-mono font-bold">
-                              {lap.has_crashed ? 'CAÍDA' : formatLapTime(lap.lap_time)}
-                            </td>
-                            <td className="p-3 font-mono">{lap.tire_wear_pct}%</td>
-                            <td className="p-3 font-bold uppercase">{lap.tire_type}</td>
-                            <td className="p-3 text-gray-400">{lap.pilot_focus}</td>
-                            <td className="p-2 text-center border-l border-gray-800/50"><SetupCell value={lap.setup_engine} /></td>
-                            <td className="p-2 text-center"><SetupCell value={lap.setup_gearbox} /></td>
-                            <td className="p-2 text-center"><SetupCell value={lap.setup_suspension} /></td>
-                            <td className="p-2 text-center"><SetupCell value={lap.setup_chassis} /></td>
-                            <td className="p-2 text-center"><SetupCell value={lap.setup_wings} /></td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                <QualifyingLapsHistory qualifyingLaps={qualifyingLaps} teamStatus={teamStatus} />
               )}
 
               {/* Parrilla de Clasificación Actualizada */}
-              <div className="bg-[#101017] border border-gray-850 rounded-2xl overflow-hidden">
-                <div className="p-4 border-b border-gray-850 flex items-center justify-between">
-                  <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
-                    <Award className="w-4 h-4 text-yellow-500" />
-                    Tiempos de Clasificación Oficiales
-                  </span>
-                  {teamStatus && (
-                    <span className="text-xs text-gray-400">
-                      Tu tiempo: <strong className="text-red-400">{formatLapTime(teamStatus.best_qualifying_time)}</strong>
-                    </span>
-                  )}
-                </div>
-                
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead className="bg-[#161622] text-gray-400 uppercase tracking-wider font-bold">
-                      <tr>
-                        <th className="p-3">Posición</th>
-                        <th className="p-3">Piloto</th>
-                        <th className="p-3">Equipo</th>
-                        <th className="p-3">Mejor Vuelta</th>
-                        <th className="p-3">Vueltas Usadas</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-850">
-                      {gridStatus.map((t, idx) => (
-                        <tr key={t.team_id} className={t.team_id === teamId ? 'bg-red-600/10 font-semibold' : ''}>
-                          <td className="p-3 font-mono font-bold">#{idx + 1}</td>
-                          <td className="p-3">{t.pilot_name}</td>
-                          <td className="p-3 text-gray-350">{t.team_name} ({t.owner_name})</td>
-                          <td className="p-3 font-mono font-bold text-yellow-500">
-                            {formatLapTime(t.best_qualifying_time)}
-                          </td>
-                          <td className="p-3 text-gray-400">{t.qualifying_laps_used || 0} / 3</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+              <QualifyingResultsTable gridStatus={gridStatus} teamId={teamId} teamStatus={teamStatus} />
             </div>
           )}
 
@@ -861,230 +755,17 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
 
               {/* Live Timing / Broadcasting en progreso */}
               {liveRace.isActive && (
-                <div className="bg-gradient-to-br from-[#101017] to-[#161622] border border-red-500/30 rounded-2xl overflow-hidden shadow-[0_0_20px_rgba(239,68,68,0.15)] relative">
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gray-800">
-                    <div 
-                      className="h-full bg-red-500 transition-all duration-1000 ease-linear"
-                      style={{ width: `${(liveRace.currentLap / liveRace.totalLaps) * 100}%` }}
-                    />
-                  </div>
-                  
-                  <div className="p-5 border-b border-gray-850 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <Activity className="w-5 h-5 text-red-500 relative z-10" />
-                        <div className="absolute inset-0 bg-red-500 blur-md opacity-50 animate-pulse rounded-full" />
-                      </div>
-                      <div>
-                        <h4 className="text-sm font-extrabold text-white uppercase tracking-wider">Live Timing</h4>
-                        <p className="text-[10px] text-red-400 font-bold uppercase tracking-widest animate-pulse">En Directo</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-2xl font-black text-white font-mono">{liveRace.currentLap}</span>
-                      <span className="text-sm text-gray-500 font-mono font-bold"> / {liveRace.totalLaps}</span>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-widest mt-0.5">Vueltas</p>
-                    </div>
-                             {liveRace.standings.length === 0 ? (
-                      <div className="text-center py-10 text-gray-500 text-xs italic">
-                        Esperando el paso por meta de la primera vuelta...
-                      </div>
-                    ) : (
-                      (() => {
-                        const absoluteBestLap = liveRace.standings.reduce((min, s) => {
-                          if (s.has_crashed || !s.best_lap) return min;
-                          return s.best_lap < min ? s.best_lap : min;
-                        }, 999.9);
-
-                        const leaderTotalTime = liveRace.standings[0]?.total_time || 0;
-
-                        return (
-                          <table className="w-full text-left text-xs border-separate border-spacing-y-1">
-                            <thead className="text-gray-400 uppercase tracking-wider font-bold">
-                              <tr>
-                                <th className="px-3 pb-2">Pos</th>
-                                <th className="px-3 pb-2">Piloto / Equipo</th>
-                                <th className="px-3 pb-2">Tiempo de Vuelta</th>
-                                <th className="px-3 pb-2">Desgaste</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {liveRace.standings.map((s, i) => {
-                                const posDiff = s.grid_position ? s.grid_position - s.position : 0;
-                                const isAbsoluteBest = Math.abs(s.last_lap_time - absoluteBestLap) < 0.001;
-                                const isPersonalBest = !isAbsoluteBest && Math.abs(s.last_lap_time - s.best_lap) < 0.001;
-                                
-                                return (
-                                  <tr 
-                                    key={s.team_id} 
-                                    className={`transition-all duration-500 ${s.has_crashed ? 'opacity-50' : ''}`}
-                                  >
-                                    <td className="p-3 flex items-center gap-2">
-                                      <div className={`w-6 h-6 flex items-center justify-center rounded-lg font-mono font-bold ${
-                                        i === 0 ? 'bg-yellow-500/20 text-yellow-500 border border-yellow-500/30' : 
-                                        i === 1 ? 'bg-gray-300/20 text-gray-300 border border-gray-300/30' : 
-                                        i === 2 ? 'bg-amber-700/20 text-amber-500 border border-amber-700/30' : 
-                                        'bg-gray-800 text-gray-400'
-                                      }`}>
-                                        {s.position}
-                                      </div>
-                                      {posDiff !== 0 && (
-                                        <span className={`text-[10px] font-bold ${posDiff > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                                          {posDiff > 0 ? '⬆' : '⬇'}{Math.abs(posDiff)}
-                                        </span>
-                                      )}
-                                    </td>
-                                    <td className="p-3">
-                                      <div className="font-bold text-white text-sm">{s.pilot_name}</div>
-                                      <div className="text-[10px] text-gray-400">{s.team_name}</div>
-                                      {s.has_crashed && <span className="inline-block mt-1 px-1.5 py-0.5 bg-red-950/50 text-red-500 text-[9px] font-bold uppercase rounded border border-red-500/20">Caída (DNF)</span>}
-                                    </td>
-                                    <td className="p-3">
-                                      <div className={`font-mono font-bold flex items-center gap-2 ${
-                                        isAbsoluteBest ? 'text-purple-400' : (isPersonalBest ? 'text-emerald-400' : 'text-gray-300')
-                                      }`}>
-                                        {s.has_crashed ? '--' : formatLapTime(s.last_lap_time)}
-                                        {isAbsoluteBest && !s.has_crashed && <Timer className="w-3 h-3 text-purple-400" />}
-                                        {i > 0 && !s.has_crashed && !liveRace.standings[i-1].has_crashed && (
-                                          <span className={`text-[10px] font-bold ${s.last_lap_time > liveRace.standings[i-1].last_lap_time ? 'text-red-400' : 'text-emerald-400'}`}>
-                                            ({(s.last_lap_time - liveRace.standings[i-1].last_lap_time) > 0 ? '+' : ''}{(s.last_lap_time - liveRace.standings[i-1].last_lap_time).toFixed(3)})
-                                          </span>
-                                        )}
-                                      </div>
-                                      {!s.has_crashed && (
-                                        <div className="text-[10px] text-gray-400 font-mono mt-0.5 font-semibold">
-                                          {i > 0 ? (
-                                            <>
-                                              <span className="mr-2">Int: +{(s.total_time - liveRace.standings[i-1].total_time).toFixed(3)}</span>
-                                              <span>Líder: +{(s.total_time - leaderTotalTime).toFixed(3)}</span>
-                                            </>
-                                          ) : (
-                                            <span>Líder</span>
-                                          )}
-                                        </div>
-                                      )}
-                                    </td>
-                                    <td className="p-3">
-                                      <div className="flex items-center gap-2 mb-1">
-                                        <div className="w-20 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                                          <div 
-                                            className={`h-full ${s.tire_wear_pct > 80 ? 'bg-red-500' : s.tire_wear_pct > 50 ? 'bg-yellow-500' : 'bg-emerald-500'}`}
-                                            style={{ width: `${Math.min(100, s.tire_wear_pct)}%` }}
-                                          />
-                                        </div>
-                                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
-                                          s.tire_type === 'soft' ? 'bg-red-950/80 text-red-500 border border-red-500/20' :
-                                          s.tire_type === 'medium' ? 'bg-yellow-950/80 text-yellow-500 border border-yellow-500/20' :
-                                          s.tire_type === 'hard' ? 'bg-gray-800 text-gray-300 border border-gray-600' :
-                                          'bg-blue-950/80 text-blue-400 border border-blue-500/20'
-                                        }`}>
-                                          {s.tire_type ? s.tire_type.charAt(0).toUpperCase() : 'M'}
-                                        </span>
-                                      </div>
-                                      <span className="text-[9px] text-gray-500 font-mono block">{s.tire_wear_pct.toFixed(1)}%</span>
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
-                        );
-                      })()
-                    )}
-                  </div>
-                </div>
+                <LiveTimingTable liveRace={liveRace} />
               )}
 
               {/* Resultados Finales de la Carrera */}
               {isRaceFinished && (
-                <div className="bg-[#101017] border border-gray-850 rounded-2xl overflow-hidden">
-                  <div className="p-4 border-b border-gray-850 flex items-center justify-between">
-                    <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
-                      <Flag className="w-4 h-4 text-red-500" />
-                      Resultados Oficiales de la Carrera (12 Vueltas)
-                    </span>
-                  </div>
-                  
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs">
-                      <thead className="bg-[#161622] text-gray-400 uppercase tracking-wider font-bold">
-                        <tr>
-                          <th className="p-3">Pos</th>
-                          <th className="p-3">Parrilla</th>
-                          <th className="p-3">Piloto</th>
-                          <th className="p-3">Equipo</th>
-                          <th className="p-3">Tiempo Total</th>
-                          <th className="p-3">Puntos</th>
-                          <th className="p-3">Ingresos (€)</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-850">
-                        {gridStatus.map((t) => (
-                          <tr key={t.team_id} className={t.team_id === teamId ? 'bg-red-600/10 font-semibold' : ''}>
-                            <td className="p-3 font-mono font-extrabold text-white text-sm">
-                              {t.finishing_position === null ? '--' : `${t.finishing_position}º`}
-                            </td>
-                            <td className="p-3 text-gray-400 font-mono">P{t.grid_position}</td>
-                            <td className="p-3">{t.pilot_name}</td>
-                            <td className="p-3 text-gray-350">{t.team_name} ({t.owner_name})</td>
-                            <td className="p-3 font-mono">
-                              {t.status === 'DNF_crash' ? (
-                                <span className="text-rose-500 font-bold">DNF (Caída)</span>
-                              ) : (
-                                formatLapTime(t.race_time)
-                              )}
-                            </td>
-                            <td className="p-3 text-emerald-400 font-extrabold text-sm flex items-center gap-1">
-                              <Award className="w-3.5 h-3.5" />
-                              +{t.points_earned} pts
-                            </td>
-                            <td className="p-3 font-mono font-bold text-yellow-500">
-                              +{t.earnings?.toLocaleString()} €
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                <RaceResultsTable gridStatus={gridStatus} teamId={teamId} />
               )}
 
               {/* Historial de Vueltas de la Carrera (si ya finalizó) */}
               {teamId && isRaceFinished && raceLaps.length > 0 && (
-                <div className="bg-[#101017] border border-gray-850 rounded-2xl overflow-hidden">
-                  <div className="p-4 border-b border-gray-850 flex items-center justify-between">
-                    <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
-                      <History className="w-4 h-4 text-gray-500" />
-                      Tu Vuelta a Vuelta en Carrera
-                    </span>
-                  </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs">
-                      <thead className="bg-[#161622] text-gray-400 uppercase tracking-wider font-bold">
-                        <tr>
-                          <th className="p-3">Vuelta</th>
-                          <th className="p-3">Tiempo</th>
-                          <th className="p-3">Desgaste Acumulado</th>
-                          <th className="p-3">Detalles / Incidentes</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-850">
-                        {raceLaps.map((lap) => (
-                          <tr key={lap.id} className={lap.has_crashed ? 'bg-red-950/10 text-red-400' : ''}>
-                            <td className="p-3 font-mono">#{lap.lap_number}</td>
-                            <td className="p-3 font-mono font-bold">
-                              {lap.has_crashed ? 'CAÍDA' : formatLapTime(lap.lap_time)}
-                            </td>
-                            <td className="p-3 font-mono">{lap.tire_wear_pct}%</td>
-                            <td className="p-3 text-xs text-gray-300 italic">
-                              {lap.feedback_received || '--'}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                <SessionLapsHistory laps={raceLaps} title="Tu Vuelta a Vuelta en Carrera" />
               )}
             </div>
           )}
