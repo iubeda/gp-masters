@@ -169,13 +169,13 @@ describe('Championship Endpoints', () => {
 
       // Creator creates a championship
       const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setDate(tomorrow.getDate() + 2);
       const champRes = await request(app)
         .post('/api/championships')
         .set('Authorization', `Bearer ${creatorToken}`)
         .send({
-          name: 'Kick Test Champ',
-          season: 2099,
+          name: 'KickTestChampionship',
+          season: 2026,
           start_date: tomorrow.toISOString().split('T')[0],
           is_public: true
         });
@@ -251,6 +251,50 @@ describe('Championship Endpoints', () => {
 
       expect(res.statusCode).toBe(400);
       expect(res.body.error).toBe('No se pueden expulsar usuarios una vez comenzadas las carreras.');
+    });
+
+    describe('Circuit Bypass Endpoint', () => {
+      let circuitId;
+
+      beforeAll(async () => {
+        // Create a circuit for the test championship
+        const circuitRes = await db.query('SELECT id FROM dictionary_circuits LIMIT 1');
+        circuitId = circuitRes.rows[0].id;
+        
+        // Admin adds circuit
+        await request(app)
+          .post('/api/calendar')
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({ championship_id: champId, circuit_id: circuitId, order: 1 });
+      });
+
+      it('should fail to toggle bypass if user is not admin', async () => {
+        const res = await request(app)
+          .put(`/api/championships/${champId}/circuits/${circuitId}/bypass`)
+          .set('Authorization', `Bearer ${anotherToken}`)
+          .send({ status: true });
+
+        expect(res.statusCode).toBe(403);
+      });
+
+      it('should successfully toggle bypass if user is admin', async () => {
+        const res = await request(app)
+          .put(`/api/championships/${champId}/circuits/${circuitId}/bypass`)
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({ status: true });
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.bypass_restrictions).toBe(true);
+
+        // Verify toggle again
+        const res2 = await request(app)
+          .put(`/api/championships/${champId}/circuits/${circuitId}/bypass`)
+          .set('Authorization', `Bearer ${adminToken}`)
+          .send({ status: false });
+
+        expect(res2.statusCode).toBe(200);
+        expect(res2.body.bypass_restrictions).toBe(false);
+      });
     });
   });
 });

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Wrench, Shield, Zap, Sun, CloudRain, Thermometer, Flag, AlertTriangle, Play,
-  CheckCircle2, HelpCircle, History, MessageSquare, Award, Coins, CalendarDays, Timer, Activity
+  CheckCircle2, HelpCircle, History, MessageSquare, Award, Coins, CalendarDays, Timer, Activity, Unlock
 } from 'lucide-react';
 import { useSocket } from '../../context/SocketContext';
 import { formatLapTime } from '../../utils/timeFormat';
@@ -52,7 +52,11 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
   
   const [practiceLapsInput, setPracticeLapsInput] = useState(5);
   const [qualifyingLapsInput, setQualifyingLapsInput] = useState(1);
-  const [bypassTime, setBypassTime] = useState(false);
+  const [isGlobalBypass, setIsGlobalBypass] = useState(circuit.bypass_restrictions);
+
+  useEffect(() => {
+    setIsGlobalBypass(circuit.bypass_restrictions);
+  }, [circuit.bypass_restrictions]);
   const [simulating, setSimulating] = useState(false);
 
   // Fetch GP simulation status
@@ -168,8 +172,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
           setup_gearbox: setup.gearbox,
           setup_suspension: setup.suspension,
           setup_chassis: setup.chassis,
-          setup_wings: setup.wings,
-          bypassTime
+          setup_wings: setup.wings
         })
       });
       showToast(`¡Tanda de libres completada! Mejor tiempo: ${res.bestTime ? formatLapTime(res.bestTime) : 'Caída'}`, 'success');
@@ -201,8 +204,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
           setup_gearbox: setup.gearbox,
           setup_suspension: setup.suspension,
           setup_chassis: setup.chassis,
-          setup_wings: setup.wings,
-          bypassTime
+          setup_wings: setup.wings
         })
       });
       showToast(`¡Clasificación completada! Mejor tiempo: ${res.bestTime ? formatLapTime(res.bestTime) : 'Caída'}`, 'success');
@@ -254,7 +256,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
         body: JSON.stringify({
           championshipId: championship.id,
           circuitId: circuit.id,
-          bypassTime
+          bypassTime: true // El admin siempre puede forzar la simulación de carrera
         })
       });
       showToast('Simulación en progreso. Cambiando a Live Timing...', 'success');
@@ -289,26 +291,23 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
   return (
     <div className="glass border border-gray-850 rounded-3xl overflow-hidden shadow-2xl space-y-6 bg-gradient-to-b from-[#13131A] to-[#0D0D12] text-white">
       {/* GP Header & Climatología */}
-      <CircuitHeader circuit={circuit} sessionLabel={sessionLabel} currentWeather={currentWeather} />
+      <CircuitHeader circuit={circuit} sessionLabel={sessionLabel} currentWeather={currentWeather} isGlobalBypass={isGlobalBypass} />
 
-      {/* Bypass Horario para Dev testing */}
+      {/* Bypass Horario para Admin */}
       {userRole === 'admin' && (
-        <div className="px-6 flex items-center justify-between bg-yellow-500/5 border border-yellow-500/10 p-3 rounded-2xl mx-6">
+        <div className="px-6 flex items-center justify-between bg-emerald-500/5 border border-emerald-500/10 p-3 rounded-2xl mx-6">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-yellow-500" />
+            <Unlock className="w-4 h-4 text-emerald-500" />
             <span className="text-xs text-gray-400">
-              <strong>Bypass de restricciones horarias:</strong> Actívalo para simular en cualquier momento sin esperar la ventana horaria (12h-15h).
+              <strong>Bypass Global del Gran Premio:</strong> Abre los entrenamientos y clasificación para todos los usuarios sin importar la fecha.
             </span>
           </div>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input 
-              type="checkbox" 
-              checked={bypassTime} 
-              onChange={(e) => setBypassTime(e.target.checked)}
-              className="sr-only peer"
-            />
-            <div className="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-yellow-500"></div>
-          </label>
+          <button
+            onClick={handleToggleGlobalBypass}
+            className={`px-4 py-1.5 text-xs font-bold rounded-xl transition-all ${isGlobalBypass ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'}`}
+          >
+            {isGlobalBypass ? '🔓 Abierto (Bypass ON)' : '🔒 Cerrado (Normal)'}
+          </button>
         </div>
       )}
 
@@ -333,8 +332,8 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
         {/* COL 2 & 3: Sessions Navigation & Telemetry/Leaderboard */}
         <div className="lg:col-span-2 space-y-6">
           {(() => {
-            const isPracticeFuture = todayStr && todayStr < circuit.practice_date;
-            const isQualifyingFuture = todayStr && todayStr < circuit.qualifying_date;
+            const isPracticeFuture = !isGlobalBypass && (todayStr && todayStr < circuit.practice_date);
+            const isQualifyingFuture = !isGlobalBypass && (todayStr && todayStr < circuit.qualifying_date);
             const isRaceFuture = todayStr && todayStr < circuit.race_date;
 
             return (

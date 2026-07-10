@@ -29,6 +29,10 @@ const validateSessionTime = async (championshipId, circuitId, sessionType, bypas
   const circuitSession = calendar.find(c => c.id === parseInt(circuitId));
   if (!circuitSession) throw new Error('Circuit not found in the championship calendar.');
 
+  if (circuitSession.bypass_restrictions && sessionType !== 'race') {
+    return;
+  }
+
   const now = new Date();
   const pad = (n) => n.toString().padStart(2, '0');
   const localDateStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;

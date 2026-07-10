@@ -91,6 +91,7 @@ CREATE TABLE championship_circuits (
     championship_id INT REFERENCES championships(id) ON DELETE CASCADE,
     circuit_id INT REFERENCES dictionary_circuits(id) ON DELETE CASCADE,
     "order" INT NOT NULL,
+    bypass_restrictions BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (championship_id, circuit_id)
 );
 

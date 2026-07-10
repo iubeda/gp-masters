@@ -13,5 +13,6 @@ router.post('/', validateChampionship, championshipController.createChampionship
 router.get('/:id', championshipController.getChampionshipDetail);
 router.get('/:id/teams', teamController.getChampionshipTeams);
 router.post('/:id/kick', championshipController.kickUser);
+router.put('/:id/circuits/:circuitId/bypass', championshipController.toggleBypass);
 
 module.exports = router;
