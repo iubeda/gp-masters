@@ -8,18 +8,18 @@ const SetupCell = ({ value }) => {
   return <span className={`font-mono font-bold ${color}`}>{v > 0 ? `+${v}` : v}</span>;
 };
 
-export default function QualifyingLapsHistory({ qualifyingLaps, teamStatus }) {
-  if (!qualifyingLaps || qualifyingLaps.length === 0) return null;
+export default function DetailedLapsHistory({ laps, title = "Telemetría", bestTime }) {
+  if (!laps || laps.length === 0) return null;
 
   return (
     <div className="bg-[#101017] border border-gray-850 rounded-2xl overflow-hidden">
       <div className="p-4 border-b border-gray-850 flex items-center justify-between">
         <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
           <History className="w-4 h-4 text-gray-500" />
-          Tu Telemetría de Clasificación
+          {title}
         </span>
         <span className="text-xs text-gray-400">
-          Mejor tiempo: <strong className="text-red-400">{teamStatus ? formatLapTime(teamStatus.best_qualifying_time) : '--'}</strong>
+          Mejor tiempo: <strong className="text-red-400">{bestTime ? formatLapTime(bestTime) : '--'}</strong>
         </span>
       </div>
       <div className="overflow-x-auto">
@@ -48,7 +48,7 @@ export default function QualifyingLapsHistory({ qualifyingLaps, teamStatus }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-850">
-            {qualifyingLaps.map((lap) => (
+            {laps.map((lap) => (
               <tr key={lap.id} className={lap.has_crashed ? 'bg-red-950/10 text-red-400' : ''}>
                 <td className="p-3 font-mono">#{lap.lap_number}</td>
                 <td className="p-3">Tanda {lap.stint_number}</td>
