@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Wrench, Shield, Zap, Sun, CloudRain, Thermometer, Flag, AlertTriangle, Play,
-  CheckCircle2, HelpCircle, History, MessageSquare, Award, Coins, CalendarDays, Timer
+  CheckCircle2, HelpCircle, History, MessageSquare, Award, Coins, CalendarDays, Timer, Activity
 } from 'lucide-react';
+import { useSocket } from '../../context/SocketContext';
 
 const formatLapTime = (timeInSeconds) => {
   if (timeInSeconds === null || timeInSeconds === undefined || isNaN(timeInSeconds) || timeInSeconds === 0) {
@@ -34,6 +35,15 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
   };
 
   const [activeTab, setActiveTab] = useState(determineInitialTab); // 'practice', 'qualifying', 'race'
+  
+  // WebSockets Context
+  const { socket } = useSocket();
+  const [liveRace, setLiveRace] = useState({
+    isActive: false,
+    currentLap: 0,
+    totalLaps: 0,
+    standings: []
+  });
   
   // GP State from backend
   const [gpData, setGpData] = useState(null);
@@ -73,6 +83,17 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
           wings: data.teamStatus.race_setup_wings || 0
         });
       }
+      // Detectar si la carrera está en curso (mid-race join)
+      if (data.raceLaps?.length > 0 && data.weather?.race?.status !== 'completed') {
+        // Encontraremos la última vuelta en la telemetría para saber por dónde va
+        const maxLap = Math.max(...data.raceLaps.map(l => l.lap_number));
+        setLiveRace(prev => ({
+          ...prev,
+          isActive: true,
+          currentLap: maxLap,
+          totalLaps: 12
+        }));
+      }
     } catch (error) {
       showToast(error.message, 'error');
     } finally {
@@ -85,6 +106,45 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
       fetchGPStatus();
     }
   }, [championship?.id, circuit?.id]);
+
+  // Socket.IO Listeners
+  useEffect(() => {
+    if (!socket || !championship?.id || !circuit?.id) return;
+
+    const roomId = { championshipId: championship.id, circuitId: circuit.id };
+    socket.emit('join-gp-room', roomId);
+
+    socket.on('qualifying-updated', () => {
+      fetchGPStatus();
+    });
+
+    socket.on('race-started', (data) => {
+      setLiveRace({ isActive: true, currentLap: 0, totalLaps: data.totalLaps, standings: [] });
+      showToast('¡La carrera ha comenzado en vivo!', 'info');
+    });
+
+    socket.on('race-lap', (data) => {
+      setLiveRace(prev => ({
+        ...prev,
+        currentLap: data.lap,
+        standings: data.standings
+      }));
+    });
+
+    socket.on('race-finished', () => {
+      setLiveRace(prev => ({ ...prev, isActive: false }));
+      fetchGPStatus();
+      showToast('¡La carrera ha finalizado!', 'success');
+    });
+
+    return () => {
+      socket.emit('leave-gp-room', roomId);
+      socket.off('qualifying-updated');
+      socket.off('race-started');
+      socket.off('race-lap');
+      socket.off('race-finished');
+    };
+  }, [socket, championship?.id, circuit?.id]);
 
   // Calculate sum of offsets
   const setupSum = setup.engine + setup.gearbox + setup.suspension + setup.chassis + setup.wings;
@@ -206,8 +266,8 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
           bypassTime
         })
       });
-      showToast('¡Carrera simulada! Consulta los resultados.', 'success');
-      fetchGPStatus();
+      showToast('Simulación en progreso. Cambiando a Live Timing...', 'success');
+      setLiveRace(prev => ({ ...prev, isActive: true }));
     } catch (error) {
       showToast(error.message, 'error');
     } finally {
@@ -778,15 +838,15 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                 </div>
               )}
 
-              {/* Botón de Simulación de Carrera */}
-              {!isRaceFinished && userRole === 'admin' && (
+              {/* Botón de Simulación de Carrera (Admin) */}
+              {!isRaceFinished && !liveRace.isActive && userRole === 'admin' && (
                 <div className="bg-gradient-to-r from-yellow-600/10 to-[#101017] border border-yellow-500/20 p-5 rounded-2xl space-y-4">
                   <div className="flex items-center gap-2">
                     <CalendarDays className="w-5 h-5 text-yellow-500" />
                     <h4 className="text-sm font-bold text-yellow-500 uppercase tracking-wider">Simulación de la Carrera</h4>
                   </div>
                   <p className="text-xs text-gray-400">
-                    La carrera es de **12 vueltas**. Se simula de una sola vez a partir de las **14:00h** del día de la carrera.
+                    La carrera se simula de forma progresiva (vuelta a vuelta) para ofrecer Live Timing a todos los usuarios conectados.
                   </p>
                   
                   <button
@@ -794,8 +854,93 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                     onClick={handleSimulateRace}
                     className="w-full py-3 bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-extrabold text-sm rounded-xl transition-all disabled:bg-gray-800 disabled:text-gray-500 flex items-center justify-center gap-1.5 shadow-lg"
                   >
-                    {simulating ? 'Simulando Carrera...' : '¡SIMULAR CARRERA AHORA!'}
+                    {simulating ? 'Iniciando Transmisión...' : '¡INICIAR CARRERA (LIVE)!'}
                   </button>
+                </div>
+              )}
+
+              {/* Live Timing / Broadcasting en progreso */}
+              {liveRace.isActive && (
+                <div className="bg-gradient-to-br from-[#101017] to-[#161622] border border-red-500/30 rounded-2xl overflow-hidden shadow-[0_0_20px_rgba(239,68,68,0.15)] relative">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gray-800">
+                    <div 
+                      className="h-full bg-red-500 transition-all duration-1000 ease-linear"
+                      style={{ width: `${(liveRace.currentLap / liveRace.totalLaps) * 100}%` }}
+                    />
+                  </div>
+                  
+                  <div className="p-5 border-b border-gray-850 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <Activity className="w-5 h-5 text-red-500 relative z-10" />
+                        <div className="absolute inset-0 bg-red-500 blur-md opacity-50 animate-pulse rounded-full" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-extrabold text-white uppercase tracking-wider">Live Timing</h4>
+                        <p className="text-[10px] text-red-400 font-bold uppercase tracking-widest animate-pulse">En Directo</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-2xl font-black text-white font-mono">{liveRace.currentLap}</span>
+                      <span className="text-sm text-gray-500 font-mono font-bold"> / {liveRace.totalLaps}</span>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-widest mt-0.5">Vueltas</p>
+                    </div>
+                  </div>
+
+                  <div className="overflow-x-auto p-4">
+                    {liveRace.standings.length === 0 ? (
+                      <div className="text-center py-10 text-gray-500 text-xs italic">
+                        Esperando el paso por meta de la primera vuelta...
+                      </div>
+                    ) : (
+                      <table className="w-full text-left text-xs border-separate border-spacing-y-1">
+                        <thead className="text-gray-400 uppercase tracking-wider font-bold">
+                          <tr>
+                            <th className="px-3 pb-2">Pos</th>
+                            <th className="px-3 pb-2">Piloto / Equipo</th>
+                            <th className="px-3 pb-2">Tiempo de Vuelta</th>
+                            <th className="px-3 pb-2">Desgaste</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {liveRace.standings.map((s, i) => (
+                            <tr 
+                              key={s.team_id} 
+                              className={`transition-all duration-500 ${s.has_crashed ? 'opacity-50' : ''}`}
+                            >
+                              <td className="p-3">
+                                <div className={`w-6 h-6 flex items-center justify-center rounded-lg font-mono font-bold ${
+                                  i === 0 ? 'bg-yellow-500/20 text-yellow-500 border border-yellow-500/30' : 
+                                  i === 1 ? 'bg-gray-300/20 text-gray-300 border border-gray-300/30' : 
+                                  i === 2 ? 'bg-amber-700/20 text-amber-500 border border-amber-700/30' : 
+                                  'bg-gray-800 text-gray-400'
+                                }`}>
+                                  {s.position}
+                                </div>
+                              </td>
+                              <td className="p-3">
+                                <div className="font-bold text-white text-sm">{s.pilot_name}</div>
+                                <div className="text-[10px] text-gray-400">{s.team_name}</div>
+                                {s.has_crashed && <span className="inline-block mt-1 px-1.5 py-0.5 bg-red-950/50 text-red-500 text-[9px] font-bold uppercase rounded border border-red-500/20">Caída (DNF)</span>}
+                              </td>
+                              <td className="p-3 font-mono font-bold text-emerald-400">
+                                {s.has_crashed ? '--' : formatLapTime(s.last_lap_time)}
+                              </td>
+                              <td className="p-3">
+                                <div className="w-24 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                                  <div 
+                                    className={`h-full ${s.tire_wear_pct > 80 ? 'bg-red-500' : s.tire_wear_pct > 50 ? 'bg-yellow-500' : 'bg-emerald-500'}`}
+                                    style={{ width: `${Math.min(100, s.tire_wear_pct)}%` }}
+                                  />
+                                </div>
+                                <span className="text-[9px] text-gray-500 font-mono mt-1 block">{s.tire_wear_pct.toFixed(1)}%</span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
                 </div>
               )}
 

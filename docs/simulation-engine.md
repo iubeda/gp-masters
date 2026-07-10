@@ -465,6 +465,16 @@ La función `validateSessionTime` en `simulation.service.js` valida que una sesi
 
 El parámetro `bypass = true` (usado por administradores) omite **todas** las validaciones de hora y fecha.
 
+### 5. Carrera y Broadcasting (Live Timing)
+
+El proceso de carrera (endpoint: `/api/simulation/race`) coordina el motor físico con la persistencia y la transmisión en vivo (WebSockets).
+
+**Proceso de Simulación (Live Timing)**
+1. **Verificación**: Confirma si la carrera ya se ha corrido y comprueba los equipos participantes.
+2. **Cálculo Completo Síncrono**: Se calcula la carrera completa vuelta a vuelta (12 vueltas) instantáneamente, incluyendo desgastes, tiempos, caídas y adelantamientos, y se persiste todo en `gp_lap_history`.
+3. **Broadcasting Progresivo**: A través de `socket.service.js`, el backend comienza un bucle que emite el estado de la carrera vuelta a vuelta (`race-lap`) **cada 20 segundos** a los clientes conectados (`room:gp:championshipId:circuitId`).
+4. **Finalización Diferida**: Sólo cuando se termina de emitir la última vuelta (240 segundos después del inicio), se marca el evento como completado en la base de datos (`markWeekendCompleted`) y se emite el evento `race-finished`.
+
 ---
 
 ## 6. Restricciones del Sistema de Setup
