@@ -47,7 +47,7 @@ beforeAll(async () => {
 
   // Crear campeonato como admin
   const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setDate(tomorrow.getDate() + 2);
   const champRes = await request(app)
     .post('/api/championships')
     .set('Authorization', `Bearer ${adminToken}`)
@@ -124,6 +124,36 @@ describe('GET /api/simulation/status/:championshipId/:circuitId', () => {
 // ---------------------------------------------------------------------------
 
 describe('POST /api/simulation/practice-stint', () => {
+  it('stint rechazado por tiempo si no hay bypass global ni flag bypassTime', async () => {
+    const res = await request(app)
+      .post('/api/simulation/practice-stint')
+      .set('Authorization', `Bearer ${playerToken}`)
+      .send({ championship_id: championshipId, circuit_id: circuitId, laps: 1, ...validSetup, bypassTime: false });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toMatch(/(programada para la fecha|abierta de 12:00h a 15:00h)/i);
+  });
+
+  it('stint permitido por tiempo usando el Global Bypass a nivel de BD', async () => {
+    // Admin activates global bypass
+    await request(app)
+      .put(`/api/championships/${championshipId}/circuits/${circuitId}/bypass`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ status: true });
+
+    // Player sends stint WITHOUT local bypassTime flag
+    const res = await request(app)
+      .post('/api/simulation/practice-stint')
+      .set('Authorization', `Bearer ${playerToken}`)
+      .send({ championship_id: championshipId, circuit_id: circuitId, laps: 1, ...validSetup, bypassTime: false });
+
+    if (res.statusCode !== 200) {
+      console.log('STINT PERMITIDO ERROR:', res.body);
+    }
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty('simulatedLaps');
+  });
+
   it('stint válido → 200 con simulatedLaps, bestTime y feedback', async () => {
     const res = await request(app)
       .post('/api/simulation/practice-stint')

@@ -46,7 +46,7 @@ const findById = async (id) => {
 
 const findCalendarCircuits = async (championshipId, startDate) => {
   const queryText = `
-    SELECT c.id, c.name, c.distance, c.curves_right, c.curves_left, c.curves_rects_ratio, c.asphalt_wear, cc.order,
+    SELECT c.id, c.name, c.distance, c.curves_right, c.curves_left, c.curves_rects_ratio, c.asphalt_wear, cc.order, cc.bypass_restrictions,
            COALESCE(rw.status, 'scheduled') AS status
     FROM championship_circuits cc
     JOIN dictionary_circuits c ON cc.circuit_id = c.id
@@ -101,6 +101,17 @@ const getKickStatus = async (userEmail, championshipId) => {
   return result.rows[0] || null;
 };
 
+const toggleCircuitBypass = async (championshipId, circuitId, status) => {
+  const queryText = `
+    UPDATE championship_circuits
+    SET bypass_restrictions = $1
+    WHERE championship_id = $2 AND circuit_id = $3
+    RETURNING *
+  `;
+  const result = await db.query(queryText, [status, championshipId, circuitId]);
+  return result.rows[0];
+};
+
 module.exports = {
   create,
   findAll,
@@ -110,4 +121,5 @@ module.exports = {
   countCircuits,
   countCompletedRaces,
   getKickStatus,
+  toggleCircuitBypass
 };

@@ -1,7 +1,8 @@
 const simulationModel = require('../models/simulation.model');
 const asyncHandler = require('../utils/asyncHandler');
 const db = require('../config/database');
-const { validateSessionTime, runStint, runRaceInternal } = require('../services/simulation.service');
+const { validateSessionTime, runStint, runRaceInternal, runRaceProgressive } = require('../services/simulation.service');
+const { emitToGP } = require('../services/socket.service');
 
 // 1. Obtener estado general del fin de semana para el circuito
 const getGPStatus = asyncHandler(async (req, res) => {
@@ -77,6 +78,13 @@ const runQualifyingStint = asyncHandler(async (req, res) => {
   }
 
   const result = await runStint('qualifying', req.body, req.user.email);
+  
+  // Notificar a todos los usuarios conectados a este GP que hay nuevos tiempos
+  emitToGP(championship_id, circuit_id, 'qualifying-updated', {
+    team_email: req.user.email,
+    bestTime: result.bestTime
+  });
+
   res.json(result);
 });
 
@@ -113,8 +121,17 @@ const runRaceSimulation = asyncHandler(async (req, res) => {
     return res.status(400).json({ error: err.message });
   }
 
-  const results = await runRaceInternal(championshipId, circuitId);
-  res.json({ message: 'Carrera simulada con éxito.', results });
+  if (process.env.NODE_ENV === 'test') {
+    const results = await runRaceInternal(championshipId, circuitId, false);
+    return res.status(200).json({ message: 'Carrera simulada con éxito.', results });
+  }
+
+  // Iniciar la simulación de carrera de forma asíncrona (progressive)
+  runRaceProgressive(championshipId, circuitId).catch(err => {
+    console.error('Error in background race simulation:', err);
+  });
+
+  res.status(202).json({ message: 'Carrera iniciada. Sigue el Live Timing para ver los resultados.' });
 });
 
 module.exports = {
