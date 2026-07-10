@@ -9,7 +9,7 @@ exports.shorthands = undefined;
  * @returns {Promise<void> | void}
  */
 exports.up = (pgm) => {
-  pgm.sql(`
+    pgm.sql(`
     -- Users table
     CREATE TABLE users (
         email VARCHAR(255) PRIMARY KEY,
@@ -91,6 +91,7 @@ exports.up = (pgm) => {
         championship_id INT REFERENCES championships(id) ON DELETE CASCADE,
         circuit_id INT REFERENCES dictionary_circuits(id) ON DELETE CASCADE,
         "order" INT NOT NULL,
+        bypass_restrictions BOOLEAN DEFAULT FALSE,
         PRIMARY KEY (championship_id, circuit_id)
     );
 
@@ -230,7 +231,7 @@ exports.up = (pgm) => {
  * @returns {Promise<void> | void}
  */
 exports.down = (pgm) => {
-  pgm.sql(`
+    pgm.sql(`
     DROP TABLE IF EXISTS gp_lap_history CASCADE;
     DROP TABLE IF EXISTS gp_team_status CASCADE;
     DROP TABLE IF EXISTS race_weekends CASCADE;

@@ -29,6 +29,10 @@ const validateSessionTime = async (championshipId, circuitId, sessionType, bypas
   const circuitSession = calendar.find(c => c.id === parseInt(circuitId));
   if (!circuitSession) throw new Error('Circuit not found in the championship calendar.');
 
+  if (circuitSession.bypass_restrictions && sessionType !== 'race') {
+    return;
+  }
+
   const now = new Date();
   const pad = (n) => n.toString().padStart(2, '0');
   const localDateStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
@@ -341,11 +345,13 @@ const runRaceInternal = async (championshipId, circuitId, progressive = false) =
         team_id: s.team.team_id,
         team_name: s.team.team_name,
         pilot_name: s.team.pilot_name,
+        grid_position: s.grid_position,
         last_lap_time: s.laps_history[s.laps_history.length - 1]?.lap_time,
         total_time: s.total_race_time,
         has_crashed: s.has_crashed,
         best_lap: s.best_lap === 999.9 ? null : s.best_lap,
-        tire_wear_pct: s.tire_wear_pct
+        tire_wear_pct: s.tire_wear_pct,
+        tire_type: s.status.race_tire_type || 'medium'
       }));
 
       emitToGP(championshipId, circuitId, 'race-lap', { lap, standings: currentStandings });

@@ -53,7 +53,15 @@ const StandingsTable = ({ teams, user, isCreator, championship, onKick }) => {
                 const isOwner =
                   team.user_email &&
                   team.user_email.toLowerCase() === user.email.toLowerCase();
-                const canKick = canShowActions && !isOwner;
+                  
+                const isCreatorTeam = 
+                  team.user_email && 
+                  championship.created_by && 
+                  team.user_email.toLowerCase() === championship.created_by.toLowerCase();
+                  
+                const hasRaced = team.races_completed > 0;
+                
+                const canKick = canShowActions && !isOwner && !isCreatorTeam && !hasRaced;
 
                 return (
                   <tr
