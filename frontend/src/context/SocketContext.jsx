@@ -5,12 +5,12 @@ import { useAuth } from './AuthContext';
 const SocketContext = createContext(null);
 
 export const SocketProvider = ({ children }) => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    // Solo conectar si hay un usuario autenticado
-    if (!user) {
+    // Solo conectar si hay un usuario autenticado y token disponible
+    if (!user || !token) {
       if (socket) {
         socket.disconnect();
         setSocket(null);
@@ -18,9 +18,11 @@ export const SocketProvider = ({ children }) => {
       return;
     }
 
-    // Inicializar conexión
+    // Inicializar conexión enviando el token
     const socketUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-    const newSocket = io(socketUrl);
+    const newSocket = io(socketUrl, {
+      auth: { token }
+    });
 
     newSocket.on('connect', () => {
       console.log('🔌 Conectado al servidor de WebSockets');
