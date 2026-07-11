@@ -17,8 +17,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = useCallback(async () => {
     try {
-      const baseUrl = import.meta.env.VITE_API_URL || '';
-      await fetch(`${baseUrl}/api/auth/logout`, { method: 'POST', credentials: 'include' });
+      await fetch('/api/auth/logout', { method: 'POST' });
     } catch (e) {
       console.error('Logout failed:', e);
     }
@@ -27,15 +26,12 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Helper function to perform authenticated API calls
-  const apiFetch = useCallback(async (endpoint, options = {}) => {
+  const apiFetch = useCallback(async (url, options = {}) => {
     const headers = {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
       ...options.headers,
     };
-
-    const baseUrl = import.meta.env.VITE_API_URL || '';
-    const url = endpoint.startsWith('http') ? endpoint : `${baseUrl}${endpoint}`;
 
     const response = await fetch(url, {
       ...options,
