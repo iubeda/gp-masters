@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import { supabase } from '../utils/supabaseClient';
 
 const AuthContext = createContext(null);
 
@@ -7,16 +8,65 @@ export const AuthProvider = ({ children }) => {
     const savedUser = localStorage.getItem('motogp_user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Sync Supabase Auth state changes
+  useEffect(() => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        try {
+          // Sync with our backend to get the full user object (role, username)
+          const response = await fetch('/api/auth/sync', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest',
+              'Authorization': `Bearer ${session.access_token}`
+            }
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            setUser(data.user);
+            localStorage.setItem('motogp_user', JSON.stringify(data.user));
+          }
+        } catch (error) {
+          console.error('Error syncing Supabase user:', error);
+        }
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        localStorage.removeItem('motogp_user');
+      }
+      setLoading(false);
+    });
+
+    // Initial session check
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, []);
 
   const login = useCallback((userData) => {
     setUser(userData);
-    // Removed localStorage.setItem('motogp_token', jwtToken);
     localStorage.setItem('motogp_user', JSON.stringify(userData));
   }, []);
 
   const logout = useCallback(async () => {
     try {
+      if (supabase) {
+        await supabase.auth.signOut();
+      }
       await fetch('/api/auth/logout', { method: 'POST' });
     } catch (e) {
       console.error('Logout failed:', e);
@@ -33,10 +83,18 @@ export const AuthProvider = ({ children }) => {
       ...options.headers,
     };
 
+    // If we have a Supabase session, append the token
+    if (supabase) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
+    }
+
     const response = await fetch(url, {
       ...options,
       headers,
-      credentials: 'include',
+      credentials: 'include', // Important for local cookie-based auth
     });
 
     if (response.status === 401) {
@@ -54,8 +112,8 @@ export const AuthProvider = ({ children }) => {
   }, [logout]);
 
   const contextValue = React.useMemo(() => ({
-    user, login, logout, apiFetch, isAuthenticated: !!user
-  }), [user, login, logout, apiFetch]);
+    user, login, logout, apiFetch, isAuthenticated: !!user, loading
+  }), [user, login, logout, apiFetch, loading]);
 
   return (
     <AuthContext.Provider value={contextValue}>

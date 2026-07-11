@@ -87,8 +87,37 @@ const logout = asyncHandler(async (req, res) => {
   res.json({ message: 'Logged out successfully.' });
 });
 
+const sync = asyncHandler(async (req, res) => {
+  // The user should already be attached by the auth middleware if the token was valid.
+  // The auth middleware parses the Supabase JWT and gets the email.
+  const email = req.user.email;
+
+  let user = await userModel.findByEmail(email);
+
+  if (!user) {
+    // Generate a random username: Manager_XXXXX
+    const randomSuffix = Math.floor(10000 + Math.random() * 90000);
+    const username = `Manager_${randomSuffix}`;
+
+    // Create user in local DB without a password hash
+    user = await userModel.create(email, username, null);
+  } else {
+    await userModel.updateLastLogin(email);
+  }
+
+  res.json({
+    message: 'User synchronized successfully.',
+    user: {
+      email: user.email,
+      username: user.username,
+      role: user.role
+    }
+  });
+});
+
 module.exports = {
   register,
   login,
-  logout
+  logout,
+  sync
 };
