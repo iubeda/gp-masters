@@ -1,6 +1,7 @@
 const app = require('./app');
 const database = require('./config/database');
 const logger = require('./utils/logger');
+const http = require('http');
 require('dotenv').config();
 
 if (!process.env.JWT_SECRET && process.env.NODE_ENV !== 'test') {
@@ -20,7 +21,7 @@ database.initializeDatabase().then(() => {
   initSocket(server);
 
   // Start Server
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     logger.info(`MotoGP Manager backend running on port ${PORT}`);
 
     // Start the background automatic simulation scheduler
