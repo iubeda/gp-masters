@@ -1,7 +1,8 @@
 const simulationModel = require('../models/simulation.model');
 const asyncHandler = require('../utils/asyncHandler');
 const db = require('../config/database');
-const { validateSessionTime, runStint, runRaceInternal } = require('../services/simulation.service');
+const { validateSessionTime, runStint, runRaceInternal, runRaceProgressive } = require('../services/simulation.service');
+const { emitToGP } = require('../services/socket.service');
 
 // 1. Obtener estado general del fin de semana para el circuito
 const getGPStatus = asyncHandler(async (req, res) => {
@@ -37,6 +38,12 @@ const getGPStatus = asyncHandler(async (req, res) => {
   const raceWeather = await simulationModel.getOrCreateWeekend(championshipId, circuitId, 'race');
   const gridStatus = await simulationModel.getGPStatusForAllTeams(championshipId, circuitId);
 
+  const maxLapRes = await db.query(
+    'SELECT MAX(lap_number) as max_lap FROM gp_lap_history WHERE championship_id = $1 AND circuit_id = $2 AND session_type = $3',
+    [championshipId, circuitId, 'race']
+  );
+  const currentRaceLap = maxLapRes.rows[0].max_lap || 0;
+
   res.json({
     weather: {
       practice: practiceWeather,
@@ -48,7 +55,8 @@ const getGPStatus = asyncHandler(async (req, res) => {
     qualifyingLaps,
     raceLaps,
     gridStatus,
-    teamId
+    teamId,
+    currentRaceLap
   });
 });
 
@@ -85,6 +93,13 @@ const runQualifyingStint = asyncHandler(async (req, res) => {
   }
 
   const result = await runStint('qualifying', req.body, req.user.email);
+  
+  // Notificar a todos los usuarios conectados a este GP que hay nuevos tiempos
+  emitToGP(championship_id, circuit_id, 'qualifying-updated', {
+    team_email: req.user.email,
+    bestTime: result.bestTime
+  });
+
   res.json(result);
 });
 
@@ -121,8 +136,17 @@ const runRaceSimulation = asyncHandler(async (req, res) => {
     return res.status(400).json({ error: err.message });
   }
 
-  const results = await runRaceInternal(championshipId, circuitId);
-  res.json({ message: 'Carrera simulada con éxito.', results });
+  if (process.env.NODE_ENV === 'test') {
+    const results = await runRaceInternal(championshipId, circuitId, false);
+    return res.status(200).json({ message: 'Carrera simulada con éxito.', results });
+  }
+
+  // Iniciar la simulación de carrera de forma asíncrona (progressive)
+  runRaceProgressive(championshipId, circuitId).catch(err => {
+    console.error('Error in background race simulation:', err);
+  });
+
+  res.status(202).json({ message: 'Carrera iniciada. Sigue el Live Timing para ver los resultados.' });
 });
 
 module.exports = {

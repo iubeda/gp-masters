@@ -7,6 +7,7 @@ const db = require('../config/database');
 const simulationModel = require('../models/simulation.model');
 const championshipModel = require('../models/championship.model');
 const engine = require('./simulation.engine');
+const { emitToGP } = require('./socket.service');
 
 // ---------------------------------------------------------------------------
 // validateSessionTime — Validación de restricciones horarias
@@ -27,6 +28,10 @@ const validateSessionTime = async (championshipId, circuitId, sessionType, bypas
   const calendar = await championshipModel.findCalendarCircuits(championshipId, championship.start_date);
   const circuitSession = calendar.find(c => c.id === parseInt(circuitId));
   if (!circuitSession) throw new Error('Circuit not found in the championship calendar.');
+
+  if (circuitSession.bypass_restrictions && sessionType !== 'race') {
+    return;
+  }
 
   const now = new Date();
   const pad = (n) => n.toString().padStart(2, '0');
@@ -199,7 +204,7 @@ const runStint = async (sessionType, params, userEmail) => {
  * @param {string|number} circuitId
  * @returns {Array} Resumen de resultados por equipo
  */
-const runRaceInternal = async (championshipId, circuitId) => {
+const runRaceInternal = async (championshipId, circuitId, progressive = false) => {
   // Comprobar si la carrera ya fue simulada
   const checkRes = await db.query(
     'SELECT COUNT(*)::int FROM gp_team_status WHERE championship_id = $1 AND circuit_id = $2 AND finishing_position IS NOT NULL',
@@ -237,6 +242,13 @@ const runRaceInternal = async (championshipId, circuitId) => {
   pilotStates.forEach((state, index) => { state.grid_position = index + 1; });
 
   const totalLaps = engine.RACE_LAPS;
+
+  if (progressive) {
+    emitToGP(championshipId, circuitId, 'race-started', { totalLaps });
+  }
+
+  // Marcar el fin de semana como 'in_progress' para que se sepa que la carrera ha comenzado
+  await simulationModel.markWeekendInProgress(championshipId, circuitId);
 
   // Loop vuelta a vuelta
   for (let lap = 1; lap <= totalLaps; lap++) {
@@ -323,6 +335,35 @@ const runRaceInternal = async (championshipId, circuitId) => {
         }
       }
     }
+
+    if (progressive) {
+      // Sort for current standings to broadcast
+      const currentStandings = [...pilotStates].sort((a, b) => {
+        if (a.has_crashed && b.has_crashed) return b.laps_history.length - a.laps_history.length;
+        if (a.has_crashed) return 1;
+        if (b.has_crashed) return -1;
+        return a.total_race_time - b.total_race_time;
+      }).map((s, idx) => ({
+        position: idx + 1,
+        team_id: s.team.team_id,
+        team_name: s.team.team_name,
+        pilot_name: s.team.pilot_name,
+        grid_position: s.grid_position,
+        last_lap_time: s.laps_history[s.laps_history.length - 1]?.lap_time,
+        total_time: s.total_race_time,
+        has_crashed: s.has_crashed,
+        best_lap: s.best_lap === 999.9 ? null : s.best_lap,
+        tire_wear_pct: s.tire_wear_pct,
+        tire_type: s.status.race_tire_type || 'medium'
+      }));
+
+      emitToGP(championshipId, circuitId, 'race-lap', { lap, standings: currentStandings });
+      
+      // Wait 20 seconds before next lap, unless it's the last lap
+      if (lap < totalLaps) {
+        await new Promise(resolve => setTimeout(resolve, 20000));
+      }
+    }
   }
 
   // Clasificación final
@@ -373,11 +414,20 @@ const runRaceInternal = async (championshipId, circuitId) => {
 
   await simulationModel.markWeekendCompleted(championshipId, circuitId);
 
+  if (progressive) {
+    emitToGP(championshipId, circuitId, 'race-finished', { results: resultsSummary });
+  }
+
   return resultsSummary;
+};
+
+const runRaceProgressive = async (championshipId, circuitId) => {
+  return runRaceInternal(championshipId, circuitId, true);
 };
 
 module.exports = {
   validateSessionTime,
   runStint,
   runRaceInternal,
+  runRaceProgressive,
 };

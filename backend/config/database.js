@@ -18,22 +18,19 @@ const initializeDatabase = async () => {
     return;
   }
   try {
-    const schemaPath = path.join(__dirname, '..', 'schema.sql');
-    const schemaSql = fs.readFileSync(schemaPath, 'utf8');
-    
-    // Execute DDL
-    await pool.query(schemaSql);
-    logger.info('Database initialized successfully with schema and base seeds.');
+    // Las tablas ahora se crean mediante node-pg-migrate en el arranque (ver package.json)
 
+    // Opcional: mantener el seeding de test (si no se movió a una migración)
     if (process.env.SEED_TEST_DATA === 'true') {
       const seedPath = path.join(__dirname, '..', 'seed_championship.sql');
-      const seedSql = fs.readFileSync(seedPath, 'utf8');
-      await pool.query(seedSql);
-      logger.info('Test championship data seeded successfully.');
+      if (fs.existsSync(seedPath)) {
+        const seedSql = fs.readFileSync(seedPath, 'utf8');
+        await pool.query(seedSql);
+        console.log('Test championship data seeded successfully.');
+      }
     }
   } catch (error) {
-    logger.error(`Error initializing database: ${error.message}`, { stack: error.stack });
-    process.exit(1);
+    console.error('Error initializing database seeds:', error);
   }
 };
 

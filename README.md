@@ -72,7 +72,7 @@ Este método es ideal para levantar todo el ecosistema (Base de Datos + Backend 
 3.  **Acceder a la aplicación:**
     *   **Frontend (Nginx):** Abre tu navegador en [http://localhost:3000](http://localhost:3000)
     *   **Backend (API):** Disponible en [http://localhost:5000](http://localhost:5000) (las llamadas desde el frontend se redirigen automáticamente a través de Nginx).
-    *   **Base de datos:** Postgres se levantará internamente en el puerto `5432`. El backend inicializará automáticamente el esquema SQL (`schema.sql`) y las semillas de datos en el primer arranque.
+    *   **Base de datos:** Postgres se levantará internamente en el puerto `5432`. El backend ejecutará automáticamente las migraciones (`node-pg-migrate`) para inicializar el esquema y los datos en el primer arranque.
 
 ---
 
@@ -103,7 +103,9 @@ Si deseas modificar el código en tiempo real con recarga automática sin recons
     ```bash
     npm run dev
     ```
-    El servidor backend se iniciará en [http://localhost:5000](http://localhost:5000) y nodemon recargará automáticamente el servidor ante cambios de código. En el inicio, el script de inicialización cargará el esquema SQL y los datos iniciales de forma automática.
+    El servidor backend se iniciará en [http://localhost:5000](http://localhost:5000) y nodemon recargará automáticamente el servidor ante cambios de código.
+    
+    *(Nota: El esquema de base de datos se maneja mediante migraciones con `node-pg-migrate`. Para aplicar cambios o inicializar la BBDD, ejecuta `npm run migrate:up`)*.
 
 #### 3. Configurar y Arrancar el Frontend
 1.  Abre una nueva terminal y navega al directorio del frontend:

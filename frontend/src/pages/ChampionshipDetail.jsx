@@ -65,7 +65,7 @@ const ChampionshipDetail = ({ showToast }) => {
     [championship, user.email]
   );
   const activeGP = useMemo(
-    () => championship?.circuits?.find((c) => c.status === 'scheduled'),
+    () => championship?.circuits?.find((c) => c.status === 'scheduled' || c.status === 'in_progress'),
     [championship]
   );
 

@@ -31,7 +31,11 @@ const findRegisteredTeams = async (championshipId) => {
            m.engine, m.gearbox, m.suspension, m.chassis, m.wings,
            (SELECT COALESCE(SUM(s.points_earned), 0)::int 
             FROM gp_team_status s 
-            WHERE s.team_id = t.id AND s.championship_id = $1) AS total_points
+            WHERE s.team_id = t.id AND s.championship_id = $1) AS total_points,
+           (SELECT COUNT(*)::int
+            FROM gp_team_status s
+            JOIN race_weekends rw ON s.championship_id = rw.championship_id AND s.circuit_id = rw.circuit_id
+            WHERE s.team_id = t.id AND rw.session_type = 'race' AND rw.status = 'completed') AS races_completed
     FROM teams t
     JOIN dictionary_pilots p ON t.pilot_id = p.id
     JOIN users u ON t.user_email = u.email

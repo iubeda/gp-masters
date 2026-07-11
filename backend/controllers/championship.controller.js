@@ -208,10 +208,38 @@ const kickUser = asyncHandler(async (req, res) => {
   res.json({ message: 'Usuario expulsado correctamente con el motivo especificado.' });
 });
 
+const toggleBypass = asyncHandler(async (req, res) => {
+  const { id, circuitId } = req.params;
+  const { status } = req.body;
+  const currentUser = req.user.email;
+  const userRole = req.user.role;
+
+  const championship = await championshipModel.findById(id);
+  if (!championship) {
+    return res.status(404).json({ error: 'Championship not found.' });
+  }
+
+  const createdBy = championship.created_by;
+  const isAdmin = userRole === 'admin';
+  const isCreator = createdBy && createdBy.toLowerCase() === currentUser.toLowerCase();
+
+  if (!isCreator && !isAdmin) {
+    return res.status(403).json({ error: 'Solo el creador o un administrador puede habilitar el Bypass Global.' });
+  }
+
+  const updated = await championshipModel.toggleCircuitBypass(id, circuitId, status === true || status === 'true');
+  if (!updated) {
+    return res.status(404).json({ error: 'Circuit not found in the championship calendar.' });
+  }
+
+  res.json({ message: 'Bypass status updated successfully.', bypass_restrictions: updated.bypass_restrictions });
+});
+
 module.exports = {
   createChampionship,
   getChampionships,
   getChampionshipDetail,
   addCalendarCircuit,
-  kickUser
+  kickUser,
+  toggleBypass
 };

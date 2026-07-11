@@ -8,7 +8,7 @@
 > - [`backend/services/simulation.engine.js`](../backend/services/simulation.engine.js) — Motor puro de cálculo físico
 > - [`backend/models/simulation.model.js`](../backend/models/simulation.model.js) — Modelo de datos y queries
 > - [`backend/utils/scheduler.js`](../backend/utils/scheduler.js) — Simulación automática de carreras
-> - [`backend/schema.sql`](../backend/schema.sql) — Esquema de base de datos
+> - [`backend/migrations/`](../backend/migrations/) — Archivos de migración de base de datos (`node-pg-migrate`)
 
 ---
 
@@ -465,6 +465,16 @@ La función `validateSessionTime` en `simulation.service.js` valida que una sesi
 
 El parámetro `bypass = true` (usado por administradores) omite **todas** las validaciones de hora y fecha.
 
+### 5. Carrera y Broadcasting (Live Timing)
+
+El proceso de carrera (endpoint: `/api/simulation/race`) coordina el motor físico con la persistencia y la transmisión en vivo (WebSockets).
+
+**Proceso de Simulación (Live Timing)**
+1. **Verificación**: Confirma si la carrera ya se ha corrido y comprueba los equipos participantes.
+2. **Cálculo Completo Síncrono**: Se calcula la carrera completa vuelta a vuelta (12 vueltas) instantáneamente, incluyendo desgastes, tiempos, caídas y adelantamientos, y se persiste todo en `gp_lap_history`.
+3. **Broadcasting Progresivo**: A través de `socket.service.js`, el backend comienza un bucle que emite el estado de la carrera vuelta a vuelta (`race-lap`) **cada 20 segundos** a los clientes conectados (`room:gp:championshipId:circuitId`). Además, el estado del fin de semana en la base de datos se marca como `in_progress` para que los usuarios que recarguen la página vean correctamente el estado de "En curso" y se unan al Live Timing sin duplicar simulaciones.
+4. **Finalización Diferida**: Sólo cuando se termina de emitir la última vuelta (240 segundos después del inicio), se marca el evento como completado en la base de datos (`markWeekendCompleted`) y se emite el evento `race-finished`.
+
 ---
 
 ## 6. Restricciones del Sistema de Setup
@@ -507,7 +517,7 @@ erDiagram
         int rain_percentage
         int temp_ambient
         int temp_asphalt
-        string status
+        string status "'pending' | 'in_progress' | 'completed'"
     }
     
     gp_team_status {

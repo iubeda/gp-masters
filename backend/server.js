@@ -12,10 +12,17 @@ const PORT = process.env.PORT || 5000;
 
 // Initialize Database DDL and Seeds
 database.initializeDatabase().then(() => {
+  // Create HTTP server from Express app
+  const server = http.createServer(app);
+
+  // Initialize Socket.IO
+  const { initSocket } = require('./services/socket.service');
+  initSocket(server);
+
   // Start Server
   app.listen(PORT, () => {
     logger.info(`MotoGP Manager backend running on port ${PORT}`);
-    
+
     // Start the background automatic simulation scheduler
     const { startScheduler } = require('./utils/scheduler');
     startScheduler();

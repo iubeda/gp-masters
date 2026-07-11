@@ -33,6 +33,17 @@ const setupTestDatabase = async () => {
   console.log = () => {};
   
   try {
+    // Run migrations dynamically on test database
+    const { runner } = require('node-pg-migrate');
+    const path = require('path');
+    await runner({
+      databaseUrl: process.env.DATABASE_URL || 'postgresql://motogp_user:motogp_password@localhost:5432/motogp_test',
+      dir: path.join(__dirname, '..', 'migrations'),
+      direction: 'up',
+      migrationsTable: 'pgmigrations',
+      log: () => {}, // silence migration logs in tests
+    });
+
     await database.initializeDatabase();
   } finally {
     console.log = originalLog;
