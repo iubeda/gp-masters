@@ -8,11 +8,20 @@ const validateRegister = (req, res, next) => {
   username = username.trim();
   req.body.username = username;
 
-  if (!email.includes('@')) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
     return res.status(400).json({ error: 'Invalid email address format.' });
   }
-  if (password.length < 4) {
-    return res.status(400).json({ error: 'Password must be at least 4 characters long.' });
+  
+  // Strong password policy: minimum 8 characters, uppercase, lowercase, number, special char
+  if (password.length < 8) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters long.' });
+  }
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({ 
+      error: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).' 
+    });
   }
 
   // Validate username length
@@ -42,6 +51,9 @@ const validateChampionship = (req, res, next) => {
   if (!name || !season || !start_date) {
     return res.status(400).json({ error: 'Championship name, season, and start date are required.' });
   }
+  if (name.length > 100) {
+    return res.status(400).json({ error: 'Championship name must be 100 characters or less.' });
+  }
 
   // Validate start_date is in the future
   const start = new Date(start_date);
@@ -70,6 +82,9 @@ const validateTeam = (req, res, next) => {
   if (!name || !championship_id) {
     return res.status(400).json({ error: 'Team name and championship_id are required.' });
   }
+  if (name.length > 100) {
+    return res.status(400).json({ error: 'Team name must be 100 characters or less.' });
+  }
   next();
 };
 
@@ -82,13 +97,27 @@ const validateCalendar = (req, res, next) => {
 };
 
 const validatePasswordUpdate = (req, res, next) => {
-  const { new_password } = req.body;
+  const { current_password, new_password } = req.body;
+  
+  if (!current_password) {
+    return res.status(400).json({ error: 'Current password is required.' });
+  }
+  
   if (!new_password) {
     return res.status(400).json({ error: 'New password is required.' });
   }
-  if (new_password.length < 4) {
-    return res.status(400).json({ error: 'Password must be at least 4 characters long.' });
+  
+  // Strong password policy: minimum 8 characters, uppercase, lowercase, number, special char
+  if (new_password.length < 8) {
+    return res.status(400).json({ error: 'New password must be at least 8 characters long.' });
   }
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+  if (!passwordRegex.test(new_password)) {
+    return res.status(400).json({ 
+      error: 'New password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).' 
+    });
+  }
+  
   next();
 };
 

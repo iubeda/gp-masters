@@ -1,6 +1,8 @@
 const championshipModel = require('../models/championship.model');
 const teamModel = require('../models/team.model');
 const db = require('../config/database');
+const bcrypt = require('bcryptjs');
+const { encrypt, decrypt } = require('../utils/encryption');
 const asyncHandler = require('../utils/asyncHandler');
 
 const createChampionship = asyncHandler(async (req, res) => {
@@ -33,10 +35,14 @@ const createChampionship = asyncHandler(async (req, res) => {
   // Validate time_restricted (boolean)
   const isTimeRestricted = time_restricted !== false && time_restricted !== 'false';
 
-  const privatePin = isPublic ? null : pin;
+  // Encrypt PIN for private championships so creator can see it later
+  let encryptedPin = null;
+  if (!isPublic && pin) {
+    encryptedPin = encrypt(pin);
+  }
 
   const championship = await championshipModel.create(
-    name, season, start_date, createdBy, isPublic, privatePin,
+    name, season, start_date, createdBy, isPublic, encryptedPin,
     parsedMaxCircuits, parsedMaxTeams, isTimeRestricted
   );
   res.status(201).json(championship);
@@ -53,6 +59,7 @@ const getChampionships = asyncHandler(async (req, res) => {
       [userEmail, champ.id]
     );
     champ.is_kicked = teamRes.rows.length > 0 ? teamRes.rows[0].is_kicked : false;
+    champ.pin = null; // Hide PIN in the general list endpoint
   }
 
   res.json(championships);
@@ -85,7 +92,16 @@ const getChampionshipDetail = asyncHandler(async (req, res) => {
   if (!championship.is_public && !isMember && !isAdmin) {
     // Hide circuits list/calendar
     championship.circuits = [];
+    championship.pin = null;
     return res.json(championship);
+  }
+
+  // Only expose decrypted PIN to creator and admin
+  const isCreator = championship.created_by && championship.created_by.toLowerCase() === userEmail.toLowerCase();
+  if (championship.pin && (isCreator || isAdmin)) {
+    championship.pin = decrypt(championship.pin);
+  } else {
+    championship.pin = null;
   }
 
   // Fetch circuits calendar with calculated dates

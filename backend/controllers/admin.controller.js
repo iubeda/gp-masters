@@ -43,19 +43,32 @@ const validDictionaries = ['motorcycles', 'pilots', 'circuits'];
 
 const getDictionary = asyncHandler(async (req, res) => {
   const { type } = req.params;
-  if (!validDictionaries.includes(type)) {
+  const tableMap = {
+    motorcycles: 'dictionary_motorcycles',
+    pilots: 'dictionary_pilots',
+    circuits: 'dictionary_circuits'
+  };
+  const tableName = tableMap[type];
+
+  if (!tableName) {
     return res.status(400).json({ error: 'Invalid dictionary type' });
   }
 
-  const result = await db.query(`SELECT * FROM dictionary_${type} ORDER BY id ASC`);
+  const result = await db.query(`SELECT * FROM ${tableName} ORDER BY id ASC`);
   res.json(result.rows);
 });
 
 const addDictionaryRecord = asyncHandler(async (req, res) => {
   const { type } = req.params;
   const data = req.body;
+  const tableMap = {
+    motorcycles: 'dictionary_motorcycles',
+    pilots: 'dictionary_pilots',
+    circuits: 'dictionary_circuits'
+  };
+  const tableName = tableMap[type];
 
-  if (!validDictionaries.includes(type)) {
+  if (!tableName) {
     return res.status(400).json({ error: 'Invalid dictionary type' });
   }
 
@@ -67,27 +80,36 @@ const addDictionaryRecord = asyncHandler(async (req, res) => {
     if (!model_name || engine === undefined || gearbox === undefined || suspension === undefined || chassis === undefined || wings === undefined) {
       return res.status(400).json({ error: 'All motorcycle fields are required' });
     }
+    if (model_name.length > 100) {
+      return res.status(400).json({ error: 'model_name must be 100 characters or less' });
+    }
     const attributes = [engine, gearbox, suspension, chassis, wings];
     if (attributes.some(attr => attr < 0 || attr > 100)) {
       return res.status(400).json({ error: 'Attributes must be between 0 and 100' });
     }
-    queryText = 'INSERT INTO dictionary_motorcycles (model_name, engine, gearbox, suspension, chassis, wings) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+    queryText = `INSERT INTO ${tableName} (model_name, engine, gearbox, suspension, chassis, wings) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
     queryValues = [model_name, engine, gearbox, suspension, chassis, wings];
   } else if (type === 'pilots') {
     const { name, talent, consistency, aggressiveness, experience, fitness } = data;
     if (!name || talent === undefined || consistency === undefined || aggressiveness === undefined || experience === undefined || fitness === undefined) {
       return res.status(400).json({ error: 'All pilot fields are required' });
     }
+    if (name.length > 100) {
+      return res.status(400).json({ error: 'name must be 100 characters or less' });
+    }
     const attributes = [talent, consistency, aggressiveness, experience, fitness];
     if (attributes.some(attr => attr < 0 || attr > 100)) {
       return res.status(400).json({ error: 'Attributes must be between 0 and 100' });
     }
-    queryText = 'INSERT INTO dictionary_pilots (name, talent, consistency, aggressiveness, experience, fitness) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+    queryText = `INSERT INTO ${tableName} (name, talent, consistency, aggressiveness, experience, fitness) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
     queryValues = [name, talent, consistency, aggressiveness, experience, fitness];
   } else if (type === 'circuits') {
     const { name, distance, curves_right, curves_left, curves_rects_ratio, asphalt_wear } = data;
     if (!name || distance === undefined || curves_right === undefined || curves_left === undefined || curves_rects_ratio === undefined || asphalt_wear === undefined) {
       return res.status(400).json({ error: 'All circuit fields are required' });
+    }
+    if (name.length > 100) {
+      return res.status(400).json({ error: 'name must be 100 characters or less' });
     }
     if (distance <= 0) {
       return res.status(400).json({ error: 'Distance must be greater than 0' });
@@ -95,7 +117,7 @@ const addDictionaryRecord = asyncHandler(async (req, res) => {
     if (curves_right < 0 || curves_left < 0 || curves_rects_ratio < 0 || asphalt_wear < 0 || asphalt_wear > 100) {
       return res.status(400).json({ error: 'Invalid circuit attributes' });
     }
-    queryText = 'INSERT INTO dictionary_circuits (name, distance, curves_right, curves_left, curves_rects_ratio, asphalt_wear) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+    queryText = `INSERT INTO ${tableName} (name, distance, curves_right, curves_left, curves_rects_ratio, asphalt_wear) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
     queryValues = [name, distance, curves_right, curves_left, curves_rects_ratio, asphalt_wear];
   }
 

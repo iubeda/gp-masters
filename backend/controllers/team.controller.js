@@ -1,6 +1,8 @@
 const teamModel = require('../models/team.model');
 const championshipModel = require('../models/championship.model');
 const db = require('../config/database');
+const bcrypt = require('bcryptjs');
+const { decrypt } = require('../utils/encryption');
 const asyncHandler = require('../utils/asyncHandler');
 
 const registerTeam = asyncHandler(async (req, res) => {
@@ -44,7 +46,11 @@ const registerTeam = asyncHandler(async (req, res) => {
     if (!pin) {
       return res.status(400).json({ error: 'A PIN is required to register in this private championship.' });
     }
-    if (pin !== championship.pin) {
+    
+    // Decrypt the stored PIN to verify against the submitted PIN
+    const decryptedPin = decrypt(championship.pin);
+    const isPinValid = decryptedPin === pin;
+    if (!isPinValid) {
       return res.status(400).json({ error: 'Incorrect PIN. Registration denied.' });
     }
   }

@@ -76,7 +76,7 @@ describe('Auth Component', () => {
     
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith('/api/auth/login', expect.any(Object));
-      expect(mockLogin).toHaveBeenCalledWith('fake-jwt-token', expect.any(Object));
+      expect(mockLogin).toHaveBeenCalledWith( expect.any(Object));
       expect(mockShowToast).toHaveBeenCalledWith('Welcome back to MotoGP Manager!', 'success');
     });
   });

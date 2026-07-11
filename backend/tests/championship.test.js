@@ -12,7 +12,7 @@ describe('Championship Endpoints', () => {
   const userCredentials = {
     email: 'championship_test@example.com',
     username: 'champ_tester',
-    password: 'password123'
+    password: 'ChampPass123!'
   };
 
   beforeAll(async () => {
@@ -33,7 +33,7 @@ describe('Championship Endpoints', () => {
         password: userCredentials.password
       });
       
-    token = loginRes.body.token;
+    token = loginRes.headers['set-cookie'][0].split(';')[0].split('=')[1];
   });
 
   afterAll(async () => {
@@ -131,41 +131,41 @@ describe('Championship Endpoints', () => {
       await request(app).post('/api/auth/register').send({
         email: 'creator@kick.test',
         username: 'kick_creator',
-        password: 'password123'
+        password: 'CreatorPass123!'
       });
       await db.query("UPDATE users SET role = 'manager' WHERE email = 'creator@kick.test'");
 
       // Login creator
       const cRes = await request(app).post('/api/auth/login').send({
         email: 'creator@kick.test',
-        password: 'password123'
+        password: 'CreatorPass123!'
       });
-      creatorToken = cRes.body.token;
+      creatorToken = cRes.headers['set-cookie'][0].split(';')[0].split('=')[1];
 
       // Register regular player
       await request(app).post('/api/auth/register').send({
         email: 'player@kick.test',
         username: 'kick_player',
-        password: 'password123'
+        password: 'PlayerPass123!'
       });
       const pRes = await request(app).post('/api/auth/login').send({
         email: 'player@kick.test',
-        password: 'password123'
+        password: 'PlayerPass123!'
       });
-      anotherToken = pRes.body.token;
+      anotherToken = pRes.headers['set-cookie'][0].split(';')[0].split('=')[1];
 
       // Register admin
       await request(app).post('/api/auth/register').send({
         email: 'admin@kick.test',
         username: 'kick_admin',
-        password: 'password123'
+        password: 'AdminKick123!'
       });
       await db.query("UPDATE users SET role = 'admin' WHERE email = 'admin@kick.test'");
       const aRes = await request(app).post('/api/auth/login').send({
         email: 'admin@kick.test',
-        password: 'password123'
+        password: 'AdminKick123!'
       });
-      adminToken = aRes.body.token;
+      adminToken = aRes.headers['set-cookie'][0].split(';')[0].split('=')[1];
 
       // Creator creates a championship
       const tomorrow = new Date();

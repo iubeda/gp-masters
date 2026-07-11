@@ -3,24 +3,25 @@ import React, { createContext, useState, useEffect, useContext, useCallback } fr
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(() => localStorage.getItem('motogp_token'));
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('motogp_user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
   const [loading, setLoading] = useState(false);
 
-  const login = useCallback((jwtToken, userData) => {
-    setToken(jwtToken);
+  const login = useCallback((userData) => {
     setUser(userData);
-    localStorage.setItem('motogp_token', jwtToken);
+    // Removed localStorage.setItem('motogp_token', jwtToken);
     localStorage.setItem('motogp_user', JSON.stringify(userData));
   }, []);
 
-  const logout = useCallback(() => {
-    setToken(null);
+  const logout = useCallback(async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (e) {
+      console.error('Logout failed:', e);
+    }
     setUser(null);
-    localStorage.removeItem('motogp_token');
     localStorage.removeItem('motogp_user');
   }, []);
 
@@ -28,16 +29,14 @@ export const AuthProvider = ({ children }) => {
   const apiFetch = useCallback(async (url, options = {}) => {
     const headers = {
       'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
       ...options.headers,
     };
-
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
 
     const response = await fetch(url, {
       ...options,
       headers,
+      credentials: 'include',
     });
 
     if (response.status === 401) {
@@ -52,11 +51,11 @@ export const AuthProvider = ({ children }) => {
     }
 
     return data;
-  }, [token, logout]);
+  }, [logout]);
 
   const contextValue = React.useMemo(() => ({
-    token, user, login, logout, apiFetch, isAuthenticated: !!token
-  }), [token, user, login, logout, apiFetch]);
+    user, login, logout, apiFetch, isAuthenticated: !!user
+  }), [user, login, logout, apiFetch]);
 
   return (
     <AuthContext.Provider value={contextValue}>

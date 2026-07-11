@@ -63,9 +63,13 @@ const getGPStatus = asyncHandler(async (req, res) => {
 // 2. Simular Tanda de Entrenamientos Libres (Máx 15 vueltas total)
 const runPracticeStint = asyncHandler(async (req, res) => {
   const { championship_id, circuit_id, bypassTime } = req.body;
+  
+  // Security: Only admins can bypass time restrictions (or in test environment)
+  const isTestEnv = process.env.NODE_ENV === 'test' || process.env.DATABASE_URL?.includes('motogp_test');
+  const canBypass = (req.user.role === 'admin' || isTestEnv) && (bypassTime === true || bypassTime === 'true');
 
   try {
-    await validateSessionTime(championship_id, circuit_id, 'practice', bypassTime === true || bypassTime === 'true');
+    await validateSessionTime(championship_id, circuit_id, 'practice', canBypass);
   } catch (err) {
     return res.status(400).json({ error: err.message });
   }
@@ -77,9 +81,13 @@ const runPracticeStint = asyncHandler(async (req, res) => {
 // 3. Simular Tanda de Clasificación (Máx 3 vueltas total)
 const runQualifyingStint = asyncHandler(async (req, res) => {
   const { championship_id, circuit_id, bypassTime } = req.body;
+  
+  // Security: Only admins can bypass time restrictions (or in test environment)
+  const isTestEnv = process.env.NODE_ENV === 'test' || process.env.DATABASE_URL?.includes('motogp_test');
+  const canBypass = (req.user.role === 'admin' || isTestEnv) && (bypassTime === true || bypassTime === 'true');
 
   try {
-    await validateSessionTime(championship_id, circuit_id, 'qualifying', bypassTime === true || bypassTime === 'true');
+    await validateSessionTime(championship_id, circuit_id, 'qualifying', canBypass);
   } catch (err) {
     return res.status(400).json({ error: err.message });
   }

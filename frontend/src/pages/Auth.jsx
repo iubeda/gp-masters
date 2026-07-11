@@ -32,7 +32,10 @@ const Auth = ({ showToast }) => {
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
         body: JSON.stringify(body),
       });
       const data = await response.json();
@@ -42,7 +45,7 @@ const Auth = ({ showToast }) => {
       }
 
       if (isLogin) {
-        login(data.token, data.user);
+        login(data.user);
         showToast('Welcome back to MotoGP Manager!', 'success');
       } else {
         showToast('Registration successful! Please log in.', 'success');

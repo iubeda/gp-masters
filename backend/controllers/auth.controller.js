@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const userModel = require('../models/user.model');
 const asyncHandler = require('../utils/asyncHandler');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecretmotogpkey';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const register = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
@@ -11,13 +11,13 @@ const register = asyncHandler(async (req, res) => {
   // Check if email already exists
   const existingUserByEmail = await userModel.findByEmail(email);
   if (existingUserByEmail) {
-    return res.status(400).json({ error: 'Email is already registered.' });
+    return res.status(400).json({ error: 'Registration failed. Username or email may already be in use.' });
   }
 
   // Check if username already exists
   const existingUserByUsername = await userModel.findByUsername(username);
   if (existingUserByUsername) {
-    return res.status(400).json({ error: 'Username is already taken.' });
+    return res.status(400).json({ error: 'Registration failed. Username or email may already be in use.' });
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -51,14 +51,25 @@ const login = asyncHandler(async (req, res) => {
   await userModel.updateLastLogin(email);
 
   const token = jwt.sign(
-    { email: user.email, username: user.username, role: user.role },
+    { 
+      email: user.email, 
+      username: user.username, 
+      role: user.role,
+      tokenVersion: user.token_version || 0  // Include token version for revocation
+    },
     JWT_SECRET,
     { expiresIn: '24h' }
   );
 
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  });
+
   res.json({
     message: 'Login successful.',
-    token,
     user: {
       email: user.email,
       username: user.username,
@@ -67,7 +78,17 @@ const login = asyncHandler(async (req, res) => {
   });
 });
 
+const logout = asyncHandler(async (req, res) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict'
+  });
+  res.json({ message: 'Logged out successfully.' });
+});
+
 module.exports = {
   register,
-  login
+  login,
+  logout
 };

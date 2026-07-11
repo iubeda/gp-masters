@@ -17,7 +17,7 @@ describe('Auth Endpoints', () => {
   const testUser = {
     email: 'test@example.com',
     username: 'testuser',
-    password: 'password123'
+    password: 'Password123!'
   };
 
   it('should register a new user successfully', async () => {
@@ -37,11 +37,11 @@ describe('Auth Endpoints', () => {
       .send({
         email: testUser.email,
         username: 'otherusername',
-        password: 'password123'
+        password: 'Password123!'
       });
 
     expect(res.statusCode).toBe(400);
-    expect(res.body.error).toBe('Email is already registered.');
+    expect(res.body.error).toBe('Registration failed. Username or email may already be in use.');
   });
 
   it('should fail to register an existing username', async () => {
@@ -50,11 +50,11 @@ describe('Auth Endpoints', () => {
       .send({
         email: 'other@example.com',
         username: testUser.username,
-        password: 'password123'
+        password: 'Password123!'
       });
 
     expect(res.statusCode).toBe(400);
-    expect(res.body.error).toBe('Username is already taken.');
+    expect(res.body.error).toBe('Registration failed. Username or email may already be in use.');
   });
 
   it('should log in successfully with correct credentials', async () => {
@@ -67,7 +67,7 @@ describe('Auth Endpoints', () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe('Login successful.');
-    expect(res.body).toHaveProperty('token');
+    // token is now in cookies
     expect(res.body.user).toHaveProperty('email', testUser.email);
   });
 

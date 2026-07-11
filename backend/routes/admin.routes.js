@@ -6,8 +6,9 @@ const checkRole = require('../middleware/role');
 const router = express.Router();
 
 // All admin routes require authentication and admin role
+// Re-validate role from database for security (prevent stale JWT roles)
 router.use(authMiddleware);
-router.use(checkRole(['admin']));
+router.use(checkRole(['admin'], true));
 
 router.get('/users', adminController.getUsers);
 router.put('/users/:email/role', adminController.updateUserRole);

@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: motogp_password
       POSTGRES_DB: motogp_db
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -23,7 +23,7 @@ services:
     environment:
       DATABASE_URL: "postgresql://motogp_user:motogp_password@postgres:5432/motogp_db"
       PORT: 5000
-      JWT_SECRET: "supersecretmotogpkey"
+      JWT_SECRET: "9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca72323c3d99ba5c11d7c7acc6e14b8c5da0c4663475c2e5c3adef46f73bcdec043"
       SEED_TEST_DATA: "true"
     ports:
       - "5000:5000"
