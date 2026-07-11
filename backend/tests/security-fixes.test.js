@@ -1,4 +1,6 @@
-// Security Fixes Validation Tests
+process.env.DATABASE_URL = process.env.DATABASE_URL || 'postgresql://motogp_user:motogp_password@localhost:5432/motogp_test';
+process.env.JWT_SECRET = process.env.JWT_SECRET || 'supersecretmotogpkey';
+
 const request = require('supertest');
 const app = require('../app');
 const bcrypt = require('bcryptjs');
@@ -145,19 +147,21 @@ describe('Security Fixes - Rate Limiting', () => {
   }, 30000); // 30 second timeout
 });
 
-describe('Security Fixes - PIN Hashing', () => {
-  it('should hash championship PIN with bcrypt', async () => {
+describe('Security Fixes - PIN Encryption', () => {
+  it('should encrypt championship PIN symmetrically', () => {
+    const { encrypt, decrypt } = require('../utils/encryption');
     const testPin = 'TEST1234';
-    const hashedPin = await bcrypt.hash(testPin, 10);
     
-    expect(hashedPin).not.toBe(testPin);
-    expect(hashedPin.length).toBe(60); // bcrypt hash length
+    const encryptedPin = encrypt(testPin);
+    expect(encryptedPin).toBeDefined();
+    expect(encryptedPin).not.toBe(testPin);
+    expect(encryptedPin).toContain(':'); // Contains IV and data
     
-    const isValid = await bcrypt.compare(testPin, hashedPin);
-    expect(isValid).toBe(true);
+    const decryptedPin = decrypt(encryptedPin);
+    expect(decryptedPin).toBe(testPin);
     
-    const isInvalid = await bcrypt.compare('WRONG123', hashedPin);
-    expect(isInvalid).toBe(false);
+    const isInvalid = decrypt('wrong:data');
+    expect(isInvalid).toBeNull();
   });
 });
 
