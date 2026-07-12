@@ -1,5 +1,6 @@
 import React from 'react';
 import { Trophy, Shield } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * General standings table for a championship.
@@ -13,6 +14,7 @@ import { Trophy, Shield } from 'lucide-react';
  *  - onKick: (team) => void — opens the kick modal for a given team
  */
 const StandingsTable = ({ teams, user, isCreator, championship, onKick }) => {
+  const { t } = useTranslation();
   const hasStarted = championship.circuits?.some((c) => c.status === 'completed');
   const canShowActions =
     user.role === 'admin' || (isCreator && !hasStarted);
@@ -23,10 +25,10 @@ const StandingsTable = ({ teams, user, isCreator, championship, onKick }) => {
       <div className="p-5 bg-gradient-to-r from-yellow-600/10 via-transparent to-transparent border-b border-gray-800 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <Trophy className="w-5 h-5 text-yellow-500" />
-          <h3 className="font-bold text-white text-base">Clasificación General</h3>
+          <h3 className="font-bold text-white text-base">{t('championship.tabs.standings', 'Clasificación General')}</h3>
         </div>
         <span className="px-3 py-1 bg-[#0F0F12] border border-gray-800 text-xs font-semibold rounded-full text-gray-300">
-          {championship.team_count} Equipos Registrados
+          {championship.team_count} {t('championship.standings.registered_teams', 'Equipos Registrados')}
         </span>
       </div>
 
@@ -41,10 +43,10 @@ const StandingsTable = ({ teams, user, isCreator, championship, onKick }) => {
             <thead className="bg-[#161622]/60 text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-800">
               <tr>
                 <th className="p-4">Pos</th>
-                <th className="p-4">Equipo</th>
-                <th className="p-4">Piloto</th>
+                <th className="p-4">{t('championship.standings.table.team', 'Equipo')}</th>
+                <th className="p-4">{t('championship.standings.table.pilot', 'Piloto')}</th>
                 <th className="p-4">Moto</th>
-                <th className="p-4 text-right">Puntos</th>
+                <th className="p-4 text-right">{t('championship.standings.table.points', 'Puntos')}</th>
                 {canShowActions && <th className="p-4 text-right">Acciones</th>}
               </tr>
             </thead>
@@ -84,7 +86,7 @@ const StandingsTable = ({ teams, user, isCreator, championship, onKick }) => {
                         )}
                       </div>
                       <span className="text-[11px] text-gray-400 block mt-0.5">
-                        Mánager: {team.owner_name} {team.is_kicked && '(Expulsado)'}
+                        {t('championship.standings.table.manager', 'Mánager')}: {team.owner_name} {team.is_kicked && '(Expulsado)'}
                       </span>
                     </td>
                     <td className="p-4 text-gray-350">

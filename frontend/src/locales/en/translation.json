@@ -89,6 +89,27 @@
       "access_pin": " • Access PIN: ",
       "pin_admin": " • PIN (admin): ",
       "no_time_limit": "No time limit"
+    },
+    "tabs": {
+      "calendar": "Calendar",
+      "my_team": "My Team",
+      "standings": "General Standings"
+    },
+    "standings": {
+      "registered_teams": "Registered Teams",
+      "table": {
+        "pilot": "Rider",
+        "team": "Team",
+        "points": "Points",
+        "manager": "Manager"
+      }
+    },
+    "next_race": {
+      "title": "Next Race",
+      "practice": "Practice",
+      "qualifying": "Qualifying",
+      "race": "Race",
+      "simulate_btn": "Simulate this circuit"
     }
   },
   "dashboard": {
@@ -127,7 +148,10 @@
       "available_desc": "Create a new championship using the button above to get started."
     },
     "card": {
-      "view_details": "View Championship Details"
+      "view_details": "View Championship Details",
+      "creator": "Creator:",
+      "teams": "Teams",
+      "circuits": "Circuits"
     }
   },
   "landing": {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { CalendarDays, Calendar, Trophy, Play } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Dashboard widget for the next upcoming race.
@@ -18,6 +19,7 @@ import { CalendarDays, Calendar, Trophy, Play } from 'lucide-react';
  *  - onSimulate: () => void — switches to the GP tab
  */
 const NextRaceCard = ({ activeGP, hasCircuits, isMember, userRole, todayStr, isCreator, onSimulate }) => {
+  const { t } = useTranslation();
   // State 1: active (upcoming) GP
   if (activeGP) {
     const canSimulate = (isMember && todayStr >= activeGP.practice_date) || userRole === 'admin';
@@ -27,7 +29,7 @@ const NextRaceCard = ({ activeGP, hasCircuits, isMember, userRole, todayStr, isC
         <div className="p-5 border-b border-gray-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <CalendarDays className="w-5 h-5 text-yellow-500" />
-            <h3 className="font-bold text-white text-base">Siguiente Carrera</h3>
+            <h3 className="font-bold text-white text-base">{t('championship.next_race.title', 'Siguiente Carrera')}</h3>
           </div>
           <span className="px-2.5 py-1 bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-xs font-bold rounded-full uppercase tracking-wider">
             GP #{activeGP.order}
@@ -47,9 +49,9 @@ const NextRaceCard = ({ activeGP, hasCircuits, isMember, userRole, todayStr, isC
 
           <div className="grid grid-cols-3 gap-2 border-t border-gray-800/40 pt-4 text-[10px] text-center">
             {[
-              { label: 'Entrenamientos', date: activeGP.practice_date, accent: false },
-              { label: 'Clasificación', date: activeGP.qualifying_date, accent: false },
-              { label: 'Carrera', date: activeGP.race_date, accent: true },
+              { label: t('championship.next_race.practice', 'Entrenamientos'), date: activeGP.practice_date, accent: false },
+              { label: t('championship.next_race.qualifying', 'Clasificación'), date: activeGP.qualifying_date, accent: false },
+              { label: t('championship.next_race.race', 'Carrera'), date: activeGP.race_date, accent: true },
             ].map(({ label, date, accent }) => (
               <div key={label} className="bg-[#0F0F12] p-2.5 rounded-xl border border-gray-850">
                 <span className={`${accent ? 'text-red-500' : 'text-gray-500'} font-bold uppercase tracking-wider block`}>
@@ -68,7 +70,7 @@ const NextRaceCard = ({ activeGP, hasCircuits, isMember, userRole, todayStr, isC
               className="w-full mt-4 py-3 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5"
             >
               <Play className="w-4 h-4 fill-current" />
-              Simular este circuito
+              {t('championship.next_race.simulate_btn', 'Simular este circuito')}
             </button>
           )}
         </div>

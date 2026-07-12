@@ -89,6 +89,27 @@
       "access_pin": " • PIN de Acceso: ",
       "pin_admin": " • PIN (admin): ",
       "no_time_limit": "Sin límite horario"
+    },
+    "tabs": {
+      "calendar": "Calendario",
+      "my_team": "Mi escudería",
+      "standings": "Clasificación General"
+    },
+    "standings": {
+      "registered_teams": "Equipos Registrados",
+      "table": {
+        "pilot": "Piloto",
+        "team": "Equipo",
+        "points": "Puntos",
+        "manager": "Mánager"
+      }
+    },
+    "next_race": {
+      "title": "Siguiente Carrera",
+      "practice": "Entrenamientos",
+      "qualifying": "Clasificación",
+      "race": "Carrera",
+      "simulate_btn": "Simular este circuito"
     }
   },
   "dashboard": {
@@ -127,7 +148,10 @@
       "available_desc": "Crea un campeonato nuevo utilizando el botón superior para empezar."
     },
     "card": {
-      "view_details": "Ver Detalles del Campeonato"
+      "view_details": "Ver Detalles del Campeonato",
+      "creator": "Creador:",
+      "teams": "Equipos",
+      "circuits": "Circuitos"
     }
   },
   "landing": {

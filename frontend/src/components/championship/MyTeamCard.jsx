@@ -1,5 +1,6 @@
 import React from 'react';
 import { Shield, Coins } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Stat bar sub-component to avoid repetition inside MyTeamCard.
@@ -22,6 +23,7 @@ const StatBar = ({ label, value }) => (
  * and motorcycle part ratings.
  */
 const MyTeamCard = ({ userTeam }) => {
+  const { t } = useTranslation();
   const motoParts = [
     { label: 'Motor', val: userTeam.engine },
     { label: 'Cambio', val: userTeam.gearbox },
@@ -38,7 +40,7 @@ const MyTeamCard = ({ userTeam }) => {
           <Shield className="w-5 h-5 text-red-500" />
           <div>
             <h3 className="font-bold text-white text-base leading-tight">{userTeam.team_name}</h3>
-            <span className="text-[10px] text-gray-400 uppercase tracking-widest font-light">Mi Escudería</span>
+            <span className="text-[10px] text-gray-400 uppercase tracking-widest font-light">{t('championship.tabs.my_team', 'Mi escudería')}</span>
           </div>
         </div>
         <div className="flex items-center gap-1 bg-yellow-500/10 border border-yellow-500/20 px-3 py-1 rounded-full text-xs font-bold text-yellow-500">

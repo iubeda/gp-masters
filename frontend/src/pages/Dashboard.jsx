@@ -431,7 +431,7 @@ const Dashboard = ({ showToast }) => {
                         </h3>
                         <div className="flex items-center gap-1.5 text-xs text-gray-400">
                           <User className="w-3.5 h-3.5 text-gray-550" />
-                          <span>Creador: <strong className="text-gray-300">{isCreator ? 'Tú' : champ.creator_name || 'System'}</strong></span>
+                          <span>{t('dashboard.card.creator', 'Creador:')} <strong className="text-gray-300">{isCreator ? t('championship.header.you_creator', 'Tú') : champ.creator_name || t('championship.header.system', 'System')}</strong></span>
                         </div>
                       </div>
                     </div>
@@ -441,14 +441,14 @@ const Dashboard = ({ showToast }) => {
                       <div className="flex items-center gap-2">
                         <Users className="w-4 h-4 text-gray-550" />
                         <div>
-                          <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Equipos</p>
+                          <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{t('dashboard.card.teams', 'Equipos')}</p>
                           <p className="text-sm font-semibold text-gray-200">{champ.team_count} / {champ.max_teams ?? 10}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-gray-555" />
                         <div>
-                          <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Circuitos</p>
+                          <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{t('dashboard.card.circuits', 'Circuitos')}</p>
                           <p className="text-sm font-semibold text-gray-200">{champ.circuit_count} / {champ.max_circuits ?? 15}</p>
                         </div>
                       </div>

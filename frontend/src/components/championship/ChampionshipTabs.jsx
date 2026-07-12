@@ -1,10 +1,12 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Tab navigation bar for the championship detail page.
  * Renders: Dashboard | Calendario | GP Activo (conditional)
  */
 const ChampionshipTabs = ({ activeTab, onTabChange, activeGP, isMember, userRole, todayStr }) => {
+  const { t } = useTranslation();
   const tabClass = (tab) =>
     `pb-4 px-1 border-b-2 transition-all duration-200 ${
       activeTab === tab
@@ -25,7 +27,7 @@ const ChampionshipTabs = ({ activeTab, onTabChange, activeGP, isMember, userRole
         onClick={() => onTabChange('calendar')}
         className={tabClass('calendar')}
       >
-        Calendario
+        {t('championship.tabs.calendar', 'Calendario')}
       </button>
 
       {(isMember || userRole === 'admin') && activeGP && (
