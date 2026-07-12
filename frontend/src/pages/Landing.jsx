@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trophy, ChevronRight, Activity, CloudLightning, Users, Shield, ArrowRight, Zap, Target, CheckCircle2, ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Landing = () => {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
+  const { t } = useTranslation();
 
   // Handle scroll to add background to fixed navbar
   useEffect(() => {
@@ -18,26 +20,26 @@ const Landing = () => {
   const features = [
     {
       icon: <Users className="w-6 h-6 text-blue-500" />,
-      title: "Team Management",
-      description: "Draft top pilots, manage your budget, and build the ultimate racing team capable of winning the championship.",
+      title: t('landing.features.team.title', "Gestión de Equipo"),
+      description: t('landing.features.team.desc', "Ficha a los mejores pilotos, gestiona tu presupuesto y construye el equipo definitivo capaz de ganar el campeonato."),
       color: "blue"
     },
     {
       icon: <Activity className="w-6 h-6 text-green-500" />,
-      title: "Live Simulation Engine",
-      description: "Watch the race unfold with our advanced physics-based engine calculating wear, weather, and pilot skills in real-time.",
+      title: t('landing.features.sim.title', "Motor de Simulación en Vivo"),
+      description: t('landing.features.sim.desc', "Observa cómo se desarrolla la carrera con nuestro avanzado motor basado en físicas que calcula desgaste, clima y habilidades en tiempo real."),
       color: "green"
     },
     {
       icon: <CloudLightning className="w-6 h-6 text-purple-500" />,
-      title: "Dynamic Weather",
-      description: "Adapt your strategy on the fly as weather conditions change dramatically during the race weekend.",
+      title: t('landing.features.weather.title', "Clima Dinámico"),
+      description: t('landing.features.weather.desc', "Adapta tu estrategia sobre la marcha a medida que las condiciones climáticas cambian drásticamente durante el fin de semana de carrera."),
       color: "purple"
     },
     {
       icon: <Zap className="w-6 h-6 text-yellow-500" />,
-      title: "Motorcycle Setup",
-      description: "Fine-tune your bikes for each unique circuit to gain those crucial milliseconds per lap.",
+      title: t('landing.features.setup.title', "Configuración de Moto"),
+      description: t('landing.features.setup.desc', "Ajusta tus motos para cada circuito único para ganar esas milésimas de segundo cruciales por vuelta."),
       color: "yellow"
     }
   ];
@@ -45,23 +47,23 @@ const Landing = () => {
   const steps = [
     {
       number: "01",
-      title: "Create Your Account",
-      desc: "Join the paddock and get your manager license."
+      title: t('landing.steps.1.title', "Crea Tu Cuenta"),
+      desc: t('landing.steps.1.desc', "Únete al paddock y obtén tu licencia de mánager.")
     },
     {
       number: "02",
-      title: "Join a Championship",
-      desc: "Find an active league or create your own with custom rules."
+      title: t('landing.steps.2.title', "Únete a un Campeonato"),
+      desc: t('landing.steps.2.desc', "Encuentra una liga activa o crea la tuya propia con reglas personalizadas.")
     },
     {
       number: "03",
-      title: "Draft Your Pilots",
-      desc: "Select the best talent that fits your team's budget and strategy."
+      title: t('landing.steps.3.title', "Ficha a Tus Pilotos"),
+      desc: t('landing.steps.3.desc', "Selecciona el mejor talento que se ajuste al presupuesto y estrategia de tu equipo.")
     },
     {
       number: "04",
-      title: "Race to Glory",
-      desc: "Manage setups, monitor weather, and win the constructor's title."
+      title: t('landing.steps.4.title', "Compite por la Gloria"),
+      desc: t('landing.steps.4.desc', "Gestiona configuraciones, monitorea el clima y gana el título de constructores.")
     }
   ];
 
@@ -90,13 +92,13 @@ const Landing = () => {
               onClick={() => navigate('/login')}
               className="text-sm font-semibold text-gray-300 hover:text-white transition-colors"
             >
-              Sign In
+              {t('landing.nav.signin', "Iniciar Sesión")}
             </button>
             <button
               onClick={() => navigate('/login', { state: { isRegister: true } })}
               className="px-5 py-2.5 bg-white text-black font-bold text-sm rounded-xl hover:bg-gray-200 transition-all active:scale-95 shadow-lg shadow-white/5"
             >
-              Play Now
+              {t('landing.nav.playnow', "Jugar Ahora")}
             </button>
           </div>
         </div>
@@ -112,15 +114,15 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-4 w-full relative z-10 flex flex-col items-center text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold uppercase tracking-wider mb-8 animate-fade-in-up">
             <Trophy className="w-4 h-4" />
-            <span>Season 2026 is Live</span>
+            <span>{t('landing.hero.badge', "La Temporada 2026 está en Directo")}</span>
           </div>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-200 to-gray-500 mb-6 drop-shadow-2xl">
-            RULE THE <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">PADDOCK</span>
+            {t('landing.hero.title1', "DOMINA EL")} <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">{t('landing.hero.title2', "PADDOCK")}</span>
           </h1>
 
           <p className="max-w-2xl text-lg md:text-xl text-gray-400 font-light mb-10 leading-relaxed">
-            Take control of your own MotoGP team. Draft elite pilots, master dynamic weather conditions, and outsmart your rivals in our advanced physics-based race simulation.
+            {t('landing.hero.desc', "Toma el control de tu propio equipo de MotoGP. Ficha pilotos de élite, domina las condiciones climáticas dinámicas y supera a tus rivales en nuestra avanzada simulación de carreras basada en físicas.")}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
@@ -128,7 +130,7 @@ const Landing = () => {
               onClick={() => navigate('/login', { state: { isRegister: true } })}
               className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-extrabold rounded-2xl shadow-xl shadow-red-600/20 active:scale-95 transition-all flex items-center justify-center gap-2 group"
             >
-              START YOUR CAREER
+              {t('landing.hero.start', "COMIENZA TU CARRERA")}
               <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
             <button
@@ -137,7 +139,7 @@ const Landing = () => {
               }}
               className="w-full sm:w-auto px-8 py-4 bg-gray-800/50 hover:bg-gray-800 text-white font-bold rounded-2xl border border-gray-700/50 transition-all flex items-center justify-center gap-2 backdrop-blur-sm"
             >
-              Discover Features
+              {t('landing.hero.discover', "Descubrir Características")}
             </button>
           </div>
 
@@ -151,8 +153,8 @@ const Landing = () => {
       <section id="features" className="py-24 relative bg-[#0F0F12] border-y border-gray-800/50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-5xl font-extrabold mb-4 text-white">Next-Gen Management</h2>
-            <p className="text-gray-400 text-lg">Every decision counts. From the drafting room to the checkered flag, experience the most authentic motorsport management simulation.</p>
+            <h2 className="text-3xl md:text-5xl font-extrabold mb-4 text-white">{t('landing.nextgen.title', "Gestión de Nueva Generación")}</h2>
+            <p className="text-gray-400 text-lg">{t('landing.nextgen.desc', "Cada decisión cuenta. Desde la sala de fichajes hasta la bandera a cuadros, experimenta la simulación de gestión de deportes de motor más auténtica.")}</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -178,10 +180,10 @@ const Landing = () => {
 
             <div className="lg:w-1/2">
               <h2 className="text-3xl md:text-5xl font-extrabold mb-6 text-white leading-tight">
-                Your Journey to <br /> <span className="text-red-500">World Champion</span>
+                {t('landing.journey.title1', "Tu Camino a")} <br /> <span className="text-red-500">{t('landing.journey.title2', "Campeón del Mundo")}</span>
               </h2>
               <p className="text-gray-400 text-lg mb-10">
-                Start from the bottom, manage your resources wisely, and climb the ranks of the global leaderboard.
+                {t('landing.journey.desc', "Comienza desde abajo, gestiona tus recursos sabiamente y escala posiciones en la clasificación global.")}
               </p>
 
               <div className="space-y-8">
@@ -252,13 +254,13 @@ const Landing = () => {
       <section className="py-24 relative border-t border-gray-800/50 bg-[#16161C]">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none"></div>
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <h2 className="text-4xl md:text-6xl font-black text-white mb-6">Ready to hit the <span className="text-red-500">apex?</span></h2>
-          <p className="text-xl text-gray-400 mb-10">Join thousands of managers and compete for the world championship today.</p>
+          <h2 className="text-4xl md:text-6xl font-black text-white mb-6">{t('landing.cta.title1', "¿Listo para llegar al")} <span className="text-red-500">{t('landing.cta.title2', "vértice?")}</span></h2>
+          <p className="text-xl text-gray-400 mb-10">{t('landing.cta.desc', "Únete a miles de mánagers y compite por el campeonato mundial hoy mismo.")}</p>
           <button
             onClick={() => navigate('/login', { state: { isRegister: true } })}
             className="px-10 py-5 bg-white text-black font-extrabold text-lg rounded-2xl hover:bg-gray-200 shadow-xl shadow-white/10 active:scale-95 transition-all flex items-center gap-3 mx-auto group"
           >
-            CREATE FREE ACCOUNT
+            {t('landing.cta.btn', "CREAR CUENTA GRATIS")}
             <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
@@ -278,11 +280,11 @@ const Landing = () => {
             </div>
           </div>
           <div className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} MotoGP Manager MVP. All rights reserved.
+            © {new Date().getFullYear()} MotoGP Manager MVP. {t('landing.footer.rights', "Todos los derechos reservados.")}
           </div>
           <div className="flex gap-4 text-sm text-gray-500">
-            <button onClick={() => navigate('/privacy')} className="hover:text-white transition-colors">Privacy</button>
-            <button onClick={() => navigate('/terms')} className="hover:text-white transition-colors">Terms</button>
+            <button onClick={() => navigate('/privacy')} className="hover:text-white transition-colors">{t('landing.footer.privacy', "Privacidad")}</button>
+            <button onClick={() => navigate('/terms')} className="hover:text-white transition-colors">{t('landing.footer.terms', "Términos")}</button>
           </div>
         </div>
       </footer>
