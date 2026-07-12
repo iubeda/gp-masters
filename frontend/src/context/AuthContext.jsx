@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import i18n from '../i18n';
 
 const AuthContext = createContext(null);
 
@@ -47,6 +48,9 @@ export const AuthProvider = ({ children }) => {
 
     const data = await response.json();
     if (!response.ok) {
+      if (data.error_code) {
+        throw new Error(i18n.t(`backend_errors.${data.error_code}`, data.error));
+      }
       throw new Error(data.error || 'Something went wrong');
     }
 

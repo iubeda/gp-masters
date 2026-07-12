@@ -11,20 +11,20 @@ const registerTeam = asyncHandler(async (req, res) => {
 
   // Validate and clean team name
   if (!name || typeof name !== 'string') {
-    return res.status(400).json({ error: 'El nombre del equipo es obligatorio y debe ser texto.' });
+    return res.status(400).json({ error: 'El nombre del equipo es obligatorio y debe ser texto.', error_code: 'EL_NOMBRE_DEL_EQUIPO_ES_OBLIGA' });
   }
 
   const trimmedName = name.trim();
 
   // Length validation: 3 to 20 characters
   if (trimmedName.length < 3 || trimmedName.length > 20) {
-    return res.status(400).json({ error: 'El nombre del equipo debe tener entre 3 y 20 caracteres.' });
+    return res.status(400).json({ error: 'El nombre del equipo debe tener entre 3 y 20 caracteres.', error_code: 'EL_NOMBRE_DEL_EQUIPO_DEBE_TENE' });
   }
 
   // Regex validation: alphanumeric, spaces, underscores, dots
   const nameRegex = /^[a-zA-Z0-9_. ]+$/;
   if (!nameRegex.test(trimmedName)) {
-    return res.status(400).json({ error: 'El nombre del equipo solo puede contener caracteres alfanuméricos, espacios, guiones bajos (_) y puntos (.).' });
+    return res.status(400).json({ error: 'El nombre del equipo solo puede contener caracteres alfanuméricos, espacios, guiones bajos (_) y puntos (.).', error_code: 'EL_NOMBRE_DEL_EQUIPO_SOLO_PUED' });
   }
 
   // Duplicate team name check in the same championship (case-insensitive)
@@ -33,32 +33,32 @@ const registerTeam = asyncHandler(async (req, res) => {
     [championship_id, trimmedName]
   );
   if (duplicateCheck.rows.length > 0) {
-    return res.status(400).json({ error: 'Ya existe un equipo con ese nombre en este campeonato.' });
+    return res.status(400).json({ error: 'Ya existe un equipo con ese nombre en este campeonato.', error_code: 'YA_EXISTE_UN_EQUIPO_CON_ESE_NO' });
   }
 
   // Verify PIN for private championships
   const championship = await championshipModel.findById(championship_id);
   if (!championship) {
-    return res.status(404).json({ error: 'Championship not found.' });
+    return res.status(404).json({ error: 'Championship not found.', error_code: 'CHAMPIONSHIP_NOT_FOUND' });
   }
 
   if (championship.is_public === false || championship.is_public === 'false') {
     if (!pin) {
-      return res.status(400).json({ error: 'A PIN is required to register in this private championship.' });
+      return res.status(400).json({ error: 'A PIN is required to register in this private championship.', error_code: 'A_PIN_IS_REQUIRED_TO_REGISTER_' });
     }
     
     // Decrypt the stored PIN to verify against the submitted PIN
     const decryptedPin = decrypt(championship.pin);
     const isPinValid = decryptedPin === pin;
     if (!isPinValid) {
-      return res.status(400).json({ error: 'Incorrect PIN. Registration denied.' });
+      return res.status(400).json({ error: 'Incorrect PIN. Registration denied.', error_code: 'INCORRECT_PIN_REGISTRATION_DEN' });
     }
   }
 
   // 1. Validation: count existing (non-kicked) teams in this championship
   const teamCount = await teamModel.countTeams(championship_id);
   if (teamCount >= championship.max_teams) {
-    return res.status(400).json({ error: `El campeonato está completo (máx. ${championship.max_teams} equipos).` });
+    return res.status(400).json({ error: `El campeonato está completo (máx. ${championship.max_teams} equipos).`, error_code: 'CHAMPIONSHIP_FULL' });
   }
 
   // 2. Validation: check if user already has a team in this championship (active or kicked)
@@ -68,9 +68,9 @@ const registerTeam = asyncHandler(async (req, res) => {
   );
   if (userTeamRes.rows.length > 0) {
     if (userTeamRes.rows[0].is_kicked) {
-      return res.status(400).json({ error: 'Fuiste expulsado de este campeonato y no puedes volver a inscribirte.' });
+      return res.status(400).json({ error: 'Fuiste expulsado de este campeonato y no puedes volver a inscribirte.', error_code: 'FUISTE_EXPULSADO_DE_ESTE_CAMPE' });
     }
-    return res.status(400).json({ error: 'You have already registered a team in this championship.' });
+    return res.status(400).json({ error: 'You have already registered a team in this championship.', error_code: 'YOU_HAVE_ALREADY_REGISTERED_A_' });
   }
 
   // 3. Find pilots already registered in this championship
@@ -81,7 +81,7 @@ const registerTeam = asyncHandler(async (req, res) => {
   const availablePilots = allPilots.filter(p => !takenPilotIds.includes(p.id));
 
   if (availablePilots.length === 0) {
-    return res.status(400).json({ error: 'No available pilots left for this championship.' });
+    return res.status(400).json({ error: 'No available pilots left for this championship.', error_code: 'NO_AVAILABLE_PILOTS_LEFT_FOR_T' });
   }
 
   // 5. Assign a random pilot
@@ -91,7 +91,7 @@ const registerTeam = asyncHandler(async (req, res) => {
   // 6. Assign a random motorcycle from the predefined catalog
   const motorcycles = await teamModel.findAllMotorcycles();
   if (motorcycles.length === 0) {
-    return res.status(400).json({ error: 'No motorcycles registered in catalog.' });
+    return res.status(400).json({ error: 'No motorcycles registered in catalog.', error_code: 'NO_MOTORCYCLES_REGISTERED_IN_C' });
   }
   const randomMotorcycle = motorcycles[Math.floor(Math.random() * motorcycles.length)];
 

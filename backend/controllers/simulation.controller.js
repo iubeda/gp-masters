@@ -28,7 +28,7 @@ const getGPStatus = asyncHandler(async (req, res) => {
     raceLaps = await simulationModel.getLapHistory(championshipId, circuitId, teamId, 'race');
   } else {
     if (req.user.role !== 'admin') {
-      return res.status(403).json({ error: 'No tienes un equipo registrado en este campeonato.' });
+      return res.status(403).json({ error: 'No tienes un equipo registrado en este campeonato.', error_code: 'NO_TIENES_UN_EQUIPO_REGISTRADO' });
     }
   }
 
@@ -71,7 +71,7 @@ const runPracticeStint = asyncHandler(async (req, res) => {
   try {
     await validateSessionTime(championship_id, circuit_id, 'practice', canBypass);
   } catch (err) {
-    return res.status(400).json({ error: err.message });
+    return res.status(400).json({ error: err.message, error_code: 'ERR_INTERNAL' });
   }
 
   const result = await runStint('practice', req.body, req.user.email);
@@ -89,7 +89,7 @@ const runQualifyingStint = asyncHandler(async (req, res) => {
   try {
     await validateSessionTime(championship_id, circuit_id, 'qualifying', canBypass);
   } catch (err) {
-    return res.status(400).json({ error: err.message });
+    return res.status(400).json({ error: err.message, error_code: 'ERR_INTERNAL' });
   }
 
   const result = await runStint('qualifying', req.body, req.user.email);
@@ -111,7 +111,7 @@ const saveRaceStrategy = asyncHandler(async (req, res) => {
   const teams = await simulationModel.getGPTeamsDetails(championship_id);
   const team = teams.find(t => t.user_email.toLowerCase() === userEmail.toLowerCase());
   if (!team) {
-    return res.status(403).json({ error: 'No tienes un equipo registrado en este campeonato.' });
+    return res.status(403).json({ error: 'No tienes un equipo registrado en este campeonato.', error_code: 'NO_TIENES_UN_EQUIPO_REGISTRADO' });
   }
 
   const updated = await simulationModel.saveRaceSetup(championship_id, circuit_id, team.team_id, {
@@ -127,13 +127,13 @@ const runRaceSimulation = asyncHandler(async (req, res) => {
   const userRole = req.user.role || 'player';
 
   if (userRole !== 'admin') {
-    return res.status(403).json({ error: 'Sólo los administradores de la plataforma pueden simular manualmente las carreras.' });
+    return res.status(403).json({ error: 'Sólo los administradores de la plataforma pueden simular manualmente las carreras.', error_code: 'S_LO_LOS_ADMINISTRADORES_DE_LA' });
   }
 
   try {
     await validateSessionTime(championshipId, circuitId, 'race', bypassTime === true || bypassTime === 'true');
   } catch (err) {
-    return res.status(400).json({ error: err.message });
+    return res.status(400).json({ error: err.message, error_code: 'ERR_INTERNAL' });
   }
 
   if (process.env.NODE_ENV === 'test') {

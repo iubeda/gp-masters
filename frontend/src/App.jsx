@@ -11,6 +11,7 @@ import Profile from './pages/Profile';
 import AdminUsers from './pages/AdminUsers';
 import Toast from './components/Toast';
 import { LogOut, User, Shield } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // Route Guard: redirects to /login if not authenticated
 const ProtectedRoute = ({ children }) => {
@@ -46,6 +47,7 @@ const NavigationHeader = ({ showToast }) => {
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   if (!isAuthenticated || !user) return null;
 
@@ -89,10 +91,10 @@ const NavigationHeader = ({ showToast }) => {
                   ? 'bg-red-600/15 border-red-500/35 text-red-400 font-bold shadow-lg shadow-red-600/5'
                   : 'bg-gray-800/40 hover:bg-gray-850 border-gray-800 text-gray-250'
               }`}
-              title="Panel de Administración"
+              title={t('app.admin_panel_title', 'Panel de Administración')}
             >
               <Shield className="w-4 h-4 text-red-500" />
-              <span className="text-sm font-semibold">Admin Panel</span>
+              <span className="text-sm font-semibold">{t('app.admin_panel', 'Admin Panel')}</span>
             </button>
           )}
 
@@ -110,7 +112,7 @@ const NavigationHeader = ({ showToast }) => {
                 ? 'bg-red-600/10 border-red-500/30 text-red-400 font-bold'
                 : 'bg-gray-800/40 hover:bg-gray-850 border-gray-800 text-gray-250'
             }`}
-            title="Manage Profile Settings"
+            title={t('app.manage_profile', 'Manage Profile Settings')}
           >
             <User className="w-4 h-4 text-red-500" />
             <span className="text-sm font-semibold">{user.username}</span>
@@ -120,12 +122,12 @@ const NavigationHeader = ({ showToast }) => {
             onClick={() => {
               logout();
               navigate('/login');
-              showToast('Logged out successfully.', 'success');
+              showToast(t('app.logged_out_success', 'Logged out successfully.'), 'success');
             }}
             className="flex items-center gap-2 px-3 py-2 bg-gray-800/80 hover:bg-red-600/10 hover:text-red-500 text-gray-300 font-bold text-xs tracking-wider uppercase border border-gray-855 rounded-xl transition-all"
           >
             <LogOut className="w-4 h-4" />
-            <span className="hidden sm:inline">Logout</span>
+            <span className="hidden sm:inline">{t('app.logout', 'Logout')}</span>
           </button>
         </div>
       </div>
