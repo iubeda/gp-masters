@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trophy, ChevronRight, Activity, CloudLightning, Users, Shield, ArrowRight, Zap, Target, CheckCircle2, ChevronDown } from 'lucide-react';
+import { Trophy, ChevronRight, Activity, CloudLightning, Users, Shield, ArrowRight, Zap, Target, CheckCircle2, ChevronDown, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Landing = () => {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (e) => {
+    const newLang = e.target.value;
+    i18n.changeLanguage(newLang);
+    localStorage.setItem('motogp_language', newLang);
+  };
 
   // Handle scroll to add background to fixed navbar
   useEffect(() => {
@@ -87,7 +93,20 @@ const Landing = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 sm:gap-6">
+            {/* Language Selector */}
+            <div className="hidden sm:flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors border border-gray-800 rounded-lg px-2 py-1 bg-gray-900/50">
+              <Globe className="w-4 h-4" />
+              <select
+                value={i18n.language}
+                onChange={changeLanguage}
+                className="bg-transparent text-xs font-semibold focus:outline-none cursor-pointer appearance-none outline-none"
+              >
+                <option value="es">ES</option>
+                <option value="en">EN</option>
+              </select>
+            </div>
+
             <button
               onClick={() => navigate('/login')}
               className="text-sm font-semibold text-gray-300 hover:text-white transition-colors"
