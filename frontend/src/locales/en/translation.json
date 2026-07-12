@@ -1,3 +1,275 @@
 {
-  "app_name": "MotoGP Manager MVP"
+  "app": {
+    "admin_panel_title": "Admin Panel",
+    "admin_panel": "Admin Panel",
+    "manage_profile": "Manage Profile Settings",
+    "logged_out_success": "Logged out successfully.",
+    "logout": "Logout"
+  },
+  "admin": {
+    "role_updated": "Role of {{email}} successfully updated to {{role}}.",
+    "never": "Never",
+    "search_placeholder": "Search by name, email or role...",
+    "loading_users": "Loading platform users...",
+    "registered_users": "Registered Users",
+    "autosave_enabled": "Autosave enabled",
+    "no_users_found": "No users found",
+    "refine_search": "Try refining your search or checking the applied filters.",
+    "table": {
+      "user": "User",
+      "email": "Email",
+      "created_at": "Created At",
+      "last_login": "Last Login",
+      "global_role": "Global Role"
+    },
+    "you": "You",
+    "tabs": {
+      "users": "Users",
+      "pilots": "Dictionary: Pilots",
+      "motorcycles": "Dictionary: Motorcycles",
+      "circuits": "Dictionary: Circuits"
+    },
+    "title": "Administration Panel",
+    "subtitle": "Manage users and dictionaries of the GP Masters Manager platform."
+  },
+  "auth": {
+    "validation": {
+      "fill_fields": "Please fill in all fields"
+    },
+    "success": {
+      "login": "Welcome back to GP Masters Manager!",
+      "register": "Registration successful! Please log in."
+    },
+    "subtitle": "Build your team, hire pilots, and rule the championship",
+    "tab": {
+      "sign_in": "SIGN IN",
+      "register": "REGISTER"
+    },
+    "form": {
+      "username": "Username",
+      "email": "Email Address",
+      "password": "Password"
+    },
+    "btn": {
+      "sign_in": "SIGN IN MANAGER",
+      "create_account": "CREATE ACCOUNT"
+    }
+  },
+  "championship": {
+    "loading": "Loading championship details...",
+    "back_dashboard": "BACK TO DASHBOARD",
+    "registration": {
+      "title": "Championship Registration",
+      "subtitle": "Create your team to compete and view telemetry.",
+      "full": "The grid is full (10/10 teams registered)."
+    },
+    "calendar": {
+      "back": "BACK TO CALENDAR",
+      "title": "Race Calendar",
+      "grand_prix": "Grand Prix",
+      "not_disputed": "The {{name}} GP is scheduled but hasn't been disputed yet.",
+      "hint": "Click on a completed (green) or in-progress (blue) race to access its dashboard.",
+      "max_reached": "This championship has reached the maximum limit of {{max}} circuits."
+    },
+    "gp": {
+      "not_registered": "Not registered in the championship!",
+      "register_required": "You must register your team in the Dashboard tab before you can simulate the {{name}} Grand Prix weekend.",
+      "go_register": "Go to Register"
+    }
+  },
+  "dashboard": {
+    "validation": {
+      "fill_fields": "Please fill in all fields",
+      "future_date": "Start date must be in the future.",
+      "pin_required": "Please enter an Access PIN for private championships",
+      "pin_format": "PIN must be 4 to 8 characters long and contain only letters and numbers."
+    },
+    "success": {
+      "created": "Championship created successfully!"
+    },
+    "title": "Championships",
+    "subtitle": "Manage active leagues or create a new GP Masters championship",
+    "btn": {
+      "new_championship": "NEW CHAMPIONSHIP"
+    },
+    "create": {
+      "title": "Create Championship",
+      "subtitle": "Initialize a new motorsport league calendar"
+    },
+    "tabs": {
+      "my_championships": "My Championships",
+      "available": "Available Championships"
+    },
+    "search": "Search by name or creator...",
+    "loading": "Loading championships...",
+    "empty": {
+      "search": "No results found",
+      "my_champs": "You are not registered in any championship",
+      "available": "No championships available",
+      "search_desc": "Try changing your search terms.",
+      "my_champs_desc": "Go to the \"Available Championships\" tab to register and compete in an active league.",
+      "available_desc": "Create a new championship using the button above to get started."
+    }
+  },
+  "landing": {
+    "features": {
+      "team": {
+        "title": "Team Management",
+        "desc": "Sign the best riders, manage your budget, and build the ultimate team capable of winning the championship."
+      },
+      "sim": {
+        "title": "Live Simulation Engine",
+        "desc": "Watch the race unfold with our advanced physics-based engine calculating wear, weather, and skills in real-time."
+      },
+      "weather": {
+        "title": "Dynamic Weather",
+        "desc": "Adapt your strategy on the fly as weather conditions change drastically during the race weekend."
+      },
+      "setup": {
+        "title": "Bike Setup",
+        "desc": "Tune your bikes for each unique circuit to gain those crucial milliseconds per lap."
+      }
+    },
+    "steps": {
+      "1": {
+        "title": "Create Your Account",
+        "desc": "Join the paddock and get your manager license."
+      },
+      "2": {
+        "title": "Join a Championship",
+        "desc": "Find an active league or create your own with custom rules."
+      },
+      "3": {
+        "title": "Sign Your Riders",
+        "desc": "Select the best talent that fits your team's budget and strategy."
+      },
+      "4": {
+        "title": "Compete for Glory",
+        "desc": "Manage setups, monitor weather, and win the constructors' title."
+      }
+    },
+    "nav": {
+      "signin": "Sign In",
+      "playnow": "Play Now"
+    },
+    "hero": {
+      "badge": "2026 Season is Live",
+      "title1": "DOMINATE THE",
+      "title2": "PADDOCK",
+      "desc": "Take control of your own MotoGP team. Sign elite riders, master dynamic weather conditions, and outsmart your rivals in our advanced physics-based racing simulation.",
+      "start": "START YOUR CAREER",
+      "discover": "Discover Features"
+    },
+    "nextgen": {
+      "title": "Next-Gen Management",
+      "desc": "Every decision counts. From the signing room to the checkered flag, experience the most authentic motorsport management simulation."
+    },
+    "journey": {
+      "title1": "Your Path to",
+      "title2": "World Champion",
+      "desc": "Start from the bottom, manage your resources wisely, and climb the global leaderboard."
+    },
+    "cta": {
+      "title1": "Ready to reach the",
+      "title2": "apex?",
+      "desc": "Join thousands of managers and compete for the world championship today.",
+      "btn": "CREATE FREE ACCOUNT"
+    },
+    "footer": {
+      "rights": "All rights reserved.",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    }
+  },
+  "privacy": {
+    "back": "Back to Home",
+    "title": "Privacy Policy",
+    "last_updated": "Last updated: July 2026",
+    "s1": {
+      "title": "1. Information We Collect",
+      "p1": "We collect information you provide directly to us when you register for GP Masters Manager MVP. This includes your username, email address, and any password you establish for account security. We do not collect sensitive personal data such as financial information or physical addresses."
+    },
+    "s2": {
+      "title": "2. How We Use Your Information",
+      "p1": "We use the information we collect to:",
+      "l1": "Provide, maintain, and improve the GP Masters Manager MVP platform.",
+      "l2": "Secure your account and verify your identity during login.",
+      "l3": "Communicate with you regarding game updates, championships, or technical issues.",
+      "l4": "Personalize your experience within the management simulation."
+    },
+    "s3": {
+      "title": "3. Data Sharing and Disclosure",
+      "p1": "We do not sell, trade, or otherwise transfer your personal information to outside parties. Your in-game manager name, team statistics, and championship results will be visible to other players on the platform as part of the core gameplay experience."
+    },
+    "s4": {
+      "title": "4. Data Security",
+      "p1": "We implement industry-standard security measures, including encryption (bcrypt) for passwords and secure JSON Web Tokens (JWT) for authentication. However, no electronic transmission or storage of information can be entirely secure, and we cannot guarantee absolute security."
+    },
+    "s5": {
+      "title": "5. Your Rights",
+      "p1": "You have the right to access, update, or request deletion of your personal information. If you wish to delete your account entirely, please contact the administration through the platform or send an email to support@motogpmanager.com."
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    }
+  },
+  "profile": {
+    "validation": {
+      "empty_password": "Please enter a new password",
+      "short_password": "Password must be at least 4 characters long"
+    },
+    "confirm_logout": "For security reasons, changing your password will close your current session. Do you wish to continue?",
+    "success": {
+      "password_updated": "Password updated successfully! Logging out..."
+    },
+    "loading": "Loading profile data...",
+    "back_dashboard": "BACK TO DASHBOARD",
+    "title": "Manager Profile",
+    "subtitle": "Review account details and update credentials",
+    "preferences": "Application Preferences",
+    "preferences_subtitle": "Local browser settings",
+    "language": "Interface Language",
+    "account_specifications": "Account Specifications",
+    "account_metadata": "Profile metadata (read-only)",
+    "nickname": "Nickname",
+    "email": "Email Address",
+    "last_login": "Last Login Date",
+    "na": "N/A",
+    "change_password": "Change Security Password",
+    "change_password_subtitle": "Updating password terminates all other active sessions",
+    "new_password": "New Password",
+    "enter_new_password": "Enter new manager password",
+    "update_password": "UPDATE PASSWORD"
+  },
+  "terms": {
+    "back": "Back to Home",
+    "title": "Terms of Service",
+    "last_updated": "Last updated: July 2026",
+    "s1": {
+      "title": "1. Acceptance of Terms",
+      "p1": "By accessing and playing GP Masters Manager MVP, you accept and agree to be bound by the terms and provisions of this agreement. If you do not agree to abide by these terms, you should not use this service."
+    },
+    "s2": {
+      "title": "2. Account Registration and Rules",
+      "l1": "You must provide a valid email address and secure password to create an account.",
+      "l2": "You are responsible for maintaining the confidentiality of your account credentials.",
+      "l3": "You agree not to use automated scripts, bots, or exploit bugs to gain an unfair advantage in the simulation.",
+      "l4": "Administrators reserve the right to ban or suspend accounts found violating fair play guidelines."
+    },
+    "s3": {
+      "title": "3. Gameplay and Simulation Engine",
+      "p1": "GP Masters Manager MVP relies on a customized physics and simulation engine to calculate race results. The results generated by the engine are final. We do not guarantee uninterrupted uptime of the simulation servers, and maintenance periods may occur without prior notice."
+    },
+    "s4": {
+      "title": "4. User Content",
+      "p1": "Users may create championships and teams. You agree not to use offensive, defamatory, or inappropriate language for usernames, team names, or championship names. The administrators reserve the right to rename or delete content deemed inappropriate."
+    },
+    "s5": {
+      "title": "5. Modifications to Service",
+      "p1": "We reserve the right to modify or discontinue, temporarily or permanently, the service (or any part of it) with or without notice. We shall not be liable to you or to any third party for any modification, suspension, or discontinuance of the service."
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    }
+  }
 }
