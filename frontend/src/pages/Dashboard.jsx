@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Plus, Trophy, Calendar, Users, ArrowRight, Loader, User, Lock, Globe, Search } from 'lucide-react';
+import { Plus, Trophy, Calendar, Users, ArrowRight, ChevronRight, Loader, User, Lock, Globe, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Dashboard = ({ showToast }) => {
