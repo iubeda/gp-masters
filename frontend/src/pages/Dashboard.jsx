@@ -8,13 +8,13 @@ const Dashboard = ({ showToast }) => {
   const { apiFetch, user } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  
+
   const [championships, setChampionships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [activeTab, setActiveTab] = useState('my-championships'); // 'my-championships', 'available-championships'
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // Helper to obtain tomorrow's date string YYYY-MM-DD
   const getTomorrowStr = () => {
     const tomorrow = new Date();
@@ -82,8 +82,8 @@ const Dashboard = ({ showToast }) => {
     try {
       await apiFetch('/api/championships', {
         method: 'POST',
-        body: JSON.stringify({ 
-          name, 
+        body: JSON.stringify({
+          name,
           season: parseInt(season),
           start_date: startDate,
           is_public: isPublic,
@@ -119,7 +119,7 @@ const Dashboard = ({ showToast }) => {
             <Trophy className="text-red-500 w-8 h-8" />
             {t('dashboard.title', 'Championships')}
           </h1>
-          <p className="text-gray-400 mt-1">{t('dashboard.subtitle', 'Manage active leagues or create a new MotoGP championship')}</p>
+          <p className="text-gray-400 mt-1">{t('dashboard.subtitle', 'Manage active leagues or create a new GP Masters championship')}</p>
         </div>
         {user.role !== 'player' && (
           <button
@@ -144,7 +144,7 @@ const Dashboard = ({ showToast }) => {
               <h2 className="text-xl font-bold text-white">{t('dashboard.create.title', 'Create Championship')}</h2>
               <p className="text-xs text-gray-400 mt-1">{t('dashboard.create.subtitle', 'Initialize a new motorsport league calendar')}</p>
             </div>
-            
+
             <form onSubmit={handleCreate} className="p-6 space-y-4 overflow-y-auto">
               <div className="space-y-1">
                 <label className="text-xs font-semibold uppercase text-gray-400">Championship Name</label>
@@ -198,26 +198,24 @@ const Dashboard = ({ showToast }) => {
                       <button
                         type="button"
                         onClick={() => setIsPublic(true)}
-                        className={`py-2.5 rounded-xl border font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-1.5 transition-all ${
-                          isPublic 
-                            ? 'bg-emerald-600/10 border-emerald-500/30 text-emerald-400' 
+                        className={`py-2.5 rounded-xl border font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-1.5 transition-all ${isPublic
+                            ? 'bg-emerald-600/10 border-emerald-500/30 text-emerald-400'
                             : 'bg-[#0F0F12] border-gray-800 text-gray-400 hover:text-white'
-                        }`}
+                          }`}
                       >
                         <Globe className="w-4 h-4" />
-                        Public
+                        {t('dashboard.create.public', 'Public')}
                       </button>
                       <button
                         type="button"
                         onClick={() => setIsPublic(false)}
-                        className={`py-2.5 rounded-xl border font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-1.5 transition-all ${
-                          !isPublic 
-                            ? 'bg-amber-600/10 border-amber-500/30 text-amber-400' 
+                        className={`py-2.5 rounded-xl border font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-1.5 transition-all ${!isPublic
+                            ? 'bg-amber-600/10 border-amber-500/30 text-amber-400'
                             : 'bg-[#0F0F12] border-gray-800 text-gray-400 hover:text-white'
-                        }`}
+                          }`}
                       >
                         <Lock className="w-4 h-4" />
-                        Private
+                        {t('dashboard.create.private', 'Private')}
                       </button>
                     </div>
                   </div>
@@ -321,11 +319,10 @@ const Dashboard = ({ showToast }) => {
               setActiveTab('my-championships');
               setSearchQuery('');
             }}
-            className={`py-2 px-4 rounded-lg text-xs font-bold transition-all ${
-              activeTab === 'my-championships'
+            className={`py-2 px-4 rounded-lg text-xs font-bold transition-all ${activeTab === 'my-championships'
                 ? 'bg-red-600 text-white shadow-lg'
                 : 'text-gray-400 hover:text-white'
-            }`}
+              }`}
           >
             {t('dashboard.tabs.my_championships', 'Mis Campeonatos')} ({championships.filter(c => c.is_member && !c.is_kicked).length})
           </button>
@@ -334,11 +331,10 @@ const Dashboard = ({ showToast }) => {
               setActiveTab('available-championships');
               setSearchQuery('');
             }}
-            className={`py-2 px-4 rounded-lg text-xs font-bold transition-all ${
-              activeTab === 'available-championships'
+            className={`py-2 px-4 rounded-lg text-xs font-bold transition-all ${activeTab === 'available-championships'
                 ? 'bg-red-600 text-white shadow-lg'
                 : 'text-gray-400 hover:text-white'
-            }`}
+              }`}
           >
             {t('dashboard.tabs.available', 'Campeonatos Disponibles')} ({championships.filter(c => !c.is_member && !c.is_kicked).length})
           </button>
@@ -368,7 +364,7 @@ const Dashboard = ({ showToast }) => {
           const myChampionships = championships.filter(c => c.is_member && !c.is_kicked);
           const availableChampionships = championships.filter(c => !c.is_member && !c.is_kicked);
           const listToFilter = activeTab === 'my-championships' ? myChampionships : availableChampionships;
-          
+
           const filtered = listToFilter.filter(champ => {
             const query = searchQuery.toLowerCase().trim();
             if (!query) return true;
@@ -386,10 +382,10 @@ const Dashboard = ({ showToast }) => {
                     {searchQuery ? t('dashboard.empty.search', 'No se encontraron resultados') : activeTab === 'my-championships' ? t('dashboard.empty.my_champs', 'No estás inscrito en ningún campeonato') : t('dashboard.empty.available', 'No hay campeonatos disponibles')}
                   </h3>
                   <p className="text-gray-400 text-sm max-w-md mx-auto">
-                    {searchQuery 
-                      ? t('dashboard.empty.search_desc', 'Prueba a cambiar los términos de búsqueda.') 
-                      : activeTab === 'my-championships' 
-                        ? t('dashboard.empty.my_champs_desc', 'Ve a la pestaña de "Campeonatos Disponibles" para inscribirte y competir en alguna liga activa.') 
+                    {searchQuery
+                      ? t('dashboard.empty.search_desc', 'Prueba a cambiar los términos de búsqueda.')
+                      : activeTab === 'my-championships'
+                        ? t('dashboard.empty.my_champs_desc', 'Ve a la pestaña de "Campeonatos Disponibles" para inscribirte y competir en alguna liga activa.')
                         : t('dashboard.empty.available_desc', 'Crea un campeonato nuevo utilizando el botón superior para empezar.')
                     }
                   </p>
@@ -403,7 +399,7 @@ const Dashboard = ({ showToast }) => {
               {filtered.map((champ) => {
                 const isCreator = champ.created_by?.toLowerCase() === user.email.toLowerCase();
                 return (
-                  <div 
+                  <div
                     key={champ.id}
                     className="glass rounded-2xl border border-gray-800/80 overflow-hidden flex flex-col justify-between hover:border-red-500/40 hover:shadow-red-950/10 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
                   >
@@ -416,19 +412,19 @@ const Dashboard = ({ showToast }) => {
                           </span>
                           {champ.is_public === false ? (
                             <span className="px-2 py-1 bg-amber-600/10 border border-amber-500/20 text-amber-500 text-[10px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
-                              <Lock className="w-3 h-3" />
-                              Private
+                              <Lock className="w-3.5 h-3.5" />
+                              {t('dashboard.create.private', 'Private')}
                             </span>
                           ) : (
                             <span className="px-2 py-1 bg-emerald-600/10 border border-emerald-500/20 text-emerald-500 text-[10px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
-                              <Globe className="w-3 h-3" />
-                              Public
+                              <Globe className="w-3.5 h-3.5" />
+                              {t('dashboard.create.public', 'Public')}
                             </span>
                           )}
                         </div>
                         <Trophy className="w-5 h-5 text-gray-550 group-hover:text-red-500 transition-colors" />
                       </div>
-                      
+
                       <div className="space-y-1.5">
                         <h3 className="text-xl font-bold text-white leading-tight group-hover:text-red-400 transition-colors">
                           {champ.name}
@@ -440,7 +436,6 @@ const Dashboard = ({ showToast }) => {
                       </div>
                     </div>
 
-                    {/* Card Stats */}
                     {/* Card Stats */}
                     <div className="px-6 py-4 bg-[#0F0F12]/40 border-t border-gray-800/50 grid grid-cols-2 gap-4">
                       <div className="flex items-center gap-2">
@@ -464,8 +459,8 @@ const Dashboard = ({ showToast }) => {
                       onClick={() => navigate('/championship/' + champ.id)}
                       className="w-full py-4 bg-[#16161C] hover:bg-red-600 text-gray-400 hover:text-white text-xs font-bold tracking-wider uppercase border-t border-gray-800/80 flex items-center justify-center gap-2 group-hover:border-red-500/20 transition-all font-mono"
                     >
-                      Ver Detalles del Campeonato
-                      <ArrowRight className="w-4 h-4" />
+                      {t('dashboard.card.view_details', 'Ver Detalles del Campeonato')}
+                      <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </button>
                   </div>
                 );

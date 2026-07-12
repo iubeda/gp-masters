@@ -1,7 +1,9 @@
 import React from 'react';
 import { CheckCircle2, CalendarDays } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit, todayStr }) => {
+  const { t } = useTranslation();
   if (!circuits || circuits.length === 0) {
     return (
       <div className="p-8 text-center text-gray-500 text-sm">
@@ -50,7 +52,7 @@ const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit, todayStr }) 
                   </h4>
                   {/* Distance and curves in one single line */}
                   <p className="text-[10px] text-gray-400 font-light uppercase tracking-wider">
-                    Distance: <strong className="text-white font-semibold">{circ.distance}m</strong> • Curves R: <strong className="text-white font-semibold">{circ.curves_right}</strong> • Curves L: <strong className="text-white font-semibold">{circ.curves_left}</strong>
+                    {t('championship.calendar.distance', 'Distance:')} <strong className="text-white font-semibold">{circ.distance}m</strong> {t('championship.calendar.curves_r', ' • Curves R: ')} <strong className="text-white font-semibold">{circ.curves_right}</strong> {t('championship.calendar.curves_l', ' • Curves L: ')} <strong className="text-white font-semibold">{circ.curves_left}</strong>
                   </p>
                 </div>
               </div>

@@ -69,12 +69,26 @@
       "grand_prix": "Grandes Premios",
       "not_disputed": "El GP de {{name}} está programado pero aún no se ha disputado.",
       "hint": "Haz click sobre una carrera realizada (verde) o en curso (azul) para acceder a su panel.",
-      "max_reached": "Este campeonato ha alcanzado el límite máximo de {{max}} circuitos."
+      "max_reached": "Este campeonato ha alcanzado el límite máximo de {{max}} circuitos.",
+      "distance": "Distancia:",
+      "curves_r": " • Curvas D: ",
+      "curves_l": " • Curvas I: "
     },
     "gp": {
       "not_registered": "¡No registrado en el campeonato!",
       "register_required": "Debes inscribir tu escudería en la pestaña de Dashboard antes de poder simular el fin de semana del Gran Premio de {{name}}.",
       "go_register": "Ir a Inscribirme"
+    },
+    "header": {
+      "season": "Temporada",
+      "private": "Privado",
+      "start_date": "Fecha Inicio:",
+      "creator": "Creador:",
+      "you_creator": "Tú (Creador)",
+      "system": "Sistema",
+      "access_pin": " • PIN de Acceso: ",
+      "pin_admin": " • PIN (admin): ",
+      "no_time_limit": "Sin límite horario"
     }
   },
   "dashboard": {
@@ -94,7 +108,9 @@
     },
     "create": {
       "title": "Crear Campeonato",
-      "subtitle": "Inicializa un nuevo calendario de liga de deportes de motor"
+      "subtitle": "Inicializa un nuevo calendario de liga de deportes de motor",
+      "public": "Público",
+      "private": "Privado"
     },
     "tabs": {
       "my_championships": "Mis Campeonatos",
@@ -109,6 +125,9 @@
       "search_desc": "Prueba a cambiar los términos de búsqueda.",
       "my_champs_desc": "Ve a la pestaña de \"Campeonatos Disponibles\" para inscribirte y competir en alguna liga activa.",
       "available_desc": "Crea un campeonato nuevo utilizando el botón superior para empezar."
+    },
+    "card": {
+      "view_details": "Ver Detalles del Campeonato"
     }
   },
   "landing": {
@@ -156,7 +175,7 @@
       "badge": "La Temporada 2026 está en Directo",
       "title1": "DOMINA EL",
       "title2": "PADDOCK",
-      "desc": "Toma el control de tu propio equipo de MotoGP. Ficha pilotos de élite, domina las condiciones climáticas dinámicas y supera a tus rivales en nuestra avanzada simulación de carreras basada en físicas.",
+      "desc": "Toma el control de tu propio equipo de Motos. Ficha pilotos de élite, domina las condiciones climáticas dinámicas y supera a tus rivales en nuestra avanzada simulación de carreras basada en físicas.",
       "start": "COMIENZA TU CARRERA",
       "discover": "Descubrir Características"
     },

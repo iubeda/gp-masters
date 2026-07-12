@@ -69,12 +69,26 @@
       "grand_prix": "Grand Prix",
       "not_disputed": "The {{name}} GP is scheduled but hasn't been disputed yet.",
       "hint": "Click on a completed (green) or in-progress (blue) race to access its dashboard.",
-      "max_reached": "This championship has reached the maximum limit of {{max}} circuits."
+      "max_reached": "This championship has reached the maximum limit of {{max}} circuits.",
+      "distance": "Distance:",
+      "curves_r": " • Curves R: ",
+      "curves_l": " • Curves L: "
     },
     "gp": {
       "not_registered": "Not registered in the championship!",
       "register_required": "You must register your team in the Dashboard tab before you can simulate the {{name}} Grand Prix weekend.",
       "go_register": "Go to Register"
+    },
+    "header": {
+      "season": "Season",
+      "private": "Private",
+      "start_date": "Start Date:",
+      "creator": "Creator:",
+      "you_creator": "You (Creator)",
+      "system": "System",
+      "access_pin": " • Access PIN: ",
+      "pin_admin": " • PIN (admin): ",
+      "no_time_limit": "No time limit"
     }
   },
   "dashboard": {
@@ -94,7 +108,9 @@
     },
     "create": {
       "title": "Create Championship",
-      "subtitle": "Initialize a new motorsport league calendar"
+      "subtitle": "Initialize a new motorsport league calendar",
+      "public": "Public",
+      "private": "Private"
     },
     "tabs": {
       "my_championships": "My Championships",
@@ -109,6 +125,9 @@
       "search_desc": "Try changing your search terms.",
       "my_champs_desc": "Go to the \"Available Championships\" tab to register and compete in an active league.",
       "available_desc": "Create a new championship using the button above to get started."
+    },
+    "card": {
+      "view_details": "View Championship Details"
     }
   },
   "landing": {
@@ -156,7 +175,7 @@
       "badge": "2026 Season is Live",
       "title1": "DOMINATE THE",
       "title2": "PADDOCK",
-      "desc": "Take control of your own MotoGP team. Sign elite riders, master dynamic weather conditions, and outsmart your rivals in our advanced physics-based racing simulation.",
+      "desc": "Take control of your own Motorcycle racing team. Sign elite riders, master dynamic weather conditions, and outsmart your rivals in our advanced physics-based racing simulation.",
       "start": "START YOUR CAREER",
       "discover": "Discover Features"
     },
