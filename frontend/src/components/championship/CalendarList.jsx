@@ -84,15 +84,15 @@ const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit, todayStr }) 
             {/* Dynamic Dates Grid */}
             <div className="border-t border-gray-800/50 pt-2 grid grid-cols-3 gap-1 text-[10px] text-center">
               <div className="bg-[#16161C]/50 p-1.5 rounded border border-gray-850">
-                <p className="text-gray-500 font-bold uppercase tracking-wider">Day 1: Prac</p>
+                <p className="text-gray-500 font-bold uppercase tracking-wider">{t('championship.calendar.day1_prac', 'Day 1: Prac')}</p>
                 <p className="text-gray-300 font-medium">{circ.practice_date}</p>
               </div>
               <div className="bg-[#16161C]/50 p-1.5 rounded border border-gray-850">
-                <p className="text-gray-500 font-bold uppercase tracking-wider">Day 2: Qual</p>
+                <p className="text-gray-500 font-bold uppercase tracking-wider">{t('championship.calendar.day2_qual', 'Day 2: Qual')}</p>
                 <p className="text-gray-300 font-medium">{circ.qualifying_date}</p>
               </div>
               <div className="bg-[#16161C]/50 p-1.5 rounded border border-gray-850">
-                <p className="text-gray-500 font-bold uppercase tracking-wider">Day 3: Race</p>
+                <p className="text-gray-500 font-bold uppercase tracking-wider">{t('championship.calendar.day3_race', 'Day 3: Race')}</p>
                 <p className="text-gray-300 font-bold text-red-400">{circ.race_date}</p>
               </div>
             </div>

@@ -300,7 +300,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
   // Clima correspondiente a la sesión activa
   const sessionWeatherMap = { practice: weather.practice, qualifying: weather.qualifying, race: weather.race };
   const currentWeather = sessionWeatherMap[activeTab];
-  const sessionLabel = activeTab === 'practice' ? 'Entrenamientos' : activeTab === 'qualifying' ? 'Clasificación' : 'Carrera';
+  const sessionLabel = activeTab === 'practice' ? t('championship.strategy.practice', 'Entrenamientos') : activeTab === 'qualifying' ? t('championship.strategy.qualifying', 'Clasificación') : t('championship.strategy.race', 'Carrera');
 
   const isPracticeFinished = circuit.status === 'completed' || (todayStr && todayStr > circuit.practice_date);
   const isQualifyingFinished = circuit.status === 'completed' || (todayStr && todayStr > circuit.qualifying_date);

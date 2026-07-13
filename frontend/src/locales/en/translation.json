@@ -75,7 +75,10 @@
       "curves_l": " • Curves L: ",
       "completed": "Completed",
       "in_progress": "In progress",
-      "scheduled": "Scheduled"
+      "scheduled": "Scheduled",
+      "day1_prac": "Day 1: Prac",
+      "day2_qual": "Day 2: Qual",
+      "day3_race": "Day 3: Race"
     },
     "gp": {
       "not_registered": "Not registered in the championship!",
@@ -138,7 +141,11 @@
       "asphalt": "Asphalt",
       "distance": "Distance:",
       "curves": "Curves:",
-      "open_schedules": "Open Schedules"
+      "open_schedules": "Open Schedules",
+      "rainy": "Rainy",
+      "cloudy": "Cloudy",
+      "sunny": "Sunny",
+      "pending_reveal": "Pending to be revealed"
     },
     "strategy": {
       "manager_settings": "Manager Settings",
@@ -199,6 +206,29 @@
       "suspension": "Susp.",
       "chassis": "Chassis",
       "wings": "Wings"
+    },
+    "add_circuit": {
+      "title": "Add Circuit to Calendar",
+      "subtitle": "Include a race circuit in the championship calendar",
+      "select_circuit": "Select Circuit",
+      "choose_circuit": "Choose a Circuit",
+      "submit_btn": "ADD CIRCUIT"
+    },
+    "kicked": {
+      "back_btn": "BACK TO DASHBOARD",
+      "title": "You have been kicked from this championship",
+      "subtitle": "An organizer (Master or Admin) has removed your active participation from this tournament.",
+      "reason": "Specified reason:"
+    },
+    "kick_modal": {
+      "title": "Kick Manager",
+      "subtitle": "Remove the user from the championship",
+      "about_to_kick": "You are about to kick",
+      "team": "Team:",
+      "warning": "Their bike and rider will become inactive but will keep their historical score.",
+      "reason_label": "Reason for kicking (Required)",
+      "cancel_btn": "CANCEL",
+      "kick_btn": "KICK"
     }
   },
   "dashboard": {

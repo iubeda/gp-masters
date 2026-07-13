@@ -45,10 +45,10 @@ export default function CircuitHeader({ circuit, sessionLabel, currentWeather, i
               <div className="font-bold uppercase tracking-wider text-gray-300">
                 <span className={currentWeather.weather_condition === 'rainy' ? 'text-blue-400' : currentWeather.weather_condition === 'cloudy' ? 'text-gray-300' : 'text-amber-500'}>
                   {currentWeather.weather_condition === 'rainy'
-                    ? `Lluvia (${currentWeather.rain_percentage}%)`
+                    ? `${t('championship.circuit.rainy', 'Lluvia')} (${currentWeather.rain_percentage}%)`
                     : currentWeather.weather_condition === 'cloudy'
-                    ? 'Nublado'
-                    : 'Soleado'}
+                    ? t('championship.circuit.cloudy', 'Nublado')
+                    : t('championship.circuit.sunny', 'Soleado')}
                 </span>
               </div>
               <div className="flex gap-3 text-gray-400">
@@ -60,7 +60,7 @@ export default function CircuitHeader({ circuit, sessionLabel, currentWeather, i
         ) : (
           <div className="flex items-center gap-2 text-gray-500 text-xs">
             <HelpCircle className="w-4 h-4" />
-            <span>Pendiente de revelarse</span>
+            <span>{t('championship.circuit.pending_reveal', 'Pendiente de revelarse')}</span>
           </div>
         )}
       </div>

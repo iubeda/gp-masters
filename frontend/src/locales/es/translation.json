@@ -75,7 +75,10 @@
       "curves_l": " • Curvas I: ",
       "completed": "Realizada",
       "in_progress": "En curso",
-      "scheduled": "Programada"
+      "scheduled": "Programada",
+      "day1_prac": "Día 1: Entren.",
+      "day2_qual": "Día 2: Clasif.",
+      "day3_race": "Día 3: Carrera"
     },
     "gp": {
       "not_registered": "¡No registrado en el campeonato!",
@@ -138,7 +141,11 @@
       "asphalt": "Asfalto",
       "distance": "Distancia:",
       "curves": "Curvas:",
-      "open_schedules": "Horarios Abiertos"
+      "open_schedules": "Horarios Abiertos",
+      "rainy": "Lluvia",
+      "cloudy": "Nublado",
+      "sunny": "Soleado",
+      "pending_reveal": "Pendiente de revelarse"
     },
     "strategy": {
       "manager_settings": "Ajustes del Mánager",
@@ -199,6 +206,29 @@
       "suspension": "Susp.",
       "chassis": "Chasis",
       "wings": "Alerón"
+    },
+    "add_circuit": {
+      "title": "Añadir Circuito al Calendario",
+      "subtitle": "Incluir un circuito de carreras en el calendario del campeonato",
+      "select_circuit": "Seleccionar Circuito",
+      "choose_circuit": "Elige un Circuito",
+      "submit_btn": "AÑADIR CIRCUITO"
+    },
+    "kicked": {
+      "back_btn": "VOLVER AL DASHBOARD",
+      "title": "Has sido expulsado de este campeonato",
+      "subtitle": "Un organizador (Master o Admin) te ha retirado la participación activa de este torneo.",
+      "reason": "Motivo especificado:"
+    },
+    "kick_modal": {
+      "title": "Expulsar Mánager",
+      "subtitle": "Retirar al usuario del campeonato",
+      "about_to_kick": "Estás a punto de expulsar a",
+      "team": "Equipo:",
+      "warning": "Su moto y piloto quedarán inactivos pero mantendrá su puntuación histórica.",
+      "reason_label": "Motivo de la expulsión (Obligatorio)",
+      "cancel_btn": "CANCELAR",
+      "kick_btn": "EXPULSAR"
     }
   },
   "dashboard": {
