@@ -356,9 +356,9 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
           {/* Navigation tabs */}
           <div className="flex bg-[#101017] p-1.5 rounded-2xl border border-gray-850">
             {[
-              { id: 'practice', label: '1. Entrenamientos Libres', info: teamStatus ? `${15 - teamStatus.practice_laps_used} / 15 laps` : '15 / 15 laps' },
-              { id: 'qualifying', label: '2. Clasificación', info: teamStatus ? `${3 - teamStatus.qualifying_laps_used} / 3 laps` : '3 / 3 laps' },
-              { id: 'race', label: '3. Carrera', info: isRaceFinished ? 'Completado' : 'Pendiente' }
+              { id: 'practice', label: `1. ${t('championship.race_center.free_practice', 'Entrenamientos Libres')}`, info: teamStatus ? `${15 - teamStatus.practice_laps_used} / 15 laps` : '15 / 15 laps' },
+              { id: 'qualifying', label: `2. ${t('championship.strategy.qualifying', 'Clasificación')}`, info: teamStatus ? `${3 - teamStatus.qualifying_laps_used} / 3 laps` : '3 / 3 laps' },
+              { id: 'race', label: `3. ${t('championship.strategy.race', 'Carrera')}`, info: isRaceFinished ? t('championship.calendar.completed', 'Completado') : t('championship.strategy.pending', 'Pendiente') }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -389,7 +389,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                   </div>
                 ) : isPracticeFinished ? (
                   <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic uppercase tracking-wider">
-                    Sesión de entrenamientos libres finalizada
+                    {t('championship.race_center.practice_finished', 'Sesión de entrenamientos libres finalizada')}
                   </div>
                 ) : (
                   <div className="bg-[#101017] border border-gray-850 p-5 rounded-2xl space-y-4">
@@ -400,7 +400,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                     
                     <div className="flex items-center gap-4">
                       <div className="flex-1 space-y-1">
-                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Vueltas a realizar (Máx: {15 - teamStatus.practice_laps_used})</label>
+                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{t('championship.race_center.laps_to_do', 'Vueltas a realizar')} (Máx: {15 - teamStatus.practice_laps_used})</label>
                         <input 
                           type="number" 
                           min="1" 
@@ -443,7 +443,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
               {practiceLaps.length === 0 ? (
                 <div className="bg-[#101017] border border-gray-850 rounded-2xl p-8 text-center text-gray-500 text-xs">
                   {teamId 
-                    ? "No has rodado ninguna vuelta de entrenamientos todavía hoy." 
+                    ? t('championship.race_center.no_practice_laps', 'No has rodado ninguna vuelta de entrenamientos todavía hoy.') 
                     : "No hay telemetría propia disponible para administradores sin equipo."}
                 </div>
               ) : (
@@ -464,18 +464,18 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                   </div>
                 ) : isQualifyingFinished ? (
                   <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic uppercase tracking-wider">
-                    Sesión de clasificación finalizada
+                    {t('championship.race_center.qualifying_finished', 'Sesión de clasificación finalizada')}
                   </div>
                 ) : (
                   <div className="bg-[#101017] border border-gray-850 p-5 rounded-2xl space-y-4">
                     <h4 className="text-sm font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
                       <Play className="w-4 h-4 text-red-500" />
-                      Simular Clasificación (Time Attack)
+                      {t('championship.race_center.simulate_qualifying', 'Simular Clasificación')}
                     </h4>
                     
                     <div className="flex items-center gap-4">
                       <div className="flex-1 space-y-1">
-                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Vueltas a realizar (Máx: {3 - teamStatus.qualifying_laps_used})</label>
+                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{t('championship.race_center.laps_to_do', 'Vueltas a realizar')} (Máx: {3 - teamStatus.qualifying_laps_used})</label>
                         <input 
                           type="number" 
                           min="1" 
@@ -490,7 +490,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                         onClick={handleQualifyingStint}
                         className="h-[46px] self-end px-6 bg-red-600 hover:bg-red-500 text-xs font-bold rounded-xl transition-all disabled:bg-gray-800 disabled:text-gray-500 flex items-center justify-center gap-1.5"
                       >
-                        {simulating ? 'Simulando...' : 'Rodar Clasificación'}
+                        {simulating ? 'Simulando...' : t('championship.race_center.ride_qualifying', 'Rodar Clasificación')}
                       </button>
                     </div>
                   </div>
@@ -531,15 +531,15 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
               {teamId && !isRaceFinished && (
                 <div className="bg-[#101017] border border-gray-850 p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <h4 className="text-sm font-bold text-gray-300 uppercase tracking-wider">Guardar Estrategia de Carrera</h4>
-                    <p className="text-xs text-gray-500">Asegura tu setup, neumáticos y enfoque antes de que empiece la carrera (14:00h).</p>
+                    <h4 className="text-sm font-bold text-gray-300 uppercase tracking-wider">{t('championship.strategy.save_race_strategy', 'Guardar Estrategia de Carrera')}</h4>
+                    <p className="text-xs text-gray-500">{t('championship.strategy.secure_setup_warning', 'Asegura tu setup, neumáticos y enfoque antes de que empiece la carrera (14:00h).')}</p>
                   </div>
                   <button
                     onClick={handleSaveStrategy}
                     disabled={simulating || !isSetupBalanced}
                     className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-xs font-bold rounded-xl transition-all disabled:bg-gray-800 disabled:text-gray-500 flex items-center justify-center gap-1.5"
                   >
-                    Guardar Estrategia
+                    {t('championship.strategy.save_strategy', 'Guardar Estrategia')}
                   </button>
                 </div>
               )}
@@ -577,7 +577,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
 
               {/* Historial de Vueltas de la Carrera (si ya finalizó) */}
               {teamId && isRaceFinished && raceLaps.length > 0 && (
-                <SessionLapsHistory laps={raceLaps} title="Tu Vuelta a Vuelta en Carrera" />
+                <SessionLapsHistory laps={raceLaps} title={t('championship.race_center.your_lap_by_lap', 'Tu Vuelta a Vuelta en Carrera')} />
               )}
             </div>
           )}

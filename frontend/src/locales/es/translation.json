@@ -72,7 +72,10 @@
       "max_reached": "Este campeonato ha alcanzado el límite máximo de {{max}} circuitos.",
       "distance": "Distancia:",
       "curves_r": " • Curvas D: ",
-      "curves_l": " • Curvas I: "
+      "curves_l": " • Curvas I: ",
+      "completed": "Realizada",
+      "in_progress": "En curso",
+      "scheduled": "Programada"
     },
     "gp": {
       "not_registered": "¡No registrado en el campeonato!",
@@ -93,7 +96,8 @@
     "tabs": {
       "calendar": "Calendario",
       "my_team": "Mi escudería",
-      "standings": "Clasificación General"
+      "standings": "Clasificación General",
+      "active_gp": "GP Activo"
     },
     "standings": {
       "registered_teams": "Equipos Registrados",
@@ -109,7 +113,70 @@
       "practice": "Entrenamientos",
       "qualifying": "Clasificación",
       "race": "Carrera",
-      "simulate_btn": "Simular este circuito"
+      "simulate_btn": "Simular este circuito",
+      "length": "Longitud",
+      "curves_rl": "Curvas R/L"
+    },
+    "my_team": {
+      "pilot": "PILOTO",
+      "talent": "Talento",
+      "consistency": "Consistencia",
+      "aggressiveness": "Agresividad",
+      "experience": "Experiencia",
+      "fitness": "Estado físico",
+      "engine": "Motor",
+      "gearbox": "Cambio",
+      "wings": "Alerón"
+    },
+    "circuit": {
+      "weather": "Clima",
+      "air": "Aire",
+      "asphalt": "Asfalto",
+      "distance": "Distancia:",
+      "curves": "Curvas:"
+    },
+    "strategy": {
+      "manager_settings": "Ajustes del Mánager",
+      "tyre_compound": "Compuesto de neumático",
+      "pilot_focus": "Enfoque del piloto",
+      "conservative": "Conservador",
+      "safe": "Ahorro/Seguro",
+      "balanced": "Equilibrado",
+      "aggressive": "Agresivo",
+      "fast_crashes": "Rápido/Caídas",
+      "practice": "Entrenamientos",
+      "qualifying": "Clasificación",
+      "race": "Carrera",
+      "pending": "Pendiente",
+      "save_race_strategy": "Guardar Estrategia de Carrera",
+      "secure_setup_warning": "Asegura tu setup, neumáticos y enfoque antes de que empiece la carrera (14:00h).",
+      "save_strategy": "Guardar Estrategia"
+    },
+    "race_center": {
+      "free_practice": "Entrenamientos Libres",
+      "simulate_qualifying": "Simular clasificación",
+      "laps_to_do": "Vueltas a realizar",
+      "ride_qualifying": "Rodar Clasificación",
+      "official_qualifying_times": "Tiempos de Clasificación Oficiales",
+      "your_time": "Tu tiempo",
+      "position": "Posición",
+      "pilot": "Piloto",
+      "team": "Equipo",
+      "best_lap": "Mejor vuelta",
+      "laps_used": "Vueltas Usadas",
+      "practice_finished": "Sesión de entrenamientos libres finalizada",
+      "qualifying_finished": "Sesión de clasificación finalizada",
+      "no_practice_laps": "No has rodado ninguna vuelta de entrenamientos todavía hoy.",
+      "official_race_results": "Resultados Oficiales de la Carrera ({{laps}} Vueltas)",
+      "grid": "Parrilla",
+      "total_time": "Tiempo total",
+      "points": "Puntos",
+      "earnings": "Ingresos",
+      "your_lap_by_lap": "Tu vuelta a vuelta en carrera",
+      "lap": "Vuelta",
+      "time": "Tiempo",
+      "accumulated_wear": "Desgaste acumulado",
+      "details_incidents": "Detalles/Incidentes"
     }
   },
   "dashboard": {

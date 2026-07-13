@@ -62,7 +62,7 @@ const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit, todayStr }) 
                 {isCompleted ? (
                   <span className="px-2 py-0.5 bg-emerald-600/10 border border-emerald-500/20 text-emerald-400 text-[9px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-                    Realizada
+                    {t('championship.calendar.completed', 'Realizada')}
                   </span>
                 ) : isActive ? (
                   <span className="px-2 py-0.5 bg-blue-600/10 border border-blue-500/20 text-blue-400 text-[9px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
@@ -70,12 +70,12 @@ const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit, todayStr }) 
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                     </span>
-                    En curso
+                    {t('championship.calendar.in_progress', 'En curso')}
                   </span>
                 ) : (
                   <span className="px-2 py-0.5 bg-gray-800/60 border border-gray-700/60 text-gray-400 text-[9px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
                     <CalendarDays className="w-3 h-3 text-gray-500" />
-                    Programada
+                    {t('championship.calendar.scheduled', 'Programada')}
                   </span>
                 )}
               </div>

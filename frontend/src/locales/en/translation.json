@@ -72,7 +72,10 @@
       "max_reached": "This championship has reached the maximum limit of {{max}} circuits.",
       "distance": "Distance:",
       "curves_r": " • Curves R: ",
-      "curves_l": " • Curves L: "
+      "curves_l": " • Curves L: ",
+      "completed": "Completed",
+      "in_progress": "In progress",
+      "scheduled": "Scheduled"
     },
     "gp": {
       "not_registered": "Not registered in the championship!",
@@ -93,7 +96,8 @@
     "tabs": {
       "calendar": "Calendar",
       "my_team": "My Team",
-      "standings": "General Standings"
+      "standings": "General Standings",
+      "active_gp": "Active GP"
     },
     "standings": {
       "registered_teams": "Registered Teams",
@@ -109,7 +113,70 @@
       "practice": "Practice",
       "qualifying": "Qualifying",
       "race": "Race",
-      "simulate_btn": "Simulate this circuit"
+      "simulate_btn": "Simulate this circuit",
+      "length": "Length",
+      "curves_rl": "Curves R/L"
+    },
+    "my_team": {
+      "pilot": "RIDER",
+      "talent": "Talent",
+      "consistency": "Consistency",
+      "aggressiveness": "Aggressiveness",
+      "experience": "Experience",
+      "fitness": "Fitness",
+      "engine": "Engine",
+      "gearbox": "Gearbox",
+      "wings": "Wings"
+    },
+    "circuit": {
+      "weather": "Weather",
+      "air": "Air",
+      "asphalt": "Asphalt",
+      "distance": "Distance:",
+      "curves": "Curves:"
+    },
+    "strategy": {
+      "manager_settings": "Manager Settings",
+      "tyre_compound": "Tyre Compound",
+      "pilot_focus": "Rider Focus",
+      "conservative": "Conservative",
+      "safe": "Safe/Save",
+      "balanced": "Balanced",
+      "aggressive": "Aggressive",
+      "fast_crashes": "Fast/Crashes",
+      "practice": "Practice",
+      "qualifying": "Qualifying",
+      "race": "Race",
+      "pending": "Pending",
+      "save_race_strategy": "Save Race Strategy",
+      "secure_setup_warning": "Secure your setup, tyres and focus before the race starts (14:00h).",
+      "save_strategy": "Save Strategy"
+    },
+    "race_center": {
+      "free_practice": "Free Practice",
+      "simulate_qualifying": "Simulate qualifying",
+      "laps_to_do": "Laps to do",
+      "ride_qualifying": "Ride Qualifying",
+      "official_qualifying_times": "Official Qualifying Times",
+      "your_time": "Your time",
+      "position": "Position",
+      "pilot": "Rider",
+      "team": "Team",
+      "best_lap": "Best lap",
+      "laps_used": "Laps Used",
+      "practice_finished": "Free practice session finished",
+      "qualifying_finished": "Qualifying session finished",
+      "no_practice_laps": "You have not ridden any practice laps yet today.",
+      "official_race_results": "Official Race Results ({{laps}} Laps)",
+      "grid": "Grid",
+      "total_time": "Total time",
+      "points": "Points",
+      "earnings": "Earnings",
+      "your_lap_by_lap": "Your lap by lap in race",
+      "lap": "Lap",
+      "time": "Time",
+      "accumulated_wear": "Accumulated wear",
+      "details_incidents": "Details/Incidents"
     }
   },
   "dashboard": {

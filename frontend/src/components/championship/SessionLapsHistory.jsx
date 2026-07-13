@@ -1,8 +1,10 @@
 import React from 'react';
 import { History } from 'lucide-react';
 import { formatLapTime } from '../../utils/timeFormat';
+import { useTranslation } from 'react-i18next';
 
 export default function SessionLapsHistory({ laps, title = 'Tu Vuelta a Vuelta' }) {
+  const { t } = useTranslation();
   if (!laps || laps.length === 0) return null;
 
   return (
@@ -17,10 +19,10 @@ export default function SessionLapsHistory({ laps, title = 'Tu Vuelta a Vuelta' 
         <table className="w-full text-left text-xs">
           <thead className="bg-[#161622] text-gray-400 uppercase tracking-wider font-bold">
             <tr>
-              <th className="p-3">Vuelta</th>
-              <th className="p-3">Tiempo</th>
-              <th className="p-3">Desgaste Acumulado</th>
-              <th className="p-3">Detalles / Incidentes</th>
+              <th className="p-3">{t('championship.race_center.lap', 'Vuelta')}</th>
+              <th className="p-3">{t('championship.race_center.time', 'Tiempo')}</th>
+              <th className="p-3">{t('championship.race_center.accumulated_wear', 'Desgaste Acumulado')}</th>
+              <th className="p-3">{t('championship.race_center.details_incidents', 'Detalles / Incidentes')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-850">

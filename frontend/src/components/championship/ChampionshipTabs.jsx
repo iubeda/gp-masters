@@ -38,7 +38,7 @@ const ChampionshipTabs = ({ activeTab, onTabChange, activeGP, isMember, userRole
           {isMember && (todayStr >= activeGP.practice_date || activeGP.status === 'in_progress' || activeGP.bypass_restrictions) && (
             <span className="w-2 h-2 rounded-full bg-red-500 animate-ping shrink-0" />
           )}
-          {(todayStr >= activeGP.practice_date || activeGP.status === 'in_progress' || activeGP.bypass_restrictions) ? 'GP Activo: ' : 'Próximo GP: '} {activeGP.name}
+          {(todayStr >= activeGP.practice_date || activeGP.status === 'in_progress' || activeGP.bypass_restrictions) ? t('championship.tabs.active_gp', 'GP Activo: ') : 'Próximo GP: '} {activeGP.name}
         </button>
       )}
     </div>

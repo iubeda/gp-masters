@@ -40,7 +40,7 @@ const NextRaceCard = ({ activeGP, hasCircuits, isMember, userRole, todayStr, isC
           <div>
             <h4 className="text-xl font-extrabold text-white">{activeGP.name}</h4>
             <p className="text-xs text-gray-400 mt-1 uppercase tracking-wider">
-              Longitud: <strong className="text-white font-semibold">{activeGP.distance}m</strong> • Curvas R/L:{' '}
+              {t('championship.next_race.length', 'Longitud')}: <strong className="text-white font-semibold">{activeGP.distance}m</strong> • {t('championship.next_race.curves_rl', 'Curvas R/L')}:{' '}
               <strong className="text-white font-semibold">
                 {activeGP.curves_right}/{activeGP.curves_left}
               </strong>
