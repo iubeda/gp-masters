@@ -386,8 +386,8 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                 isPracticeFuture ? (
                   <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic tracking-wider flex flex-col items-center gap-2">
                     <CalendarDays className="w-6 h-6 text-blue-400 mb-1" />
-                    <span>Los entrenamientos libres aún no han comenzado.</span>
-                    <span className="text-xs text-gray-500 font-normal">Programados para el {circuit.practice_date}</span>
+                    <span>{t('championship.race_center.practice_not_started', 'Los entrenamientos libres aún no han comenzado.')}</span>
+                    <span className="text-xs text-gray-500 font-normal">{t('championship.race_center.scheduled_for', 'Programados para el')} {circuit.practice_date}</span>
                   </div>
                 ) : isPracticeFinished ? (
                   <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic uppercase tracking-wider">
@@ -397,7 +397,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                   <div className="bg-[#101017] border border-gray-850 p-5 rounded-2xl space-y-4">
                     <h4 className="text-sm font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
                       <Play className="w-4 h-4 text-red-500" />
-                      Simular Tanda de Entrenamientos
+                      {t('championship.race_center.simulate_practice', 'Simular Tanda de Entrenamientos')}
                     </h4>
                     
                     <div className="flex items-center gap-4">
@@ -424,7 +424,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                 )
               ) : (
                 <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-xs text-gray-450 italic">
-                  Los entrenamientos libres solo están disponibles para los participantes del campeonato.
+                  {t('championship.race_center.practice_only_participants', 'Los entrenamientos libres solo están disponibles para los participantes del campeonato.')}
                 </div>
               )}
 
@@ -461,8 +461,8 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                 isQualifyingFuture ? (
                   <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic tracking-wider flex flex-col items-center gap-2">
                     <CalendarDays className="w-6 h-6 text-blue-400 mb-1" />
-                    <span>La sesión de clasificación aún no ha comenzado.</span>
-                    <span className="text-xs text-gray-500 font-normal">Programada para el {circuit.qualifying_date}</span>
+                    <span>{t('championship.race_center.qualifying_not_started', 'La sesión de clasificación aún no ha comenzado.')}</span>
+                    <span className="text-xs text-gray-500 font-normal">{t('championship.race_center.scheduled_for', 'Programada para el')} {circuit.qualifying_date}</span>
                   </div>
                 ) : isQualifyingFinished ? (
                   <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic uppercase tracking-wider">
@@ -499,7 +499,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                 )
               ) : (
                 <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-xs text-gray-450 italic">
-                  La clasificación solo está disponible para los participantes del campeonato.
+                  {t('championship.race_center.qualifying_only_participants', 'La clasificación solo está disponible para los participantes del campeonato.')}
                 </div>
               )}
 
@@ -551,10 +551,10 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                 <div className="bg-gradient-to-r from-yellow-600/10 to-[#101017] border border-yellow-500/20 p-5 rounded-2xl space-y-4">
                   <div className="flex items-center gap-2">
                     <CalendarDays className="w-5 h-5 text-yellow-500" />
-                    <h4 className="text-sm font-bold text-yellow-500 uppercase tracking-wider">Simulación de la Carrera</h4>
+                    <h4 className="text-sm font-bold text-yellow-500 uppercase tracking-wider">{t('championship.race_center.race_simulation', 'Simulación de la Carrera')}</h4>
                   </div>
                   <p className="text-xs text-gray-400">
-                    La carrera se simula de forma progresiva (vuelta a vuelta) para ofrecer Live Timing a todos los usuarios conectados.
+                    {t('championship.race_center.race_simulation_desc', 'La carrera se simula de forma progresiva (vuelta a vuelta) para ofrecer Live Timing a todos los usuarios conectados.')}
                   </p>
                   
                   <button
@@ -562,7 +562,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                     onClick={handleSimulateRace}
                     className="w-full py-3 bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-extrabold text-sm rounded-xl transition-all disabled:bg-gray-800 disabled:text-gray-500 flex items-center justify-center gap-1.5 shadow-lg"
                   >
-                    {simulating ? 'Iniciando Transmisión...' : '¡INICIAR CARRERA (LIVE)!'}
+                    {simulating ? t('championship.race_center.starting_transmission', 'Iniciando Transmisión...') : t('championship.race_center.start_race_live', '¡INICIAR CARRERA (LIVE)!')}
                   </button>
                 </div>
               )}

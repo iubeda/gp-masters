@@ -110,7 +110,11 @@
         "points": "Points",
         "manager": "Manager"
       },
-      "no_points": "No points registered in the championship yet."
+      "no_points": "No points registered in the championship yet.",
+      "kick": "Kick",
+      "kicked": "Kicked",
+      "reason": "Reason:",
+      "not_specified": "Not specified"
     },
     "next_race": {
       "title": "Next Race",
@@ -122,7 +126,8 @@
       "curves_rl": "Curves R/L",
       "no_circuits_programmed": "No Circuits Programmed",
       "creator_no_circuits": "You haven't added any circuit to this championship yet. Go to the Calendar tab to schedule the races.",
-      "member_no_circuits": "No circuits have been scheduled in the calendar of this championship yet. Please wait for the organizer to add the races."
+      "member_no_circuits": "No circuits have been scheduled in the calendar of this championship yet. Please wait for the organizer to add the races.",
+      "all_simulated": "All races of the championship have been simulated. Check the General Standings to see the final podium."
     },
     "my_team": {
       "pilot": "RIDER",
@@ -162,7 +167,9 @@
       "pending": "Pending",
       "save_race_strategy": "Save Race Strategy",
       "secure_setup_warning": "Secure your setup, tyres and focus before the race starts (14:00h).",
-      "save_strategy": "Save Strategy"
+      "save_strategy": "Save Strategy",
+      "admin_mode": "Admin Mode",
+      "admin_mode_desc": "You are not participating in this championship. As an administrator you can see the general status of the other teams and force the race simulation."
     },
     "race_center": {
       "free_practice": "Free Practice",
@@ -190,7 +197,17 @@
       "accumulated_wear": "Accumulated wear",
       "details_incidents": "Details/Incidents",
       "pilot_radio": "Rider Radio Message",
-      "your_qualifying_telemetry": "Your Qualifying Telemetry"
+      "your_qualifying_telemetry": "Your Qualifying Telemetry",
+      "practice_not_started": "Free practice has not started yet.",
+      "scheduled_for": "Scheduled for",
+      "simulate_practice": "Simulate Practice Stint",
+      "practice_only_participants": "Free practice is only available for championship participants.",
+      "qualifying_not_started": "The qualifying session has not started yet.",
+      "qualifying_only_participants": "Qualifying is only available for championship participants.",
+      "race_simulation": "Race Simulation",
+      "race_simulation_desc": "The race is simulated progressively (lap by lap) to offer Live Timing to all connected users.",
+      "starting_transmission": "Starting Transmission...",
+      "start_race_live": "START RACE (LIVE)!"
     },
     "telemetry": {
       "best_time": "Best time",
@@ -229,6 +246,16 @@
       "reason_label": "Reason for kicking (Required)",
       "cancel_btn": "CANCEL",
       "kick_btn": "KICK"
+    },
+    "live_timing": {
+      "live": "Live",
+      "laps": "Laps",
+      "waiting_first_lap": "Waiting for the first lap finish line pass...",
+      "pos": "Pos",
+      "pilot_team": "Rider / Team",
+      "lap_time": "Lap Time",
+      "wear": "Wear",
+      "crash": "Crash (DNF)"
     }
   },
   "dashboard": {

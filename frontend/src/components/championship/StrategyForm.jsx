@@ -19,9 +19,9 @@ export default function StrategyForm({
     return (
       <div className="bg-[#101017] border border-gray-850 p-6 rounded-2xl space-y-4 text-center">
         <Shield className="w-12 h-12 text-yellow-500 mx-auto" />
-        <h3 className="font-bold text-white text-sm uppercase tracking-wider">Modo Administrador</h3>
+        <h3 className="font-bold text-white text-sm uppercase tracking-wider">{t('championship.strategy.admin_mode', 'Modo Administrador')}</h3>
         <p className="text-xs text-gray-455 leading-relaxed">
-          No estás participando en este campeonato. Como administrador puedes ver el estado general de los demás equipos y forzar la simulación de la carrera.
+          {t('championship.strategy.admin_mode_desc', 'No estás participando en este campeonato. Como administrador puedes ver el estado general de los demás equipos y forzar la simulación de la carrera.')}
         </p>
       </div>
     );

@@ -1,8 +1,10 @@
 import React from 'react';
 import { Activity, Timer } from 'lucide-react';
 import { formatLapTime } from '../../utils/timeFormat';
+import { useTranslation } from 'react-i18next';
 
 export default function LiveTimingTable({ liveRace }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-[#101017] border border-red-900/30 rounded-2xl overflow-hidden shadow-[0_0_20px_rgba(220,38,38,0.1)] relative">
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-600 via-red-400 to-red-600 animate-pulse" />
@@ -14,21 +16,21 @@ export default function LiveTimingTable({ liveRace }) {
             <div className="absolute inset-0 bg-red-500 blur-md opacity-50 animate-pulse rounded-full" />
           </div>
           <div>
-            <h4 className="text-sm font-extrabold text-white uppercase tracking-wider">Live Timing</h4>
-            <p className="text-[10px] text-red-400 font-bold uppercase tracking-widest animate-pulse">En Directo</p>
+            <h4 className="text-sm font-extrabold text-white uppercase tracking-wider">{t('championship.live_timing.title', 'Live Timing')}</h4>
+            <p className="text-[10px] text-red-400 font-bold uppercase tracking-widest animate-pulse">{t('championship.live_timing.live', 'En Directo')}</p>
           </div>
         </div>
         <div className="text-right">
           <span className="text-2xl font-black text-white font-mono">{liveRace.currentLap}</span>
           <span className="text-sm text-gray-500 font-mono font-bold"> / {liveRace.totalLaps}</span>
-          <p className="text-[10px] text-gray-400 uppercase tracking-widest mt-0.5">Vueltas</p>
+          <p className="text-[10px] text-gray-400 uppercase tracking-widest mt-0.5">{t('championship.live_timing.laps', 'Vueltas')}</p>
         </div>
       </div>
 
       <div className="overflow-x-auto p-4">
         {liveRace.standings.length === 0 ? (
           <div className="text-center py-10 text-gray-500 text-xs italic">
-            Esperando el paso por meta de la primera vuelta...
+            {t('championship.live_timing.waiting_first_lap', 'Esperando el paso por meta de la primera vuelta...')}
           </div>
         ) : (
           (() => {
@@ -43,10 +45,10 @@ export default function LiveTimingTable({ liveRace }) {
               <table className="w-full text-left text-xs border-separate border-spacing-y-1">
                 <thead className="text-gray-400 uppercase tracking-wider font-bold">
                   <tr>
-                    <th className="px-3 pb-2">Pos</th>
-                    <th className="px-3 pb-2">Piloto / Equipo</th>
-                    <th className="px-3 pb-2">Tiempo de Vuelta</th>
-                    <th className="px-3 pb-2">Desgaste</th>
+                    <th className="px-3 pb-2">{t('championship.live_timing.pos', 'Pos')}</th>
+                    <th className="px-3 pb-2">{t('championship.live_timing.pilot_team', 'Piloto / Equipo')}</th>
+                    <th className="px-3 pb-2">{t('championship.live_timing.lap_time', 'Tiempo de Vuelta')}</th>
+                    <th className="px-3 pb-2">{t('championship.live_timing.wear', 'Desgaste')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -78,7 +80,7 @@ export default function LiveTimingTable({ liveRace }) {
                         <td className="p-3">
                           <div className="font-bold text-white text-sm">{s.pilot_name}</div>
                           <div className="text-[10px] text-gray-400">{s.team_name}</div>
-                          {s.has_crashed && <span className="inline-block mt-1 px-1.5 py-0.5 bg-red-950/50 text-red-500 text-[9px] font-bold uppercase rounded border border-red-500/20">Caída (DNF)</span>}
+                          {s.has_crashed && <span className="inline-block mt-1 px-1.5 py-0.5 bg-red-950/50 text-red-500 text-[9px] font-bold uppercase rounded border border-red-500/20">{t('championship.live_timing.crash', 'Caída (DNF)')}</span>}
                         </td>
                         <td className="p-3">
                           <div className={`font-mono font-bold flex items-center gap-2 ${

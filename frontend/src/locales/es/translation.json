@@ -110,7 +110,11 @@
         "points": "Puntos",
         "manager": "Mánager"
       },
-      "no_points": "Aún no hay puntuaciones registradas en el campeonato."
+      "no_points": "Aún no hay puntuaciones registradas en el campeonato.",
+      "kick": "Expulsar",
+      "kicked": "Expulsado",
+      "reason": "Motivo:",
+      "not_specified": "No especificado"
     },
     "next_race": {
       "title": "Siguiente Carrera",
@@ -122,7 +126,8 @@
       "curves_rl": "Curvas R/L",
       "no_circuits_programmed": "Sin Circuitos Programados",
       "creator_no_circuits": "Aún no has añadido ningún circuito a este campeonato. Dirígete a la pestaña de Calendario para programar las carreras.",
-      "member_no_circuits": "Aún no se han programado circuitos en el calendario de este campeonato. Por favor, espera a que el organizador añada las carreras."
+      "member_no_circuits": "Aún no se han programado circuitos en el calendario de este campeonato. Por favor, espera a que el organizador añada las carreras.",
+      "all_simulated": "Todas las carreras del campeonato han sido simuladas. Consulta la Clasificación General para ver el podio final."
     },
     "my_team": {
       "pilot": "PILOTO",
@@ -162,7 +167,9 @@
       "pending": "Pendiente",
       "save_race_strategy": "Guardar Estrategia de Carrera",
       "secure_setup_warning": "Asegura tu setup, neumáticos y enfoque antes de que empiece la carrera (14:00h).",
-      "save_strategy": "Guardar Estrategia"
+      "save_strategy": "Guardar Estrategia",
+      "admin_mode": "Modo Administrador",
+      "admin_mode_desc": "No estás participando en este campeonato. Como administrador puedes ver el estado general de los demás equipos y forzar la simulación de la carrera."
     },
     "race_center": {
       "free_practice": "Entrenamientos Libres",
@@ -190,7 +197,17 @@
       "accumulated_wear": "Desgaste acumulado",
       "details_incidents": "Detalles/Incidentes",
       "pilot_radio": "Mensaje de Radio del Piloto",
-      "your_qualifying_telemetry": "Tu Telemetría de Clasificación"
+      "your_qualifying_telemetry": "Tu Telemetría de Clasificación",
+      "practice_not_started": "Los entrenamientos libres aún no han comenzado.",
+      "scheduled_for": "Programados para el",
+      "simulate_practice": "Simular Tanda de Entrenamientos",
+      "practice_only_participants": "Los entrenamientos libres solo están disponibles para los participantes del campeonato.",
+      "qualifying_not_started": "La sesión de clasificación aún no ha comenzado.",
+      "qualifying_only_participants": "La clasificación solo está disponible para los participantes del campeonato.",
+      "race_simulation": "Simulación de la Carrera",
+      "race_simulation_desc": "La carrera se simula de forma progresiva (vuelta a vuelta) para ofrecer Live Timing a todos los usuarios conectados.",
+      "starting_transmission": "Iniciando Transmisión...",
+      "start_race_live": "¡INICIAR CARRERA (LIVE)!"
     },
     "telemetry": {
       "best_time": "Mejor tiempo",
@@ -229,6 +246,16 @@
       "reason_label": "Motivo de la expulsión (Obligatorio)",
       "cancel_btn": "CANCELAR",
       "kick_btn": "EXPULSAR"
+    },
+    "live_timing": {
+      "live": "En Directo",
+      "laps": "Vueltas",
+      "waiting_first_lap": "Esperando el paso por meta de la primera vuelta...",
+      "pos": "Pos",
+      "pilot_team": "Piloto / Equipo",
+      "lap_time": "Tiempo de Vuelta",
+      "wear": "Desgaste",
+      "crash": "Caída (DNF)"
     }
   },
   "dashboard": {

@@ -99,7 +99,7 @@ const NextRaceCard = ({ activeGP, hasCircuits, isMember, userRole, todayStr, isC
       <Trophy className="w-10 h-10 text-yellow-500 mx-auto animate-bounce animate-pulse" />
       <h4 className="text-base font-bold text-white">¡Campeonato Finalizado!</h4>
       <p className="text-xs text-gray-400 leading-relaxed max-w-md mx-auto">
-        Todas las carreras del campeonato han sido simuladas. Consulta la Clasificación General para ver el podio final.
+        {t('championship.next_race.all_simulated', 'Todas las carreras del campeonato han sido simuladas. Consulta la Clasificación General para ver el podio final.')}
       </p>
     </div>
   );
