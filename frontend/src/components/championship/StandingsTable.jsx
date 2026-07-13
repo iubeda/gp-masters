@@ -35,7 +35,7 @@ const StandingsTable = ({ teams, user, isCreator, championship, onKick }) => {
       {/* Body */}
       {teams.length === 0 ? (
         <div className="p-8 text-center text-gray-500 text-sm">
-          Aún no hay puntuaciones registradas en el campeonato.
+          {t('championship.standings.no_points', 'Aún no hay puntuaciones registradas en el campeonato.')}
         </div>
       ) : (
         <div className="overflow-x-auto">

@@ -83,11 +83,11 @@ const NextRaceCard = ({ activeGP, hasCircuits, isMember, userRole, todayStr, isC
     return (
       <div className="glass rounded-2xl border border-gray-800 p-8 text-center space-y-3 bg-gradient-to-r from-gray-600/10 via-transparent to-transparent">
         <Calendar className="w-10 h-10 text-gray-500 mx-auto" />
-        <h4 className="text-base font-bold text-white">Sin Circuitos Programados</h4>
+        <h4 className="text-base font-bold text-white">{t('championship.next_race.no_circuits_programmed', 'Sin Circuitos Programados')}</h4>
         <p className="text-xs text-gray-400 leading-relaxed max-w-md mx-auto">
-          {isCreator
-            ? 'Aún no has añadido ningún circuito a este campeonato. Dirígete a la pestaña de Calendario para programar las carreras.'
-            : 'Aún no se han programado circuitos en el calendario de este campeonato. Por favor, espera a que el organizador añada las carreras.'}
+          {isCreator 
+            ? t('championship.next_race.creator_no_circuits', 'Aún no has añadido ningún circuito a este campeonato. Dirígete a la pestaña de Calendario para programar las carreras.')
+            : t('championship.next_race.member_no_circuits', 'Aún no se han programado circuitos en el calendario de este campeonato. Por favor, espera a que el organizador añada las carreras.')}
         </p>
       </div>
     );

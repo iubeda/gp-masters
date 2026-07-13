@@ -106,7 +106,8 @@
         "team": "Equipo",
         "points": "Puntos",
         "manager": "Mánager"
-      }
+      },
+      "no_points": "Aún no hay puntuaciones registradas en el campeonato."
     },
     "next_race": {
       "title": "Siguiente Carrera",
@@ -115,7 +116,10 @@
       "race": "Carrera",
       "simulate_btn": "Simular este circuito",
       "length": "Longitud",
-      "curves_rl": "Curvas R/L"
+      "curves_rl": "Curvas R/L",
+      "no_circuits_programmed": "Sin Circuitos Programados",
+      "creator_no_circuits": "Aún no has añadido ningún circuito a este campeonato. Dirígete a la pestaña de Calendario para programar las carreras.",
+      "member_no_circuits": "Aún no se han programado circuitos en el calendario de este campeonato. Por favor, espera a que el organizador añada las carreras."
     },
     "my_team": {
       "pilot": "PILOTO",
@@ -237,6 +241,14 @@
       "creator": "Creador:",
       "teams": "Equipos",
       "circuits": "Circuitos"
+    },
+    "modal": {
+      "max_races": "Máx. Carreras",
+      "max_participants": "Máx. Participantes",
+      "between_gps": "Entre 2 y 15 GPs",
+      "between_teams": "Entre 2 y 12 equipos",
+      "time_limit": "Limitación Horaria (12h–15h)",
+      "time_limit_desc": "Si está activo, los entrenamientos y clasificación solo se pueden simular entre las 12:00h y las 15:00h."
     }
   },
   "landing": {

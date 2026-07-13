@@ -106,7 +106,8 @@
         "team": "Team",
         "points": "Points",
         "manager": "Manager"
-      }
+      },
+      "no_points": "No points registered in the championship yet."
     },
     "next_race": {
       "title": "Next Race",
@@ -115,7 +116,10 @@
       "race": "Race",
       "simulate_btn": "Simulate this circuit",
       "length": "Length",
-      "curves_rl": "Curves R/L"
+      "curves_rl": "Curves R/L",
+      "no_circuits_programmed": "No Circuits Programmed",
+      "creator_no_circuits": "You haven't added any circuit to this championship yet. Go to the Calendar tab to schedule the races.",
+      "member_no_circuits": "No circuits have been scheduled in the calendar of this championship yet. Please wait for the organizer to add the races."
     },
     "my_team": {
       "pilot": "RIDER",
@@ -237,6 +241,14 @@
       "creator": "Creator:",
       "teams": "Teams",
       "circuits": "Circuits"
+    },
+    "modal": {
+      "max_races": "Max Races",
+      "max_participants": "Max Participants",
+      "between_gps": "Between 2 and 15 GPs",
+      "between_teams": "Between 2 and 12 teams",
+      "time_limit": "Time Limitation (12h-15h)",
+      "time_limit_desc": "If active, practice and qualifying can only be simulated between 12:00h and 15:00h."
     }
   },
   "landing": {

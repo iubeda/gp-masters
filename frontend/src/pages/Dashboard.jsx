@@ -241,7 +241,7 @@ const Dashboard = ({ showToast }) => {
               {/* Race & team limits */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold uppercase text-gray-400">Máx. Carreras</label>
+                  <label className="text-xs font-semibold uppercase text-gray-400">{t('dashboard.modal.max_races', 'Máx. Carreras')}</label>
                   <input
                     type="number"
                     min="2"
@@ -251,10 +251,10 @@ const Dashboard = ({ showToast }) => {
                     className="w-full px-4 py-3 bg-[#0F0F12] border border-gray-800 rounded-xl focus:border-red-500 focus:outline-none text-white text-sm"
                     required
                   />
-                  <p className="text-[10px] text-gray-500">Entre 2 y 15 GPs</p>
+                  <p className="text-[10px] text-gray-500">{t('dashboard.modal.between_gps', 'Entre 2 y 15 GPs')}</p>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold uppercase text-gray-400">Máx. Participantes</label>
+                  <label className="text-xs font-semibold uppercase text-gray-400">{t('dashboard.modal.max_participants', 'Máx. Participantes')}</label>
                   <input
                     type="number"
                     min="2"
@@ -264,15 +264,15 @@ const Dashboard = ({ showToast }) => {
                     className="w-full px-4 py-3 bg-[#0F0F12] border border-gray-800 rounded-xl focus:border-red-500 focus:outline-none text-white text-sm"
                     required
                   />
-                  <p className="text-[10px] text-gray-500">Entre 2 y 12 equipos</p>
+                  <p className="text-[10px] text-gray-500">{t('dashboard.modal.between_teams', 'Entre 2 y 12 equipos')}</p>
                 </div>
               </div>
 
               {/* Time restriction toggle */}
               <div className="flex items-center justify-between p-4 bg-[#0F0F12] border border-gray-800 rounded-xl">
                 <div>
-                  <p className="text-xs font-semibold text-gray-300">Limitación Horaria (12h–15h)</p>
-                  <p className="text-[10px] text-gray-500 mt-0.5">Si está activo, los entrenamientos y clasificación solo se pueden simular entre las 12:00h y las 15:00h.</p>
+                  <p className="text-xs font-semibold text-gray-300">{t('dashboard.modal.time_limit', 'Limitación Horaria (12h–15h)')}</p>
+                  <p className="text-[10px] text-gray-500 mt-0.5">{t('dashboard.modal.time_limit_desc', 'Si está activo, los entrenamientos y clasificación solo se pueden simular entre las 12:00h y las 15:00h.')}</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer ml-4 flex-shrink-0">
                   <input
