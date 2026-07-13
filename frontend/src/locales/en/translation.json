@@ -133,7 +133,8 @@
       "air": "Air",
       "asphalt": "Asphalt",
       "distance": "Distance:",
-      "curves": "Curves:"
+      "curves": "Curves:",
+      "open_schedules": "Open Schedules"
     },
     "strategy": {
       "manager_settings": "Manager Settings",
@@ -176,7 +177,24 @@
       "lap": "Lap",
       "time": "Time",
       "accumulated_wear": "Accumulated wear",
-      "details_incidents": "Details/Incidents"
+      "details_incidents": "Details/Incidents",
+      "pilot_radio": "Rider Radio Message",
+      "your_qualifying_telemetry": "Your Qualifying Telemetry"
+    },
+    "telemetry": {
+      "best_time": "Best time",
+      "lap": "Lap",
+      "stint": "Stint",
+      "lap_time": "Lap Time",
+      "tire_wear": "Tire Wear",
+      "tire": "Tire",
+      "focus": "Focus",
+      "bike_setup": "Bike Setup",
+      "engine": "Engine",
+      "gearbox": "Gearbox",
+      "suspension": "Susp.",
+      "chassis": "Chassis",
+      "wings": "Wings"
     }
   },
   "dashboard": {

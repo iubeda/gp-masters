@@ -433,7 +433,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                 <div className="bg-gradient-to-r from-red-950/20 to-[#101017] border border-red-500/20 p-5 rounded-2xl space-y-3">
                   <div className="flex items-center gap-2">
                     <MessageSquare className="w-4.5 h-4.5 text-red-400" />
-                    <span className="text-xs font-bold text-red-400 uppercase tracking-wider">Mensaje de Radio del Piloto</span>
+                    <span className="text-xs font-bold text-red-400 uppercase tracking-wider">{t('championship.race_center.pilot_radio', 'Mensaje de Radio del Piloto')}</span>
                   </div>
                   <blockquote className="text-sm italic text-gray-200">
                     "{practiceLaps[practiceLaps.length - 1].feedback_received || 'El piloto no tiene comentarios todavía.'}"
@@ -508,7 +508,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                 <div className="bg-gradient-to-r from-red-950/20 to-[#101017] border border-red-500/20 p-5 rounded-2xl space-y-3">
                   <div className="flex items-center gap-2">
                     <MessageSquare className="w-4.5 h-4.5 text-red-400" />
-                    <span className="text-xs font-bold text-red-400 uppercase tracking-wider">Mensaje de Radio del Piloto</span>
+                    <span className="text-xs font-bold text-red-400 uppercase tracking-wider">{t('championship.race_center.pilot_radio', 'Mensaje de Radio del Piloto')}</span>
                   </div>
                   <blockquote className="text-sm italic text-gray-200">
                     "{qualifyingLaps[qualifyingLaps.length - 1].feedback_received || 'El piloto no tiene comentarios todavía.'}"
@@ -518,7 +518,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
 
               {/* Tu Telemetría de Clasificación */}
               {teamId && qualifyingLaps.length > 0 && (
-                <DetailedLapsHistory laps={qualifyingLaps} title="Tu Telemetría de Clasificación" bestTime={teamStatus?.best_qualifying_time} />
+                <DetailedLapsHistory laps={qualifyingLaps} title={t('championship.race_center.your_qualifying_telemetry', 'Tu Telemetría de Clasificación')} bestTime={teamStatus?.best_qualifying_time} />
               )}
 
               {/* Parrilla de Clasificación Actualizada */}

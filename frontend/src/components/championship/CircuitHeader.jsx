@@ -16,7 +16,7 @@ export default function CircuitHeader({ circuit, sessionLabel, currentWeather, i
           {isGlobalBypass && (
             <span className="px-2.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
               <Unlock className="w-3 h-3" />
-              Horarios Abiertos
+              {t('championship.circuit.open_schedules', 'Horarios Abiertos')}
             </span>
           )}
         </div>
