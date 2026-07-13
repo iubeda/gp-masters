@@ -12,8 +12,10 @@ import SessionLapsHistory from './SessionLapsHistory';
 import DetailedLapsHistory from './DetailedLapsHistory';
 import CircuitHeader from './CircuitHeader';
 import StrategyForm from './StrategyForm';
+import { useTranslation } from 'react-i18next';
 
 const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, todayStr }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   
   const determineInitialTab = () => {
