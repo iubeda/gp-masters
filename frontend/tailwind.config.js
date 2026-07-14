@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Premium MotoGP themed colors: dark grays, vibrant reds/oranges, carbon-like accents
+        // Premium GP Masters themed colors: dark grays, vibrant reds/oranges, carbon-like accents
         dark: {
           bg: '#0F0F12',
           card: '#16161C',

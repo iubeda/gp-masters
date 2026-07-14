@@ -85,7 +85,7 @@ const Landing = () => {
             </div>
             <div>
               <span className="font-extrabold text-white text-lg tracking-wider">
-                MOTOGP
+                MASTERS
               </span>
               <span className="font-light text-gray-400 text-xs block -mt-1 uppercase tracking-widest">
                 Manager MVP
@@ -294,12 +294,12 @@ const Landing = () => {
             </div>
             <div>
               <span className="font-extrabold text-white text-sm tracking-wider">
-                MOTOGP MANAGER
+                MASTERS MANAGER
               </span>
             </div>
           </div>
           <div className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} MotoGP Manager MVP. {t('landing.footer.rights', "Todos los derechos reservados.")}
+            © {new Date().getFullYear()} GP Masters Manager MVP. {t('landing.footer.rights', "Todos los derechos reservados.")}
           </div>
           <div className="flex gap-4 text-sm text-gray-500">
             <button onClick={() => navigate('/privacy')} className="hover:text-white transition-colors">{t('landing.footer.privacy', "Privacidad")}</button>

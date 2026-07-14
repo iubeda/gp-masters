@@ -39,7 +39,7 @@ const AdminUsers = ({ showToast }) => {
         body: JSON.stringify({ role: newRole })
       });
       showToast(t('admin.role_updated', 'Rol de {{email}} actualizado a {{role}} correctamente.', { email, role: newRole.toUpperCase() }), 'success');
-      setUsers(prevUsers => 
+      setUsers(prevUsers =>
         prevUsers.map(u => u.email === email ? { ...u, role: newRole } : u)
       );
     } catch (error) {
@@ -138,11 +138,10 @@ const AdminUsers = ({ showToast }) => {
                     const isSaving = updatingEmails[userItem.email];
 
                     return (
-                      <tr 
-                        key={userItem.email} 
-                        className={`transition-colors hover:bg-[#16161C]/30 ${
-                          isSelf ? 'bg-red-955/5' : ''
-                        }`}
+                      <tr
+                        key={userItem.email}
+                        className={`transition-colors hover:bg-[#16161C]/30 ${isSelf ? 'bg-red-955/5' : ''
+                          }`}
                       >
                         <td className="p-4 pl-6">
                           <div className="flex items-center gap-2.5">
@@ -184,9 +183,8 @@ const AdminUsers = ({ showToast }) => {
                               value={userItem.role}
                               disabled={isSelf || isSaving}
                               onChange={(e) => handleRoleChange(userItem.email, e.target.value)}
-                              className={`px-3 py-1.5 border rounded-xl text-xs font-bold uppercase tracking-wider focus:outline-none bg-[#0F0F12] select-none cursor-pointer transition-all ${getRoleBadgeClass(userItem.role)} ${
-                                isSelf ? 'opacity-70 cursor-not-allowed border-dashed' : ''
-                              }`}
+                              className={`px-3 py-1.5 border rounded-xl text-xs font-bold uppercase tracking-wider focus:outline-none bg-[#0F0F12] select-none cursor-pointer transition-all ${getRoleBadgeClass(userItem.role)} ${isSelf ? 'opacity-70 cursor-not-allowed border-dashed' : ''
+                                }`}
                             >
                               <option value="player" className="bg-[#0F0F12] text-gray-300">Player</option>
                               <option value="manager" className="bg-[#0F0F12] text-blue-400 font-bold">Manager</option>
@@ -222,7 +220,7 @@ const AdminUsers = ({ showToast }) => {
           <Shield className="text-red-505 w-8 h-8" />
           {t('admin.title', 'Panel de Administración')}
         </h1>
-        <p className="text-gray-400 text-sm">{t('admin.subtitle', 'Gestiona los usuarios y diccionarios de la plataforma MotoGP Manager.')}</p>
+        <p className="text-gray-400 text-sm">{t('admin.subtitle', 'Gestiona los usuarios y diccionarios de la plataforma GP Masters Manager.')}</p>
       </div>
 
       {/* Tabs */}
@@ -231,11 +229,10 @@ const AdminUsers = ({ showToast }) => {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold whitespace-nowrap transition-colors border-b-2 ${
-              activeTab === tab.id
+            className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold whitespace-nowrap transition-colors border-b-2 ${activeTab === tab.id
                 ? 'border-red-500 text-red-400 bg-red-600/5'
                 : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-700'
-            }`}
+              }`}
           >
             <tab.icon className="w-4 h-4" />
             {tab.label}

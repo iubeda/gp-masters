@@ -57,7 +57,7 @@ const NavigationHeader = ({ showToast }) => {
     <header className="border-b border-gray-800 bg-[#16161C]/80 backdrop-blur-md sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
-        <div 
+        <div
           onClick={() => navigate('/dashboard')}
           className="flex items-center gap-2.5 cursor-pointer select-none group"
         >
@@ -66,7 +66,7 @@ const NavigationHeader = ({ showToast }) => {
           </div>
           <div>
             <span className="font-extrabold text-white text-base tracking-wider group-hover:text-red-400 transition-colors">
-              MOTOGP
+              MASTERS
             </span>
             <span className="font-light text-gray-400 text-xs block -mt-1 uppercase tracking-widest">
               Manager MVP
@@ -86,11 +86,10 @@ const NavigationHeader = ({ showToast }) => {
                   navigate('/admin');
                 }
               }}
-              className={`flex items-center gap-2 px-3.5 py-1.5 border rounded-xl transition-all select-none ${
-                location.pathname === '/admin'
+              className={`flex items-center gap-2 px-3.5 py-1.5 border rounded-xl transition-all select-none ${location.pathname === '/admin'
                   ? 'bg-red-600/15 border-red-500/35 text-red-400 font-bold shadow-lg shadow-red-600/5'
                   : 'bg-gray-800/40 hover:bg-gray-850 border-gray-800 text-gray-250'
-              }`}
+                }`}
               title={t('app.admin_panel_title', 'Panel de Administración')}
             >
               <Shield className="w-4 h-4 text-red-500" />
@@ -107,17 +106,16 @@ const NavigationHeader = ({ showToast }) => {
                 navigate('/profile');
               }
             }}
-            className={`flex items-center gap-2 px-3.5 py-1.5 border rounded-xl transition-all select-none ${
-              isProfileActive
+            className={`flex items-center gap-2 px-3.5 py-1.5 border rounded-xl transition-all select-none ${isProfileActive
                 ? 'bg-red-600/10 border-red-500/30 text-red-400 font-bold'
                 : 'bg-gray-800/40 hover:bg-gray-850 border-gray-800 text-gray-250'
-            }`}
+              }`}
             title={t('app.manage_profile', 'Manage Profile Settings')}
           >
             <User className="w-4 h-4 text-red-500" />
             <span className="text-sm font-semibold">{user.username}</span>
           </button>
-          
+
           <button
             onClick={() => {
               logout();
@@ -139,65 +137,65 @@ const MainApp = ({ showToast }) => {
   return (
     <div className="min-h-screen flex flex-col bg-[#0F0F12] grid-bg">
       <NavigationHeader showToast={showToast} />
-      
+
       {/* Main Container routes */}
       <main className="flex-1 pb-16">
         <Routes>
-          <Route 
-            path="/login" 
+          <Route
+            path="/login"
             element={
               <PublicRoute>
                 <Auth showToast={showToast} />
               </PublicRoute>
-            } 
+            }
           />
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
               <PublicRoute>
                 <Landing />
               </PublicRoute>
-            } 
+            }
           />
-          <Route 
-            path="/privacy" 
-            element={<Privacy />} 
+          <Route
+            path="/privacy"
+            element={<Privacy />}
           />
-          <Route 
-            path="/terms" 
-            element={<Terms />} 
+          <Route
+            path="/terms"
+            element={<Terms />}
           />
-          <Route 
-            path="/dashboard" 
+          <Route
+            path="/dashboard"
             element={
               <ProtectedRoute>
                 <Dashboard showToast={showToast} />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/championship/:id" 
+          <Route
+            path="/championship/:id"
             element={
               <ProtectedRoute>
                 <ChampionshipDetail showToast={showToast} />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/profile" 
+          <Route
+            path="/profile"
             element={
               <ProtectedRoute>
                 <Profile showToast={showToast} />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/admin" 
+          <Route
+            path="/admin"
             element={
               <AdminRoute>
                 <AdminUsers showToast={showToast} />
               </AdminRoute>
-            } 
+            }
           />
           {/* Catch-all redirects to Dashboard */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
@@ -219,10 +217,10 @@ function App() {
       <BrowserRouter>
         <MainApp showToast={showToast} />
         {toast && (
-          <Toast 
-            message={toast.message} 
-            type={toast.type} 
-            onClose={() => setToast(null)} 
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
           />
         )}
       </BrowserRouter>

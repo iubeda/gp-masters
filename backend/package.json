@@ -1,7 +1,7 @@
 {
   "name": "motogp-manager-backend",
   "version": "1.0.0",
-  "description": "Backend API for MotoGP Manager MVP",
+  "description": "Backend API for GP Masters Manager MVP",
   "main": "server.js",
   "scripts": {
     "start": "npm run migrate:up && node server.js",

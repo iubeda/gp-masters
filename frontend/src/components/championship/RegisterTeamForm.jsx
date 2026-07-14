@@ -1,21 +1,21 @@
 import React from 'react';
 import { Shield, Lock } from 'lucide-react';
 
-const RegisterTeamForm = ({ 
-  onSubmit, 
-  teamName, 
-  setTeamName, 
-  pin, 
-  setPin, 
-  registeringTeam, 
-  championship 
+const RegisterTeamForm = ({
+  onSubmit,
+  teamName,
+  setTeamName,
+  pin,
+  setPin,
+  registeringTeam,
+  championship
 }) => {
   return (
     <div className="glass rounded-2xl border border-gray-800 overflow-hidden shadow-xl animate-fadeIn">
       <div className="p-6 bg-gradient-to-r from-orange-600/10 to-transparent border-b border-gray-800">
         <h2 className="text-lg font-bold text-white flex items-center gap-2">
           <Shield className="w-5 h-5 text-orange-500" />
-          Register Your MotoGP Team
+          Register Your Moto Team
         </h2>
         <p className="text-xs text-gray-400 mt-1">Submit your team name and enter the championship grid</p>
       </div>

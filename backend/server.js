@@ -22,7 +22,7 @@ database.initializeDatabase().then(() => {
 
   // Start Server
   server.listen(PORT, () => {
-    logger.info(`MotoGP Manager backend running on port ${PORT}`);
+    logger.info(`GP Masters Manager backend running on port ${PORT}`);
 
     // Start the background automatic simulation scheduler
     const { startScheduler } = require('./utils/scheduler');

@@ -34,7 +34,7 @@ const Auth = ({ showToast }) => {
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'X-Requested-With': 'XMLHttpRequest'
         },
@@ -48,7 +48,7 @@ const Auth = ({ showToast }) => {
 
       if (isLogin) {
         login(data.user);
-        showToast(t('auth.success.login', 'Welcome back to MotoGP Manager!'), 'success');
+        showToast(t('auth.success.login', 'Welcome back to GP Masters Manager!'), 'success');
       } else {
         showToast(t('auth.success.register', 'Registration successful! Please log in.'), 'success');
         setIsLogin(true);
@@ -74,7 +74,7 @@ const Auth = ({ showToast }) => {
             <Trophy className="w-8 h-8 text-red-500" />
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
-            MOTOGP MANAGER
+            GP MASTERS MANAGER
           </h1>
           <p className="text-sm text-gray-400 mt-2 font-light">
             {t('auth.subtitle', 'Build your team, hire pilots, and rule the championship')}
@@ -85,21 +85,19 @@ const Auth = ({ showToast }) => {
         <div className="flex border-b border-gray-800 bg-[#0F0F12]/50">
           <button
             onClick={() => { setIsLogin(true); setEmail(''); setUsername(''); setPassword(''); }}
-            className={`flex-1 py-4 text-sm font-semibold tracking-wider transition-colors ${
-              isLogin 
-                ? 'text-red-500 border-b-2 border-red-500 bg-[#16161C]/50' 
-                : 'text-gray-400 hover:text-white'
-            }`}
+            className={`flex-1 py-4 text-sm font-semibold tracking-wider transition-colors ${isLogin
+              ? 'text-red-500 border-b-2 border-red-500 bg-[#16161C]/50'
+              : 'text-gray-400 hover:text-white'
+              }`}
           >
             {t('auth.tab.sign_in', 'SIGN IN')}
           </button>
           <button
             onClick={() => { setIsLogin(false); setEmail(''); setUsername(''); setPassword(''); }}
-            className={`flex-1 py-4 text-sm font-semibold tracking-wider transition-colors ${
-              !isLogin 
-                ? 'text-red-500 border-b-2 border-red-500 bg-[#16161C]/50' 
-                : 'text-gray-400 hover:text-white'
-            }`}
+            className={`flex-1 py-4 text-sm font-semibold tracking-wider transition-colors ${!isLogin
+              ? 'text-red-500 border-b-2 border-red-500 bg-[#16161C]/50'
+              : 'text-gray-400 hover:text-white'
+              }`}
           >
             {t('auth.tab.register', 'REGISTER')}
           </button>
