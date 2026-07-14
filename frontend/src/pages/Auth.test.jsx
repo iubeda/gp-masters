@@ -23,7 +23,7 @@ describe('Auth Component', () => {
     render(<MemoryRouter><Auth showToast={vi.fn()} /></MemoryRouter>);
 
     expect(screen.getByRole('button', { name: /^sign in$/i })).toHaveClass('text-red-500');
-    expect(screen.getByPlaceholderText(/manager@motogp.com/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/player@example.com/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/••••••••/i)).toBeInTheDocument();
     expect(screen.queryByPlaceholderText(/ManagerName/i)).not.toBeInTheDocument();
   });
@@ -64,7 +64,7 @@ describe('Auth Component', () => {
 
     render(<MemoryRouter><Auth showToast={mockShowToast} /></MemoryRouter>);
 
-    fireEvent.change(screen.getByPlaceholderText(/manager@motogp.com/i), {
+    fireEvent.change(screen.getByPlaceholderText(/player@example.com/i), {
       target: { value: 'manager@motogp.com' }
     });
     fireEvent.change(screen.getByPlaceholderText(/••••••••/i), {
@@ -92,7 +92,7 @@ describe('Auth Component', () => {
 
     render(<MemoryRouter><Auth showToast={mockShowToast} /></MemoryRouter>);
 
-    fireEvent.change(screen.getByPlaceholderText(/manager@motogp.com/i), {
+    fireEvent.change(screen.getByPlaceholderText(/player@example.com/i), {
       target: { value: 'manager@motogp.com' }
     });
     fireEvent.change(screen.getByPlaceholderText(/••••••••/i), {
