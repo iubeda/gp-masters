@@ -135,7 +135,7 @@ const Auth = ({ showToast }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-[#0F0F12]/80 border border-gray-800 rounded-xl focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none text-white text-sm transition-all"
-                placeholder="manager@motogp.com"
+                placeholder="player@example.com"
                 required
               />
             </div>
