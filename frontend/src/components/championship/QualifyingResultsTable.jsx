@@ -1,18 +1,20 @@
 import React from 'react';
 import { Award } from 'lucide-react';
 import { formatLapTime } from '../../utils/timeFormat';
+import { useTranslation } from 'react-i18next';
 
 export default function QualifyingResultsTable({ gridStatus, teamId, teamStatus }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-[#101017] border border-gray-850 rounded-2xl overflow-hidden">
       <div className="p-4 border-b border-gray-850 flex items-center justify-between">
         <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
           <Award className="w-4 h-4 text-yellow-500" />
-          Tiempos de Clasificación Oficiales
+          {t('championship.race_center.official_qualifying_times', 'Tiempos de Clasificación Oficiales')}
         </span>
         {teamStatus && (
           <span className="text-xs text-gray-400">
-            Tu tiempo: <strong className="text-red-400">{formatLapTime(teamStatus.best_qualifying_time)}</strong>
+            {t('championship.race_center.your_time', 'Tu tiempo')}: <strong className="text-red-400">{formatLapTime(teamStatus.best_qualifying_time)}</strong>
           </span>
         )}
       </div>
@@ -21,11 +23,11 @@ export default function QualifyingResultsTable({ gridStatus, teamId, teamStatus 
         <table className="w-full text-left text-xs">
           <thead className="bg-[#161622] text-gray-400 uppercase tracking-wider font-bold">
             <tr>
-              <th className="p-3">Posición</th>
-              <th className="p-3">Piloto</th>
-              <th className="p-3">Equipo</th>
-              <th className="p-3">Mejor Vuelta</th>
-              <th className="p-3">Vueltas Usadas</th>
+              <th className="p-3">{t('championship.race_center.position', 'Posición')}</th>
+              <th className="p-3">{t('championship.race_center.pilot', 'Piloto')}</th>
+              <th className="p-3">{t('championship.race_center.team', 'Equipo')}</th>
+              <th className="p-3">{t('championship.race_center.best_lap', 'Mejor Vuelta')}</th>
+              <th className="p-3">{t('championship.race_center.laps_used', 'Vueltas Usadas')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-850">

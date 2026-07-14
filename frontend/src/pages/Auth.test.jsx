@@ -21,7 +21,7 @@ describe('Auth Component', () => {
 
   it('renders login tab by default with email and password inputs', () => {
     render(<MemoryRouter><Auth showToast={vi.fn()} /></MemoryRouter>);
-    
+
     expect(screen.getByRole('button', { name: /^sign in$/i })).toHaveClass('text-red-500');
     expect(screen.getByPlaceholderText(/manager@motogp.com/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/••••••••/i)).toBeInTheDocument();
@@ -30,10 +30,10 @@ describe('Auth Component', () => {
 
   it('switches to register tab when clicking register', () => {
     render(<MemoryRouter><Auth showToast={vi.fn()} /></MemoryRouter>);
-    
+
     const registerTab = screen.getByRole('button', { name: /^register$/i });
     fireEvent.click(registerTab);
-    
+
     expect(registerTab).toHaveClass('text-red-500');
     expect(screen.getByPlaceholderText(/ManagerName/i)).toBeInTheDocument();
   });
@@ -41,18 +41,18 @@ describe('Auth Component', () => {
   it('triggers showToast error if fields are missing on submit', async () => {
     const mockShowToast = vi.fn();
     render(<MemoryRouter><Auth showToast={mockShowToast} /></MemoryRouter>);
-    
+
     // Submit the form directly to bypass HTML5 validation blocks in JSDOM
     const submitBtn = screen.getByRole('button', { name: /sign in manager/i });
     const form = submitBtn.closest('form');
     fireEvent.submit(form);
-    
+
     expect(mockShowToast).toHaveBeenCalledWith('Please fill in all fields', 'error');
   });
 
   it('performs successful login call and sets context', async () => {
     const mockShowToast = vi.fn();
-    
+
     // Mock successful login fetch response
     global.fetch.mockResolvedValueOnce({
       ok: true,
@@ -63,27 +63,27 @@ describe('Auth Component', () => {
     });
 
     render(<MemoryRouter><Auth showToast={mockShowToast} /></MemoryRouter>);
-    
+
     fireEvent.change(screen.getByPlaceholderText(/manager@motogp.com/i), {
       target: { value: 'manager@motogp.com' }
     });
     fireEvent.change(screen.getByPlaceholderText(/••••••••/i), {
       target: { value: 'password123' }
     });
-    
+
     const submitBtn = screen.getByRole('button', { name: /sign in manager/i });
     fireEvent.click(submitBtn);
-    
+
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith('/api/auth/login', expect.any(Object));
-      expect(mockLogin).toHaveBeenCalledWith( expect.any(Object));
-      expect(mockShowToast).toHaveBeenCalledWith('Welcome back to MotoGP Manager!', 'success');
+      expect(mockLogin).toHaveBeenCalledWith(expect.any(Object));
+      expect(mockShowToast).toHaveBeenCalledWith('Welcome back to GP Masters Manager!', 'success');
     });
   });
 
   it('handles backend error message on failed login', async () => {
     const mockShowToast = vi.fn();
-    
+
     // Mock error response
     global.fetch.mockResolvedValueOnce({
       ok: false,
@@ -91,17 +91,17 @@ describe('Auth Component', () => {
     });
 
     render(<MemoryRouter><Auth showToast={mockShowToast} /></MemoryRouter>);
-    
+
     fireEvent.change(screen.getByPlaceholderText(/manager@motogp.com/i), {
       target: { value: 'manager@motogp.com' }
     });
     fireEvent.change(screen.getByPlaceholderText(/••••••••/i), {
       target: { value: 'wrongpassword' }
     });
-    
+
     const submitBtn = screen.getByRole('button', { name: /sign in manager/i });
     fireEvent.click(submitBtn);
-    
+
     await waitFor(() => {
       expect(mockShowToast).toHaveBeenCalledWith('Invalid credentials', 'error');
     });

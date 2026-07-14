@@ -1,6 +1,6 @@
 # Motor de Simulación de Carreras
 
-> Documentación técnica del motor de simulación de Gran Premio de MotoGP Manager.
+> Documentación técnica del motor de simulación de Gran Premio de GP Masters Manager.
 > 
 > **Archivos clave:**
 > - [`backend/controllers/simulation.controller.js`](../backend/controllers/simulation.controller.js) — Endpoints HTTP y validación de requests

@@ -1,14 +1,16 @@
 import React from 'react';
 import { Flag, Award } from 'lucide-react';
 import { formatLapTime } from '../../utils/timeFormat';
+import { useTranslation } from 'react-i18next';
 
 export default function RaceResultsTable({ gridStatus, teamId }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-[#101017] border border-gray-850 rounded-2xl overflow-hidden">
       <div className="p-4 border-b border-gray-850 flex items-center justify-between">
         <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
           <Flag className="w-4 h-4 text-red-500" />
-          Resultados Oficiales de la Carrera (12 Vueltas)
+          {t('championship.race_center.official_race_results', 'Resultados Oficiales de la Carrera ({{laps}} Vueltas)', { laps: 12 })}
         </span>
       </div>
       
@@ -17,12 +19,12 @@ export default function RaceResultsTable({ gridStatus, teamId }) {
           <thead className="bg-[#161622] text-gray-400 uppercase tracking-wider font-bold">
             <tr>
               <th className="p-3">Pos</th>
-              <th className="p-3">Parrilla</th>
-              <th className="p-3">Piloto</th>
-              <th className="p-3">Equipo</th>
-              <th className="p-3">Tiempo Total</th>
-              <th className="p-3">Puntos</th>
-              <th className="p-3">Ingresos (€)</th>
+              <th className="p-3">{t('championship.race_center.grid', 'Parrilla')}</th>
+              <th className="p-3">{t('championship.race_center.pilot', 'Piloto')}</th>
+              <th className="p-3">{t('championship.race_center.team', 'Equipo')}</th>
+              <th className="p-3">{t('championship.race_center.total_time', 'Tiempo Total')}</th>
+              <th className="p-3">{t('championship.race_center.points', 'Puntos')}</th>
+              <th className="p-3">{t('championship.race_center.earnings', 'Ingresos')} (€)</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-850">

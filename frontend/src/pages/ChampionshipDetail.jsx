@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ArrowLeft, Users, Play } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // Data hook
 import useChampionshipData from '../hooks/useChampionshipData';
@@ -40,6 +41,7 @@ const ChampionshipDetail = ({ showToast }) => {
   // UI state (tab + completed circuit selector) — stays in the page component
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedCompletedCircuit, setSelectedCompletedCircuit] = useState(null);
+  const { t } = useTranslation();
 
   const todayStr = useMemo(getTodayStr, []);
 
@@ -82,7 +84,7 @@ const ChampionshipDetail = ({ showToast }) => {
     return (
       <div className="flex flex-col items-center justify-center py-40 gap-3 max-w-6xl mx-auto">
         <div className="w-10 h-10 border-4 border-red-500/20 border-t-red-500 rounded-full animate-spin" />
-        <p className="text-gray-400">Loading championship details...</p>
+        <p className="text-gray-400">{t('championship.loading', 'Loading championship details...')}</p>
       </div>
     );
   }
@@ -102,7 +104,7 @@ const ChampionshipDetail = ({ showToast }) => {
         className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors self-start"
       >
         <ArrowLeft className="w-4 h-4" />
-        BACK TO DASHBOARD
+        {t('championship.back_dashboard', 'BACK TO DASHBOARD')}
       </button>
 
       {/* Title + metadata */}
@@ -131,8 +133,8 @@ const ChampionshipDetail = ({ showToast }) => {
                   <div className="flex items-center gap-3">
                     <Users className="w-6 h-6 text-red-500" />
                     <div>
-                      <h2 className="text-lg font-bold text-white">Inscripción al Campeonato</h2>
-                      <p className="text-xs text-gray-400 mt-0.5">Crea tu equipo para competir y ver la telemetría.</p>
+                      <h2 className="text-lg font-bold text-white">{t('championship.registration.title', 'Inscripción al Campeonato')}</h2>
+                      <p className="text-xs text-gray-400 mt-0.5">{t('championship.registration.subtitle', 'Crea tu equipo para competir y ver la telemetría.')}</p>
                     </div>
                   </div>
                 </div>
@@ -148,7 +150,7 @@ const ChampionshipDetail = ({ showToast }) => {
                   />
                 ) : (
                   <div className="p-4 bg-gray-950/20 border border-gray-800 rounded-2xl text-center text-sm text-gray-455">
-                    La parrilla está completa (10/10 equipos registrados).
+                    {t('championship.registration.full', 'La parrilla está completa (10/10 equipos registrados).')}
                   </div>
                 )}
               </div>
@@ -187,7 +189,7 @@ const ChampionshipDetail = ({ showToast }) => {
                 className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-white transition-colors self-start bg-gray-800/40 px-3.5 py-2 border border-gray-800 rounded-xl"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
-                VOLVER AL CALENDARIO
+                {t('championship.calendar.back', 'VOLVER AL CALENDARIO')}
               </button>
               <RaceCenter
                 championship={championship}
@@ -204,9 +206,9 @@ const ChampionshipDetail = ({ showToast }) => {
               <div className="lg:col-span-2 space-y-6">
                 <div className="glass rounded-2xl border border-gray-800 overflow-hidden">
                   <div className="p-6 bg-gradient-to-r from-yellow-600/10 via-transparent to-transparent border-b border-gray-800 flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-white">Calendario de Carreras</h2>
+                    <h2 className="text-xl font-bold text-white">{t('championship.calendar.title', 'Calendario de Carreras')}</h2>
                     <span className="px-3 py-1 bg-[#0F0F12] border border-gray-805 text-xs font-semibold rounded-full text-gray-300">
-                      {championship.circuits?.length || 0} / {championship.max_circuits ?? 15} Grandes Premios
+                      {championship.circuits?.length || 0} / {championship.max_circuits ?? 15} {t('championship.calendar.grand_prix', 'Grandes Premios')}
                     </span>
                   </div>
                   <CalendarList
@@ -219,12 +221,12 @@ const ChampionshipDetail = ({ showToast }) => {
                       } else if (activeGP && circ.id === activeGP.id) {
                         setActiveTab('gp');
                       } else {
-                        showToast(`El GP de ${circ.name} está programado pero aún no se ha disputado.`, 'info');
+                        showToast(t('championship.calendar.not_disputed', 'El GP de {{name}} está programado pero aún no se ha disputado.', { name: circ.name }), 'info');
                       }
                     }}
                   />
                   <div className="p-4 bg-[#161622]/40 border-t border-gray-850 text-[11px] text-gray-450 italic text-center">
-                    Haz click sobre una carrera realizada (verde) o en curso (azul) para acceder a su panel.
+                    {t('championship.calendar.hint', 'Haz click sobre una carrera realizada (verde) o en curso (azul) para acceder a su panel.')}
                   </div>
                 </div>
               </div>
@@ -245,7 +247,7 @@ const ChampionshipDetail = ({ showToast }) => {
                   <div className="p-4 bg-yellow-950/20 border border-yellow-900/30 rounded-2xl flex items-center gap-3">
                     <Check className="w-5 h-5 text-yellow-500 shrink-0" />
                     <p className="text-xs text-yellow-350 leading-relaxed">
-                      Este campeonato ha alcanzado el límite máximo de {championship.max_circuits ?? 15} circuitos.
+                      {t('championship.calendar.max_reached', 'Este campeonato ha alcanzado el límite máximo de {{max}} circuitos.', { max: championship.max_circuits ?? 15 })}
                     </p>
                   </div>
                 )}
@@ -270,15 +272,15 @@ const ChampionshipDetail = ({ showToast }) => {
           ) : (
             <div className="glass rounded-2xl border border-gray-800 p-8 text-center space-y-4 max-w-2xl mx-auto bg-gradient-to-r from-red-600/10 via-transparent to-transparent">
               <Users className="w-12 h-12 text-red-500 mx-auto" />
-              <h3 className="text-xl font-bold text-white">¡No registrado en el campeonato!</h3>
+              <h3 className="text-xl font-bold text-white">{t('championship.gp.not_registered', '¡No registrado en el campeonato!')}</h3>
               <p className="text-sm text-gray-450 leading-relaxed">
-                Debes inscribir tu escudería en la pestaña de Dashboard antes de poder simular el fin de semana del Gran Premio de {activeGP.name}.
+                {t('championship.gp.register_required', 'Debes inscribir tu escudería en la pestaña de Dashboard antes de poder simular el fin de semana del Gran Premio de {{name}}.', { name: activeGP.name })}
               </p>
               <button
                 onClick={() => setActiveTab('dashboard')}
                 className="px-5 py-3 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all"
               >
-                Ir a Inscribirme
+                {t('championship.gp.go_register', 'Ir a Inscribirme')}
               </button>
             </div>
           )}

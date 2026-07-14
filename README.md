@@ -1,12 +1,12 @@
-# MotoGP Manager MVP
+# GP Masters Manager MVP
 
-¡Bienvenido a **MotoGP Manager**, una plataforma de simulación y gestión de escuderías de MotoGP! Esta aplicación permite a los usuarios sumergirse en el rol de un mánager de carreras, compitiendo contra otros jugadores en campeonatos personalizados.
+¡Bienvenido a **GP Masters Manager**, una plataforma de simulación y gestión de escuderías de MotoGP! Esta aplicación permite a los usuarios sumergirse en el rol de un mánager de carreras, compitiendo contra otros jugadores en campeonatos personalizados.
 
 ---
 
 ## 📋 Descripción del Producto
 
-**MotoGP Manager** es un juego de gestión deportiva en formato web (MVP) que incluye las siguientes características clave:
+**GP Masters Manager** es un juego de gestión deportiva en formato web (MVP) que incluye las siguientes características clave:
 
 *   **Autenticación de Usuarios:** Registro e inicio de sesión seguro para gestionar tu perfil y tus equipos de manera persistente.
 *   **Gestión de Campeonatos:** 

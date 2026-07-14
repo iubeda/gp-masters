@@ -1,5 +1,6 @@
 import React from 'react';
 import { Wrench, CheckCircle2, AlertTriangle, Shield } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function StrategyForm({ 
   teamId, 
@@ -12,13 +13,15 @@ export default function StrategyForm({
   isSetupBalanced, 
   setupSum 
 }) {
+  const { t } = useTranslation();
+
   if (!teamId) {
     return (
       <div className="bg-[#101017] border border-gray-850 p-6 rounded-2xl space-y-4 text-center">
         <Shield className="w-12 h-12 text-yellow-500 mx-auto" />
-        <h3 className="font-bold text-white text-sm uppercase tracking-wider">Modo Administrador</h3>
+        <h3 className="font-bold text-white text-sm uppercase tracking-wider">{t('championship.strategy.admin_mode', 'Modo Administrador')}</h3>
         <p className="text-xs text-gray-455 leading-relaxed">
-          No estás participando en este campeonato. Como administrador puedes ver el estado general de los demás equipos y forzar la simulación de la carrera.
+          {t('championship.strategy.admin_mode_desc', 'No estás participando en este campeonato. Como administrador puedes ver el estado general de los demás equipos y forzar la simulación de la carrera.')}
         </p>
       </div>
     );
@@ -28,12 +31,12 @@ export default function StrategyForm({
     <div className="bg-[#101017] border border-gray-850 p-5 rounded-2xl space-y-5">
       <div className="flex items-center gap-2 border-b border-gray-800 pb-3">
         <Wrench className="w-5 h-5 text-red-500" />
-        <h3 className="font-bold text-white text-sm uppercase tracking-wider">Ajustes del Mánager</h3>
+        <h3 className="font-bold text-white text-sm uppercase tracking-wider">{t('championship.strategy.manager_settings', 'Ajustes del Mánager')}</h3>
       </div>
 
       {/* Tire Compound selection */}
       <div className="space-y-2">
-        <label className="text-xs font-semibold text-gray-400 block uppercase tracking-wider">Compuesto de Neumático</label>
+        <label className="text-xs font-semibold text-gray-400 block uppercase tracking-wider">{t('championship.strategy.tyre_compound', 'Compuesto de Neumático')}</label>
         <div className="grid grid-cols-2 gap-2">
           {[
             { id: 'soft', label: 'Soft (Blando)', color: 'border-red-500 text-red-400 bg-red-950/10' },
@@ -56,12 +59,12 @@ export default function StrategyForm({
 
       {/* Pilot Focus selection */}
       <div className="space-y-2">
-        <label className="text-xs font-semibold text-gray-400 block uppercase tracking-wider">Enfoque del Piloto</label>
+        <label className="text-xs font-semibold text-gray-400 block uppercase tracking-wider">{t('championship.strategy.pilot_focus', 'Enfoque del Piloto')}</label>
         <div className="grid grid-cols-3 gap-2">
           {[
-            { id: 'conservative', label: 'Conservador', desc: 'Ahorro / Seguro' },
-            { id: 'balanced', label: 'Equilibrado', desc: 'Standard' },
-            { id: 'aggressive', label: 'Agresivo', desc: 'Rápido / Caídas' }
+            { id: 'conservative', label: t('championship.strategy.conservative', 'Conservador'), desc: t('championship.strategy.safe', 'Ahorro / Seguro') },
+            { id: 'balanced', label: t('championship.strategy.balanced', 'Equilibrado'), desc: 'Standard' },
+            { id: 'aggressive', label: t('championship.strategy.aggressive', 'Agresivo'), desc: t('championship.strategy.fast_crashes', 'Rápido / Caídas') }
           ].map((f) => (
             <button
               key={f.id}

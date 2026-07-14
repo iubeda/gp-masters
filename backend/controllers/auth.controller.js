@@ -11,13 +11,13 @@ const register = asyncHandler(async (req, res) => {
   // Check if email already exists
   const existingUserByEmail = await userModel.findByEmail(email);
   if (existingUserByEmail) {
-    return res.status(400).json({ error: 'Registration failed. Username or email may already be in use.' });
+    return res.status(400).json({ error: 'Registration failed. Username or email may already be in use.', error_code: 'REGISTRATION_FAILED_USERNAME_O' });
   }
 
   // Check if username already exists
   const existingUserByUsername = await userModel.findByUsername(username);
   if (existingUserByUsername) {
-    return res.status(400).json({ error: 'Registration failed. Username or email may already be in use.' });
+    return res.status(400).json({ error: 'Registration failed. Username or email may already be in use.', error_code: 'REGISTRATION_FAILED_USERNAME_O' });
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -40,12 +40,12 @@ const login = asyncHandler(async (req, res) => {
   const user = await userModel.findByEmail(email);
 
   if (!user) {
-    return res.status(400).json({ error: 'Invalid email or password.' });
+    return res.status(400).json({ error: 'Invalid email or password.', error_code: 'INVALID_EMAIL_OR_PASSWORD' });
   }
 
   const isMatch = await bcrypt.compare(password, user.password_hash);
   if (!isMatch) {
-    return res.status(400).json({ error: 'Invalid email or password.' });
+    return res.status(400).json({ error: 'Invalid email or password.', error_code: 'INVALID_EMAIL_OR_PASSWORD' });
   }
 
   await userModel.updateLastLogin(email);

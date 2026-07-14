@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Shield, Search, Loader, User, Mail, ShieldAlert, CheckCircle2, Users, Database } from 'lucide-react';
 import DictionaryManager from '../components/admin/DictionaryManager';
+import { useTranslation } from 'react-i18next';
 
 const AdminUsers = ({ showToast }) => {
   const { apiFetch, user: currentUser } = useAuth();
@@ -10,6 +11,7 @@ const AdminUsers = ({ showToast }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [updatingEmails, setUpdatingEmails] = useState({});
   const [activeTab, setActiveTab] = useState('users'); // users, pilots, motorcycles, circuits
+  const { t } = useTranslation();
 
   const fetchUsers = async () => {
     try {
@@ -36,8 +38,8 @@ const AdminUsers = ({ showToast }) => {
         method: 'PUT',
         body: JSON.stringify({ role: newRole })
       });
-      showToast(`Rol de ${email} actualizado a ${newRole.toUpperCase()} correctamente.`, 'success');
-      setUsers(prevUsers => 
+      showToast(t('admin.role_updated', 'Rol de {{email}} actualizado a {{role}} correctamente.', { email, role: newRole.toUpperCase() }), 'success');
+      setUsers(prevUsers =>
         prevUsers.map(u => u.email === email ? { ...u, role: newRole } : u)
       );
     } catch (error) {
@@ -61,7 +63,7 @@ const AdminUsers = ({ showToast }) => {
   };
 
   const formatDate = (dateStr) => {
-    if (!dateStr) return 'Nunca';
+    if (!dateStr) return t('admin.never', 'Nunca');
     const date = new Date(dateStr);
     return date.toLocaleString('es-ES', {
       day: '2-digit',
@@ -89,7 +91,7 @@ const AdminUsers = ({ showToast }) => {
           <Search className="w-4 h-4 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Buscar por nombre, email o rol..."
+            placeholder={t('admin.search_placeholder', 'Buscar por nombre, email o rol...')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 bg-[#0F0F12] border border-gray-800 rounded-xl focus:border-red-500 focus:outline-none text-white text-xs transition-all"
@@ -100,34 +102,34 @@ const AdminUsers = ({ showToast }) => {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-32 gap-3">
           <Loader className="w-10 h-10 text-red-500 animate-spin" />
-          <p className="text-gray-400">Cargando usuarios de la plataforma...</p>
+          <p className="text-gray-400">{t('admin.loading_users', 'Cargando usuarios de la plataforma...')}</p>
         </div>
       ) : (
         <div className="glass rounded-2xl border border-gray-800 overflow-hidden shadow-2xl">
           <div className="p-5 border-b border-gray-800 bg-gradient-to-r from-red-600/10 via-transparent to-transparent flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <ShieldAlert className="w-5 h-5 text-red-505" />
-              <h3 className="font-bold text-white text-base">Usuarios Registrados ({users.length})</h3>
+              <h3 className="font-bold text-white text-base">{t('admin.registered_users', 'Usuarios Registrados')} ({users.length})</h3>
             </div>
-            <span className="text-xs text-gray-400 font-medium">Auto-guardado habilitado</span>
+            <span className="text-xs text-gray-400 font-medium">{t('admin.autosave_enabled', 'Auto-guardado habilitado')}</span>
           </div>
 
           {filteredUsers.length === 0 ? (
             <div className="p-16 text-center text-gray-500 space-y-3">
               <User className="w-12 h-12 text-gray-700 mx-auto" />
-              <h4 className="text-white font-bold">No se encontraron usuarios</h4>
-              <p className="text-xs max-w-xs mx-auto">Prueba a refinar tu búsqueda o verifica los filtros introducidos.</p>
+              <h4 className="text-white font-bold">{t('admin.no_users_found', 'No se encontraron usuarios')}</h4>
+              <p className="text-xs max-w-xs mx-auto">{t('admin.refine_search', 'Prueba a refinar tu búsqueda o verifica los filtros introducidos.')}</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm text-gray-300">
                 <thead className="bg-[#161622]/60 text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-800">
                   <tr>
-                    <th className="p-4 pl-6">Usuario</th>
-                    <th className="p-4">Email</th>
-                    <th className="p-4">Creado el</th>
-                    <th className="p-4">Última Conexión</th>
-                    <th className="p-4 text-center">Rol Global</th>
+                    <th className="p-4 pl-6">{t('admin.table.user', 'Usuario')}</th>
+                    <th className="p-4">{t('admin.table.email', 'Email')}</th>
+                    <th className="p-4">{t('admin.table.created_at', 'Creado el')}</th>
+                    <th className="p-4">{t('admin.table.last_login', 'Última Conexión')}</th>
+                    <th className="p-4 text-center">{t('admin.table.global_role', 'Rol Global')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-855/60">
@@ -136,11 +138,10 @@ const AdminUsers = ({ showToast }) => {
                     const isSaving = updatingEmails[userItem.email];
 
                     return (
-                      <tr 
-                        key={userItem.email} 
-                        className={`transition-colors hover:bg-[#16161C]/30 ${
-                          isSelf ? 'bg-red-955/5' : ''
-                        }`}
+                      <tr
+                        key={userItem.email}
+                        className={`transition-colors hover:bg-[#16161C]/30 ${isSelf ? 'bg-red-955/5' : ''
+                          }`}
                       >
                         <td className="p-4 pl-6">
                           <div className="flex items-center gap-2.5">
@@ -152,7 +153,7 @@ const AdminUsers = ({ showToast }) => {
                                 {userItem.username}
                                 {isSelf && (
                                   <span className="px-1.5 py-0.5 bg-red-650/15 border border-red-500/20 text-[9px] rounded text-red-500 font-bold uppercase tracking-wider">
-                                    Tú
+                                    {t('admin.you', 'Tú')}
                                   </span>
                                 )}
                               </div>
@@ -182,9 +183,8 @@ const AdminUsers = ({ showToast }) => {
                               value={userItem.role}
                               disabled={isSelf || isSaving}
                               onChange={(e) => handleRoleChange(userItem.email, e.target.value)}
-                              className={`px-3 py-1.5 border rounded-xl text-xs font-bold uppercase tracking-wider focus:outline-none bg-[#0F0F12] select-none cursor-pointer transition-all ${getRoleBadgeClass(userItem.role)} ${
-                                isSelf ? 'opacity-70 cursor-not-allowed border-dashed' : ''
-                              }`}
+                              className={`px-3 py-1.5 border rounded-xl text-xs font-bold uppercase tracking-wider focus:outline-none bg-[#0F0F12] select-none cursor-pointer transition-all ${getRoleBadgeClass(userItem.role)} ${isSelf ? 'opacity-70 cursor-not-allowed border-dashed' : ''
+                                }`}
                             >
                               <option value="player" className="bg-[#0F0F12] text-gray-300">Player</option>
                               <option value="manager" className="bg-[#0F0F12] text-blue-400 font-bold">Manager</option>
@@ -206,10 +206,10 @@ const AdminUsers = ({ showToast }) => {
   );
 
   const tabs = [
-    { id: 'users', label: 'Usuarios', icon: Users },
-    { id: 'pilots', label: 'Diccionario: Pilotos', icon: Database },
-    { id: 'motorcycles', label: 'Diccionario: Motocicletas', icon: Database },
-    { id: 'circuits', label: 'Diccionario: Circuitos', icon: Database },
+    { id: 'users', label: t('admin.tabs.users', 'Usuarios'), icon: Users },
+    { id: 'pilots', label: t('admin.tabs.pilots', 'Diccionario: Pilotos'), icon: Database },
+    { id: 'motorcycles', label: t('admin.tabs.motorcycles', 'Diccionario: Motocicletas'), icon: Database },
+    { id: 'circuits', label: t('admin.tabs.circuits', 'Diccionario: Circuitos'), icon: Database },
   ];
 
   return (
@@ -218,9 +218,9 @@ const AdminUsers = ({ showToast }) => {
       <div className="space-y-1">
         <h1 className="text-3xl font-extrabold text-white flex items-center gap-3">
           <Shield className="text-red-505 w-8 h-8" />
-          Panel de Administración
+          {t('admin.title', 'Panel de Administración')}
         </h1>
-        <p className="text-gray-400 text-sm">Gestiona los usuarios y diccionarios de la plataforma MotoGP Manager.</p>
+        <p className="text-gray-400 text-sm">{t('admin.subtitle', 'Gestiona los usuarios y diccionarios de la plataforma GP Masters Manager.')}</p>
       </div>
 
       {/* Tabs */}
@@ -229,11 +229,10 @@ const AdminUsers = ({ showToast }) => {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold whitespace-nowrap transition-colors border-b-2 ${
-              activeTab === tab.id
+            className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold whitespace-nowrap transition-colors border-b-2 ${activeTab === tab.id
                 ? 'border-red-500 text-red-400 bg-red-600/5'
                 : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-700'
-            }`}
+              }`}
           >
             <tab.icon className="w-4 h-4" />
             {tab.label}

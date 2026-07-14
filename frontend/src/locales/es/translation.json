@@ -1,0 +1,472 @@
+{
+  "app": {
+    "admin_panel_title": "Panel de Administración",
+    "admin_panel": "Admin Panel",
+    "manage_profile": "Manage Profile Settings",
+    "logged_out_success": "Logged out successfully.",
+    "logout": "Logout"
+  },
+  "admin": {
+    "role_updated": "Rol de {{email}} actualizado a {{role}} correctamente.",
+    "never": "Nunca",
+    "search_placeholder": "Buscar por nombre, email o rol...",
+    "loading_users": "Cargando usuarios de la plataforma...",
+    "registered_users": "Usuarios Registrados",
+    "autosave_enabled": "Auto-guardado habilitado",
+    "no_users_found": "No se encontraron usuarios",
+    "refine_search": "Prueba a refinar tu búsqueda o verifica los filtros introducidos.",
+    "table": {
+      "user": "Usuario",
+      "email": "Email",
+      "created_at": "Creado el",
+      "last_login": "Última Conexión",
+      "global_role": "Rol Global"
+    },
+    "you": "Tú",
+    "tabs": {
+      "users": "Usuarios",
+      "pilots": "Diccionario: Pilotos",
+      "motorcycles": "Diccionario: Motocicletas",
+      "circuits": "Diccionario: Circuitos"
+    },
+    "title": "Panel de Administración",
+    "subtitle": "Gestiona los usuarios y diccionarios de la plataforma GP Masters Manager."
+  },
+  "auth": {
+    "validation": {
+      "fill_fields": "Por favor completa todos los campos"
+    },
+    "success": {
+      "login": "¡Bienvenido de nuevo a GP Masters Manager!",
+      "register": "¡Registro exitoso! Por favor inicia sesión."
+    },
+    "subtitle": "Construye tu equipo, ficha pilotos y domina el campeonato",
+    "tab": {
+      "sign_in": "INICIAR SESIÓN",
+      "register": "REGISTRO"
+    },
+    "form": {
+      "username": "Nombre de Usuario",
+      "email": "Correo Electrónico",
+      "password": "Contraseña"
+    },
+    "btn": {
+      "sign_in": "ACCEDER COMO MÁNAGER",
+      "create_account": "CREAR CUENTA"
+    }
+  },
+  "championship": {
+    "loading": "Cargando detalles del campeonato...",
+    "back_dashboard": "VOLVER AL DASHBOARD",
+    "registration": {
+      "title": "Inscripción al Campeonato",
+      "subtitle": "Crea tu equipo para competir y ver la telemetría.",
+      "full": "La parrilla está completa (10/10 equipos registrados)."
+    },
+    "calendar": {
+      "back": "VOLVER AL CALENDARIO",
+      "title": "Calendario de Carreras",
+      "grand_prix": "Grandes Premios",
+      "not_disputed": "El GP de {{name}} está programado pero aún no se ha disputado.",
+      "hint": "Haz click sobre una carrera realizada (verde) o en curso (azul) para acceder a su panel.",
+      "max_reached": "Este campeonato ha alcanzado el límite máximo de {{max}} circuitos.",
+      "distance": "Distancia:",
+      "curves_r": " • Curvas D: ",
+      "curves_l": " • Curvas I: ",
+      "completed": "Realizada",
+      "in_progress": "En curso",
+      "scheduled": "Programada",
+      "day1_prac": "Día 1: Entren.",
+      "day2_qual": "Día 2: Clasif.",
+      "day3_race": "Día 3: Carrera"
+    },
+    "gp": {
+      "not_registered": "¡No registrado en el campeonato!",
+      "register_required": "Debes inscribir tu escudería en la pestaña de Dashboard antes de poder simular el fin de semana del Gran Premio de {{name}}.",
+      "go_register": "Ir a Inscribirme"
+    },
+    "header": {
+      "season": "Temporada",
+      "private": "Privado",
+      "start_date": "Fecha Inicio:",
+      "creator": "Creador:",
+      "you_creator": "Tú (Creador)",
+      "system": "Sistema",
+      "access_pin": " • PIN de Acceso: ",
+      "pin_admin": " • PIN (admin): ",
+      "no_time_limit": "Sin límite horario"
+    },
+    "tabs": {
+      "calendar": "Calendario",
+      "my_team": "Mi escudería",
+      "standings": "Clasificación General",
+      "active_gp": "GP Activo"
+    },
+    "standings": {
+      "registered_teams": "Equipos Registrados",
+      "table": {
+        "pilot": "Piloto",
+        "team": "Equipo",
+        "points": "Puntos",
+        "manager": "Mánager"
+      },
+      "no_points": "Aún no hay puntuaciones registradas en el campeonato.",
+      "kick": "Expulsar",
+      "kicked": "Expulsado",
+      "reason": "Motivo:",
+      "not_specified": "No especificado"
+    },
+    "next_race": {
+      "title": "Siguiente Carrera",
+      "practice": "Entrenamientos",
+      "qualifying": "Clasificación",
+      "race": "Carrera",
+      "simulate_btn": "Simular este circuito",
+      "length": "Longitud",
+      "curves_rl": "Curvas R/L",
+      "no_circuits_programmed": "Sin Circuitos Programados",
+      "creator_no_circuits": "Aún no has añadido ningún circuito a este campeonato. Dirígete a la pestaña de Calendario para programar las carreras.",
+      "member_no_circuits": "Aún no se han programado circuitos en el calendario de este campeonato. Por favor, espera a que el organizador añada las carreras.",
+      "all_simulated": "Todas las carreras del campeonato han sido simuladas. Consulta la Clasificación General para ver el podio final."
+    },
+    "my_team": {
+      "pilot": "PILOTO",
+      "talent": "Talento",
+      "consistency": "Consistencia",
+      "aggressiveness": "Agresividad",
+      "experience": "Experiencia",
+      "fitness": "Estado físico",
+      "engine": "Motor",
+      "gearbox": "Cambio",
+      "wings": "Alerón"
+    },
+    "circuit": {
+      "weather": "Clima",
+      "air": "Aire",
+      "asphalt": "Asfalto",
+      "distance": "Distancia:",
+      "curves": "Curvas:",
+      "open_schedules": "Horarios Abiertos",
+      "rainy": "Lluvia",
+      "cloudy": "Nublado",
+      "sunny": "Soleado",
+      "pending_reveal": "Pendiente de revelarse"
+    },
+    "strategy": {
+      "manager_settings": "Ajustes del Mánager",
+      "tyre_compound": "Compuesto de neumático",
+      "pilot_focus": "Enfoque del piloto",
+      "conservative": "Conservador",
+      "safe": "Ahorro/Seguro",
+      "balanced": "Equilibrado",
+      "aggressive": "Agresivo",
+      "fast_crashes": "Rápido/Caídas",
+      "practice": "Entrenamientos",
+      "qualifying": "Clasificación",
+      "race": "Carrera",
+      "pending": "Pendiente",
+      "save_race_strategy": "Guardar Estrategia de Carrera",
+      "secure_setup_warning": "Asegura tu setup, neumáticos y enfoque antes de que empiece la carrera (14:00h).",
+      "save_strategy": "Guardar Estrategia",
+      "admin_mode": "Modo Administrador",
+      "admin_mode_desc": "No estás participando en este campeonato. Como administrador puedes ver el estado general de los demás equipos y forzar la simulación de la carrera."
+    },
+    "race_center": {
+      "free_practice": "Entrenamientos Libres",
+      "simulate_qualifying": "Simular clasificación",
+      "laps_to_do": "Vueltas a realizar",
+      "ride_qualifying": "Rodar Clasificación",
+      "official_qualifying_times": "Tiempos de Clasificación Oficiales",
+      "your_time": "Tu tiempo",
+      "position": "Posición",
+      "pilot": "Piloto",
+      "team": "Equipo",
+      "best_lap": "Mejor vuelta",
+      "laps_used": "Vueltas Usadas",
+      "practice_finished": "Sesión de entrenamientos libres finalizada",
+      "qualifying_finished": "Sesión de clasificación finalizada",
+      "no_practice_laps": "No has rodado ninguna vuelta de entrenamientos todavía hoy.",
+      "official_race_results": "Resultados Oficiales de la Carrera ({{laps}} Vueltas)",
+      "grid": "Parrilla",
+      "total_time": "Tiempo total",
+      "points": "Puntos",
+      "earnings": "Ingresos",
+      "your_lap_by_lap": "Tu vuelta a vuelta en carrera",
+      "lap": "Vuelta",
+      "time": "Tiempo",
+      "accumulated_wear": "Desgaste acumulado",
+      "details_incidents": "Detalles/Incidentes",
+      "pilot_radio": "Mensaje de Radio del Piloto",
+      "your_qualifying_telemetry": "Tu Telemetría de Clasificación",
+      "practice_not_started": "Los entrenamientos libres aún no han comenzado.",
+      "scheduled_for": "Programados para el",
+      "simulate_practice": "Simular Tanda de Entrenamientos",
+      "practice_only_participants": "Los entrenamientos libres solo están disponibles para los participantes del campeonato.",
+      "qualifying_not_started": "La sesión de clasificación aún no ha comenzado.",
+      "qualifying_only_participants": "La clasificación solo está disponible para los participantes del campeonato.",
+      "race_simulation": "Simulación de la Carrera",
+      "race_simulation_desc": "La carrera se simula de forma progresiva (vuelta a vuelta) para ofrecer Live Timing a todos los usuarios conectados.",
+      "starting_transmission": "Iniciando Transmisión...",
+      "start_race_live": "¡INICIAR CARRERA (LIVE)!"
+    },
+    "telemetry": {
+      "best_time": "Mejor tiempo",
+      "lap": "Vuelta",
+      "stint": "Tanda",
+      "lap_time": "Tiempo de Vuelta",
+      "tire_wear": "Desgaste Neumático",
+      "tire": "Neumático",
+      "focus": "Enfoque",
+      "bike_setup": "Setup de Moto",
+      "engine": "Motor",
+      "gearbox": "Caja",
+      "suspension": "Susp.",
+      "chassis": "Chasis",
+      "wings": "Alerón"
+    },
+    "add_circuit": {
+      "title": "Añadir Circuito al Calendario",
+      "subtitle": "Incluir un circuito de carreras en el calendario del campeonato",
+      "select_circuit": "Seleccionar Circuito",
+      "choose_circuit": "Elige un Circuito",
+      "submit_btn": "AÑADIR CIRCUITO"
+    },
+    "kicked": {
+      "back_btn": "VOLVER AL DASHBOARD",
+      "title": "Has sido expulsado de este campeonato",
+      "subtitle": "Un organizador (Master o Admin) te ha retirado la participación activa de este torneo.",
+      "reason": "Motivo especificado:"
+    },
+    "kick_modal": {
+      "title": "Expulsar Mánager",
+      "subtitle": "Retirar al usuario del campeonato",
+      "about_to_kick": "Estás a punto de expulsar a",
+      "team": "Equipo:",
+      "warning": "Su moto y piloto quedarán inactivos pero mantendrá su puntuación histórica.",
+      "reason_label": "Motivo de la expulsión (Obligatorio)",
+      "cancel_btn": "CANCELAR",
+      "kick_btn": "EXPULSAR"
+    },
+    "live_timing": {
+      "live": "En Directo",
+      "laps": "Vueltas",
+      "waiting_first_lap": "Esperando el paso por meta de la primera vuelta...",
+      "pos": "Pos",
+      "pilot_team": "Piloto / Equipo",
+      "lap_time": "Tiempo de Vuelta",
+      "wear": "Desgaste",
+      "crash": "Caída (DNF)"
+    }
+  },
+  "dashboard": {
+    "validation": {
+      "fill_fields": "Por favor completa todos los campos",
+      "future_date": "La fecha de inicio debe ser en el futuro.",
+      "pin_required": "Por favor ingresa un PIN de acceso para campeonatos privados",
+      "pin_format": "El PIN debe tener entre 4 y 8 caracteres y contener solo letras y números."
+    },
+    "success": {
+      "created": "¡Campeonato creado con éxito!"
+    },
+    "title": "Campeonatos",
+    "subtitle": "Gestiona ligas activas o crea un nuevo campeonato GP Masters",
+    "btn": {
+      "new_championship": "NUEVO CAMPEONATO"
+    },
+    "create": {
+      "title": "Crear Campeonato",
+      "subtitle": "Inicializa un nuevo calendario de liga de deportes de motor",
+      "public": "Público",
+      "private": "Privado"
+    },
+    "tabs": {
+      "my_championships": "Mis Campeonatos",
+      "available": "Campeonatos Disponibles"
+    },
+    "search": "Buscar por nombre o creador...",
+    "loading": "Cargando campeonatos...",
+    "empty": {
+      "search": "No se encontraron resultados",
+      "my_champs": "No estás inscrito en ningún campeonato",
+      "available": "No hay campeonatos disponibles",
+      "search_desc": "Prueba a cambiar los términos de búsqueda.",
+      "my_champs_desc": "Ve a la pestaña de \"Campeonatos Disponibles\" para inscribirte y competir en alguna liga activa.",
+      "available_desc": "Crea un campeonato nuevo utilizando el botón superior para empezar."
+    },
+    "card": {
+      "view_details": "Ver Detalles del Campeonato",
+      "creator": "Creador:",
+      "teams": "Equipos",
+      "circuits": "Circuitos"
+    },
+    "modal": {
+      "max_races": "Máx. Carreras",
+      "max_participants": "Máx. Participantes",
+      "between_gps": "Entre 2 y 15 GPs",
+      "between_teams": "Entre 2 y 12 equipos",
+      "time_limit": "Limitación Horaria (12h–15h)",
+      "time_limit_desc": "Si está activo, los entrenamientos y clasificación solo se pueden simular entre las 12:00h y las 15:00h."
+    }
+  },
+  "landing": {
+    "features": {
+      "team": {
+        "title": "Gestión de Equipo",
+        "desc": "Ficha a los mejores pilotos, gestiona tu presupuesto y construye el equipo definitivo capaz de ganar el campeonato."
+      },
+      "sim": {
+        "title": "Motor de Simulación en Vivo",
+        "desc": "Observa cómo se desarrolla la carrera con nuestro avanzado motor basado en físicas que calcula desgaste, clima y habilidades en tiempo real."
+      },
+      "weather": {
+        "title": "Clima Dinámico",
+        "desc": "Adapta tu estrategia sobre la marcha a medida que las condiciones climáticas cambian drásticamente durante el fin de semana de carrera."
+      },
+      "setup": {
+        "title": "Configuración de Moto",
+        "desc": "Ajusta tus motos para cada circuito único para ganar esas milésimas de segundo cruciales por vuelta."
+      }
+    },
+    "steps": {
+      "1": {
+        "title": "Crea Tu Cuenta",
+        "desc": "Únete al paddock y obtén tu licencia de mánager."
+      },
+      "2": {
+        "title": "Únete a un Campeonato",
+        "desc": "Encuentra una liga activa o crea la tuya propia con reglas personalizadas."
+      },
+      "3": {
+        "title": "Ficha a Tus Pilotos",
+        "desc": "Selecciona el mejor talento que se ajuste al presupuesto y estrategia de tu equipo."
+      },
+      "4": {
+        "title": "Compite por la Gloria",
+        "desc": "Gestiona configuraciones, monitorea el clima y gana el título de constructores."
+      }
+    },
+    "nav": {
+      "signin": "Iniciar Sesión",
+      "playnow": "Jugar Ahora"
+    },
+    "hero": {
+      "badge": "La Temporada 2026 está en Directo",
+      "title1": "DOMINA EL",
+      "title2": "PADDOCK",
+      "desc": "Toma el control de tu propio equipo de Motos. Ficha pilotos de élite, domina las condiciones climáticas dinámicas y supera a tus rivales en nuestra avanzada simulación de carreras basada en físicas.",
+      "start": "COMIENZA TU CARRERA",
+      "discover": "Descubrir Características"
+    },
+    "nextgen": {
+      "title": "Gestión de Nueva Generación",
+      "desc": "Cada decisión cuenta. Desde la sala de fichajes hasta la bandera a cuadros, experimenta la simulación de gestión de deportes de motor más auténtica."
+    },
+    "journey": {
+      "title1": "Tu Camino a",
+      "title2": "Campeón del Mundo",
+      "desc": "Comienza desde abajo, gestiona tus recursos sabiamente y escala posiciones en la clasificación global."
+    },
+    "cta": {
+      "title1": "¿Listo para llegar al",
+      "title2": "vértice?",
+      "desc": "Únete a miles de mánagers y compite por el campeonato mundial hoy mismo.",
+      "btn": "CREAR CUENTA GRATIS"
+    },
+    "footer": {
+      "rights": "Todos los derechos reservados.",
+      "privacy": "Privacidad",
+      "terms": "Términos"
+    }
+  },
+  "privacy": {
+    "back": "Volver al Inicio",
+    "title": "Política de Privacidad",
+    "last_updated": "Última actualización: Julio 2026",
+    "s1": {
+      "title": "1. Información que Recopilamos",
+      "p1": "Recopilamos la información que nos proporcionas directamente cuando te registras en GP Masters Manager MVP. Esto incluye tu nombre de usuario, dirección de correo electrónico y cualquier contraseña que establezcas para la seguridad de la cuenta. No recopilamos datos personales sensibles como información financiera o direcciones físicas."
+    },
+    "s2": {
+      "title": "2. Cómo Usamos tu Información",
+      "p1": "Usamos la información que recopilamos para:",
+      "l1": "Proporcionar, mantener y mejorar la plataforma GP Masters Manager MVP.",
+      "l2": "Asegurar tu cuenta y verificar tu identidad durante el inicio de sesión.",
+      "l3": "Comunicarnos contigo respecto a actualizaciones del juego, campeonatos o problemas técnicos.",
+      "l4": "Personalizar tu experiencia dentro de la simulación de gestión."
+    },
+    "s3": {
+      "title": "3. Compartir y Divulgar Datos",
+      "p1": "No vendemos, intercambiamos ni transferimos de otra manera tu información personal a terceros. Tu nombre de mánager dentro del juego, las estadísticas de tu equipo y los resultados del campeonato serán visibles para otros jugadores en la plataforma como parte de la experiencia de juego principal."
+    },
+    "s4": {
+      "title": "4. Seguridad de Datos",
+      "p1": "Implementamos medidas de seguridad estándar de la industria, incluyendo encriptación (bcrypt) para contraseñas y JSON Web Tokens (JWT) seguros para la autenticación. Sin embargo, ninguna transmisión electrónica o almacenamiento de información puede ser completamente seguro, y no podemos garantizar una seguridad absoluta."
+    },
+    "s5": {
+      "title": "5. Tus Derechos",
+      "p1": "Tienes el derecho de acceder, actualizar o solicitar la eliminación de tu información personal. Si deseas eliminar tu cuenta por completo, por favor contacta a la administración a través de la plataforma o envía un correo electrónico a support@motogpmanager.com."
+    },
+    "footer": {
+      "rights": "Todos los derechos reservados."
+    }
+  },
+  "profile": {
+    "validation": {
+      "empty_password": "Por favor ingresa una nueva contraseña",
+      "short_password": "La contraseña debe tener al menos 4 caracteres"
+    },
+    "confirm_logout": "Por seguridad, al cambiar la contraseña se cerrará tu sesión actual. ¿Deseas continuar?",
+    "success": {
+      "password_updated": "¡Contraseña actualizada con éxito! Cerrando sesión..."
+    },
+    "loading": "Cargando datos del perfil...",
+    "back_dashboard": "VOLVER AL DASHBOARD",
+    "title": "Perfil del Mánager",
+    "subtitle": "Revisa los detalles de tu cuenta y actualiza credenciales",
+    "preferences": "Preferencias de la Aplicación",
+    "preferences_subtitle": "Ajustes locales del navegador",
+    "language": "Idioma de la interfaz",
+    "account_specifications": "Especificaciones de la Cuenta",
+    "account_metadata": "Metadatos del perfil (solo lectura)",
+    "nickname": "Apodo",
+    "email": "Correo Electrónico",
+    "last_login": "Última Conexión",
+    "na": "N/D",
+    "change_password": "Cambiar Contraseña de Seguridad",
+    "change_password_subtitle": "Actualizar la contraseña cierra todas las demás sesiones activas",
+    "new_password": "Nueva Contraseña",
+    "enter_new_password": "Ingresa la nueva contraseña de mánager",
+    "update_password": "ACTUALIZAR CONTRASEÑA"
+  },
+  "terms": {
+    "back": "Volver al Inicio",
+    "title": "Términos de Servicio",
+    "last_updated": "Última actualización: Julio 2026",
+    "s1": {
+      "title": "1. Aceptación de Términos",
+      "p1": "Al acceder y jugar a GP Masters Manager MVP, aceptas y acuerdas estar sujeto a los términos y disposiciones de este acuerdo. Si no aceptas cumplir con estos términos, no debes usar este servicio."
+    },
+    "s2": {
+      "title": "2. Registro de Cuenta y Reglas",
+      "l1": "Debes proporcionar una dirección de correo electrónico válida y una contraseña segura para crear una cuenta.",
+      "l2": "Eres responsable de mantener la confidencialidad de las credenciales de tu cuenta.",
+      "l3": "Aceptas no usar scripts automatizados, bots ni explotar errores para obtener una ventaja injusta en la simulación.",
+      "l4": "Los administradores se reservan el derecho de prohibir o suspender cuentas que infrinjan las pautas de juego limpio."
+    },
+    "s3": {
+      "title": "3. Motor de Simulación y Juego",
+      "p1": "GP Masters Manager MVP depende de un motor de físicas y simulación personalizado para calcular los resultados de las carreras. Los resultados generados por el motor son definitivos. No garantizamos el tiempo de actividad ininterrumpido de los servidores de simulación, y pueden ocurrir períodos de mantenimiento sin previo aviso."
+    },
+    "s4": {
+      "title": "4. Contenido del Usuario",
+      "p1": "Los usuarios pueden crear campeonatos y equipos. Aceptas no usar lenguaje ofensivo, difamatorio o inapropiado para nombres de usuario, nombres de equipos o nombres de campeonatos. Los administradores se reservan el derecho de renombrar o eliminar contenido considerado inapropiado."
+    },
+    "s5": {
+      "title": "5. Modificaciones del Servicio",
+      "p1": "Nos reservamos el derecho de modificar o discontinuar, temporal o permanentemente, el servicio (o cualquier parte del mismo) con o sin previo aviso. No seremos responsables ante ti ni ante terceros por cualquier modificación, suspensión o interrupción del servicio."
+    },
+    "footer": {
+      "rights": "Todos los derechos reservados."
+    }
+  }
+}

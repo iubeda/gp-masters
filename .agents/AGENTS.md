@@ -1,4 +1,4 @@
-# Reglas del Agente — MotoGP Manager
+# Reglas del Agente — GP Masters Manager
 
 ---
 

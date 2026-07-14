@@ -1,7 +1,9 @@
 import React from 'react';
 import { CheckCircle2, CalendarDays } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit, todayStr }) => {
+  const { t } = useTranslation();
   if (!circuits || circuits.length === 0) {
     return (
       <div className="p-8 text-center text-gray-500 text-sm">
@@ -50,7 +52,7 @@ const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit, todayStr }) 
                   </h4>
                   {/* Distance and curves in one single line */}
                   <p className="text-[10px] text-gray-400 font-light uppercase tracking-wider">
-                    Distance: <strong className="text-white font-semibold">{circ.distance}m</strong> • Curves R: <strong className="text-white font-semibold">{circ.curves_right}</strong> • Curves L: <strong className="text-white font-semibold">{circ.curves_left}</strong>
+                    {t('championship.calendar.distance', 'Distance:')} <strong className="text-white font-semibold">{circ.distance}m</strong> {t('championship.calendar.curves_r', ' • Curves R: ')} <strong className="text-white font-semibold">{circ.curves_right}</strong> {t('championship.calendar.curves_l', ' • Curves L: ')} <strong className="text-white font-semibold">{circ.curves_left}</strong>
                   </p>
                 </div>
               </div>
@@ -60,7 +62,7 @@ const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit, todayStr }) 
                 {isCompleted ? (
                   <span className="px-2 py-0.5 bg-emerald-600/10 border border-emerald-500/20 text-emerald-400 text-[9px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-                    Realizada
+                    {t('championship.calendar.completed', 'Realizada')}
                   </span>
                 ) : isActive ? (
                   <span className="px-2 py-0.5 bg-blue-600/10 border border-blue-500/20 text-blue-400 text-[9px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
@@ -68,12 +70,12 @@ const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit, todayStr }) 
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                     </span>
-                    En curso
+                    {t('championship.calendar.in_progress', 'En curso')}
                   </span>
                 ) : (
                   <span className="px-2 py-0.5 bg-gray-800/60 border border-gray-700/60 text-gray-400 text-[9px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
                     <CalendarDays className="w-3 h-3 text-gray-500" />
-                    Programada
+                    {t('championship.calendar.scheduled', 'Programada')}
                   </span>
                 )}
               </div>
@@ -82,15 +84,15 @@ const CalendarList = ({ circuits, selectedCircuit, onSelectCircuit, todayStr }) 
             {/* Dynamic Dates Grid */}
             <div className="border-t border-gray-800/50 pt-2 grid grid-cols-3 gap-1 text-[10px] text-center">
               <div className="bg-[#16161C]/50 p-1.5 rounded border border-gray-850">
-                <p className="text-gray-500 font-bold uppercase tracking-wider">Day 1: Prac</p>
+                <p className="text-gray-500 font-bold uppercase tracking-wider">{t('championship.calendar.day1_prac', 'Day 1: Prac')}</p>
                 <p className="text-gray-300 font-medium">{circ.practice_date}</p>
               </div>
               <div className="bg-[#16161C]/50 p-1.5 rounded border border-gray-850">
-                <p className="text-gray-500 font-bold uppercase tracking-wider">Day 2: Qual</p>
+                <p className="text-gray-500 font-bold uppercase tracking-wider">{t('championship.calendar.day2_qual', 'Day 2: Qual')}</p>
                 <p className="text-gray-300 font-medium">{circ.qualifying_date}</p>
               </div>
               <div className="bg-[#16161C]/50 p-1.5 rounded border border-gray-850">
-                <p className="text-gray-500 font-bold uppercase tracking-wider">Day 3: Race</p>
+                <p className="text-gray-500 font-bold uppercase tracking-wider">{t('championship.calendar.day3_race', 'Day 3: Race')}</p>
                 <p className="text-gray-300 font-bold text-red-400">{circ.race_date}</p>
               </div>
             </div>

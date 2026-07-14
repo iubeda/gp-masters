@@ -1,6 +1,6 @@
-# Guía de Roles y Permisos — MotoGP Manager
+# Guía de Roles y Permisos — GP Masters Manager
 
-Esta documentación describe en detalle los distintos roles de usuario que existen en **MotoGP Manager** y las acciones y permisos específicos asignados a cada uno para la gestión de campeonatos, escuderías y simulaciones.
+Esta documentación describe en detalle los distintos roles de usuario que existen en **GP Masters Manager** y las acciones y permisos específicos asignados a cada uno para la gestión de campeonatos, escuderías y simulaciones.
 
 ---
 

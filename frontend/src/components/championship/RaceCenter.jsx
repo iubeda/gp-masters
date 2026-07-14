@@ -12,8 +12,10 @@ import SessionLapsHistory from './SessionLapsHistory';
 import DetailedLapsHistory from './DetailedLapsHistory';
 import CircuitHeader from './CircuitHeader';
 import StrategyForm from './StrategyForm';
+import { useTranslation } from 'react-i18next';
 
 const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, todayStr }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   
   const determineInitialTab = () => {
@@ -298,7 +300,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
   // Clima correspondiente a la sesión activa
   const sessionWeatherMap = { practice: weather.practice, qualifying: weather.qualifying, race: weather.race };
   const currentWeather = sessionWeatherMap[activeTab];
-  const sessionLabel = activeTab === 'practice' ? 'Entrenamientos' : activeTab === 'qualifying' ? 'Clasificación' : 'Carrera';
+  const sessionLabel = activeTab === 'practice' ? t('championship.strategy.practice', 'Entrenamientos') : activeTab === 'qualifying' ? t('championship.strategy.qualifying', 'Clasificación') : t('championship.strategy.race', 'Carrera');
 
   const isPracticeFinished = circuit.status === 'completed' || (todayStr && todayStr > circuit.practice_date);
   const isQualifyingFinished = circuit.status === 'completed' || (todayStr && todayStr > circuit.qualifying_date);
@@ -356,9 +358,9 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
           {/* Navigation tabs */}
           <div className="flex bg-[#101017] p-1.5 rounded-2xl border border-gray-850">
             {[
-              { id: 'practice', label: '1. Entrenamientos Libres', info: teamStatus ? `${15 - teamStatus.practice_laps_used} / 15 laps` : '15 / 15 laps' },
-              { id: 'qualifying', label: '2. Clasificación', info: teamStatus ? `${3 - teamStatus.qualifying_laps_used} / 3 laps` : '3 / 3 laps' },
-              { id: 'race', label: '3. Carrera', info: isRaceFinished ? 'Completado' : 'Pendiente' }
+              { id: 'practice', label: `1. ${t('championship.race_center.free_practice', 'Entrenamientos Libres')}`, info: teamStatus ? `${15 - teamStatus.practice_laps_used} / 15 laps` : '15 / 15 laps' },
+              { id: 'qualifying', label: `2. ${t('championship.strategy.qualifying', 'Clasificación')}`, info: teamStatus ? `${3 - teamStatus.qualifying_laps_used} / 3 laps` : '3 / 3 laps' },
+              { id: 'race', label: `3. ${t('championship.strategy.race', 'Carrera')}`, info: isRaceFinished ? t('championship.calendar.completed', 'Completado') : t('championship.strategy.pending', 'Pendiente') }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -384,23 +386,23 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                 isPracticeFuture ? (
                   <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic tracking-wider flex flex-col items-center gap-2">
                     <CalendarDays className="w-6 h-6 text-blue-400 mb-1" />
-                    <span>Los entrenamientos libres aún no han comenzado.</span>
-                    <span className="text-xs text-gray-500 font-normal">Programados para el {circuit.practice_date}</span>
+                    <span>{t('championship.race_center.practice_not_started', 'Los entrenamientos libres aún no han comenzado.')}</span>
+                    <span className="text-xs text-gray-500 font-normal">{t('championship.race_center.scheduled_for', 'Programados para el')} {circuit.practice_date}</span>
                   </div>
                 ) : isPracticeFinished ? (
                   <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic uppercase tracking-wider">
-                    Sesión de entrenamientos libres finalizada
+                    {t('championship.race_center.practice_finished', 'Sesión de entrenamientos libres finalizada')}
                   </div>
                 ) : (
                   <div className="bg-[#101017] border border-gray-850 p-5 rounded-2xl space-y-4">
                     <h4 className="text-sm font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
                       <Play className="w-4 h-4 text-red-500" />
-                      Simular Tanda de Entrenamientos
+                      {t('championship.race_center.simulate_practice', 'Simular Tanda de Entrenamientos')}
                     </h4>
                     
                     <div className="flex items-center gap-4">
                       <div className="flex-1 space-y-1">
-                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Vueltas a realizar (Máx: {15 - teamStatus.practice_laps_used})</label>
+                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{t('championship.race_center.laps_to_do', 'Vueltas a realizar')} (Máx: {15 - teamStatus.practice_laps_used})</label>
                         <input 
                           type="number" 
                           min="1" 
@@ -422,7 +424,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                 )
               ) : (
                 <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-xs text-gray-450 italic">
-                  Los entrenamientos libres solo están disponibles para los participantes del campeonato.
+                  {t('championship.race_center.practice_only_participants', 'Los entrenamientos libres solo están disponibles para los participantes del campeonato.')}
                 </div>
               )}
 
@@ -431,7 +433,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                 <div className="bg-gradient-to-r from-red-950/20 to-[#101017] border border-red-500/20 p-5 rounded-2xl space-y-3">
                   <div className="flex items-center gap-2">
                     <MessageSquare className="w-4.5 h-4.5 text-red-400" />
-                    <span className="text-xs font-bold text-red-400 uppercase tracking-wider">Mensaje de Radio del Piloto</span>
+                    <span className="text-xs font-bold text-red-400 uppercase tracking-wider">{t('championship.race_center.pilot_radio', 'Mensaje de Radio del Piloto')}</span>
                   </div>
                   <blockquote className="text-sm italic text-gray-200">
                     "{practiceLaps[practiceLaps.length - 1].feedback_received || 'El piloto no tiene comentarios todavía.'}"
@@ -443,7 +445,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
               {practiceLaps.length === 0 ? (
                 <div className="bg-[#101017] border border-gray-850 rounded-2xl p-8 text-center text-gray-500 text-xs">
                   {teamId 
-                    ? "No has rodado ninguna vuelta de entrenamientos todavía hoy." 
+                    ? t('championship.race_center.no_practice_laps', 'No has rodado ninguna vuelta de entrenamientos todavía hoy.') 
                     : "No hay telemetría propia disponible para administradores sin equipo."}
                 </div>
               ) : (
@@ -459,23 +461,23 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                 isQualifyingFuture ? (
                   <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic tracking-wider flex flex-col items-center gap-2">
                     <CalendarDays className="w-6 h-6 text-blue-400 mb-1" />
-                    <span>La sesión de clasificación aún no ha comenzado.</span>
-                    <span className="text-xs text-gray-500 font-normal">Programada para el {circuit.qualifying_date}</span>
+                    <span>{t('championship.race_center.qualifying_not_started', 'La sesión de clasificación aún no ha comenzado.')}</span>
+                    <span className="text-xs text-gray-500 font-normal">{t('championship.race_center.scheduled_for', 'Programada para el')} {circuit.qualifying_date}</span>
                   </div>
                 ) : isQualifyingFinished ? (
                   <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic uppercase tracking-wider">
-                    Sesión de clasificación finalizada
+                    {t('championship.race_center.qualifying_finished', 'Sesión de clasificación finalizada')}
                   </div>
                 ) : (
                   <div className="bg-[#101017] border border-gray-850 p-5 rounded-2xl space-y-4">
                     <h4 className="text-sm font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
                       <Play className="w-4 h-4 text-red-500" />
-                      Simular Clasificación (Time Attack)
+                      {t('championship.race_center.simulate_qualifying', 'Simular Clasificación')}
                     </h4>
                     
                     <div className="flex items-center gap-4">
                       <div className="flex-1 space-y-1">
-                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Vueltas a realizar (Máx: {3 - teamStatus.qualifying_laps_used})</label>
+                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{t('championship.race_center.laps_to_do', 'Vueltas a realizar')} (Máx: {3 - teamStatus.qualifying_laps_used})</label>
                         <input 
                           type="number" 
                           min="1" 
@@ -490,14 +492,14 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                         onClick={handleQualifyingStint}
                         className="h-[46px] self-end px-6 bg-red-600 hover:bg-red-500 text-xs font-bold rounded-xl transition-all disabled:bg-gray-800 disabled:text-gray-500 flex items-center justify-center gap-1.5"
                       >
-                        {simulating ? 'Simulando...' : 'Rodar Clasificación'}
+                        {simulating ? 'Simulando...' : t('championship.race_center.ride_qualifying', 'Rodar Clasificación')}
                       </button>
                     </div>
                   </div>
                 )
               ) : (
                 <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-xs text-gray-450 italic">
-                  La clasificación solo está disponible para los participantes del campeonato.
+                  {t('championship.race_center.qualifying_only_participants', 'La clasificación solo está disponible para los participantes del campeonato.')}
                 </div>
               )}
 
@@ -506,7 +508,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                 <div className="bg-gradient-to-r from-red-950/20 to-[#101017] border border-red-500/20 p-5 rounded-2xl space-y-3">
                   <div className="flex items-center gap-2">
                     <MessageSquare className="w-4.5 h-4.5 text-red-400" />
-                    <span className="text-xs font-bold text-red-400 uppercase tracking-wider">Mensaje de Radio del Piloto</span>
+                    <span className="text-xs font-bold text-red-400 uppercase tracking-wider">{t('championship.race_center.pilot_radio', 'Mensaje de Radio del Piloto')}</span>
                   </div>
                   <blockquote className="text-sm italic text-gray-200">
                     "{qualifyingLaps[qualifyingLaps.length - 1].feedback_received || 'El piloto no tiene comentarios todavía.'}"
@@ -516,7 +518,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
 
               {/* Tu Telemetría de Clasificación */}
               {teamId && qualifyingLaps.length > 0 && (
-                <DetailedLapsHistory laps={qualifyingLaps} title="Tu Telemetría de Clasificación" bestTime={teamStatus?.best_qualifying_time} />
+                <DetailedLapsHistory laps={qualifyingLaps} title={t('championship.race_center.your_qualifying_telemetry', 'Tu Telemetría de Clasificación')} bestTime={teamStatus?.best_qualifying_time} />
               )}
 
               {/* Parrilla de Clasificación Actualizada */}
@@ -531,15 +533,15 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
               {teamId && !isRaceFinished && (
                 <div className="bg-[#101017] border border-gray-850 p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <h4 className="text-sm font-bold text-gray-300 uppercase tracking-wider">Guardar Estrategia de Carrera</h4>
-                    <p className="text-xs text-gray-500">Asegura tu setup, neumáticos y enfoque antes de que empiece la carrera (14:00h).</p>
+                    <h4 className="text-sm font-bold text-gray-300 uppercase tracking-wider">{t('championship.strategy.save_race_strategy', 'Guardar Estrategia de Carrera')}</h4>
+                    <p className="text-xs text-gray-500">{t('championship.strategy.secure_setup_warning', 'Asegura tu setup, neumáticos y enfoque antes de que empiece la carrera (14:00h).')}</p>
                   </div>
                   <button
                     onClick={handleSaveStrategy}
                     disabled={simulating || !isSetupBalanced}
                     className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-xs font-bold rounded-xl transition-all disabled:bg-gray-800 disabled:text-gray-500 flex items-center justify-center gap-1.5"
                   >
-                    Guardar Estrategia
+                    {t('championship.strategy.save_strategy', 'Guardar Estrategia')}
                   </button>
                 </div>
               )}
@@ -549,10 +551,10 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                 <div className="bg-gradient-to-r from-yellow-600/10 to-[#101017] border border-yellow-500/20 p-5 rounded-2xl space-y-4">
                   <div className="flex items-center gap-2">
                     <CalendarDays className="w-5 h-5 text-yellow-500" />
-                    <h4 className="text-sm font-bold text-yellow-500 uppercase tracking-wider">Simulación de la Carrera</h4>
+                    <h4 className="text-sm font-bold text-yellow-500 uppercase tracking-wider">{t('championship.race_center.race_simulation', 'Simulación de la Carrera')}</h4>
                   </div>
                   <p className="text-xs text-gray-400">
-                    La carrera se simula de forma progresiva (vuelta a vuelta) para ofrecer Live Timing a todos los usuarios conectados.
+                    {t('championship.race_center.race_simulation_desc', 'La carrera se simula de forma progresiva (vuelta a vuelta) para ofrecer Live Timing a todos los usuarios conectados.')}
                   </p>
                   
                   <button
@@ -560,7 +562,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
                     onClick={handleSimulateRace}
                     className="w-full py-3 bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-extrabold text-sm rounded-xl transition-all disabled:bg-gray-800 disabled:text-gray-500 flex items-center justify-center gap-1.5 shadow-lg"
                   >
-                    {simulating ? 'Iniciando Transmisión...' : '¡INICIAR CARRERA (LIVE)!'}
+                    {simulating ? t('championship.race_center.starting_transmission', 'Iniciando Transmisión...') : t('championship.race_center.start_race_live', '¡INICIAR CARRERA (LIVE)!')}
                   </button>
                 </div>
               )}
@@ -577,7 +579,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
 
               {/* Historial de Vueltas de la Carrera (si ya finalizó) */}
               {teamId && isRaceFinished && raceLaps.length > 0 && (
-                <SessionLapsHistory laps={raceLaps} title="Tu Vuelta a Vuelta en Carrera" />
+                <SessionLapsHistory laps={raceLaps} title={t('championship.race_center.your_lap_by_lap', 'Tu Vuelta a Vuelta en Carrera')} />
               )}
             </div>
           )}

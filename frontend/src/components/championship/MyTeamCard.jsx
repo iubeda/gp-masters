@@ -1,5 +1,6 @@
 import React from 'react';
 import { Shield, Coins } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Stat bar sub-component to avoid repetition inside MyTeamCard.
@@ -22,12 +23,13 @@ const StatBar = ({ label, value }) => (
  * and motorcycle part ratings.
  */
 const MyTeamCard = ({ userTeam }) => {
+  const { t } = useTranslation();
   const motoParts = [
-    { label: 'Motor', val: userTeam.engine },
-    { label: 'Cambio', val: userTeam.gearbox },
+    { label: t('championship.my_team.engine', 'Motor'), val: userTeam.engine },
+    { label: t('championship.my_team.gearbox', 'Cambio'), val: userTeam.gearbox },
     { label: 'Susp.', val: userTeam.suspension },
     { label: 'Chasis', val: userTeam.chassis },
-    { label: 'Alerón', val: userTeam.wings },
+    { label: t('championship.my_team.wings', 'Alerón'), val: userTeam.wings },
   ];
 
   return (
@@ -38,7 +40,7 @@ const MyTeamCard = ({ userTeam }) => {
           <Shield className="w-5 h-5 text-red-500" />
           <div>
             <h3 className="font-bold text-white text-base leading-tight">{userTeam.team_name}</h3>
-            <span className="text-[10px] text-gray-400 uppercase tracking-widest font-light">Mi Escudería</span>
+            <span className="text-[10px] text-gray-400 uppercase tracking-widest font-light">{t('championship.tabs.my_team', 'Mi escudería')}</span>
           </div>
         </div>
         <div className="flex items-center gap-1 bg-yellow-500/10 border border-yellow-500/20 px-3 py-1 rounded-full text-xs font-bold text-yellow-500">
@@ -51,20 +53,20 @@ const MyTeamCard = ({ userTeam }) => {
         {/* Pilot */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Piloto</span>
+            <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider">{t('championship.my_team.pilot', 'PILOTO')}</span>
             <span className="text-sm font-bold text-white">{userTeam.pilot_name}</span>
           </div>
           <div className="space-y-2 bg-[#0F0F12]/60 p-3 rounded-xl border border-gray-850">
-            <StatBar label="Talento" value={userTeam.talent} />
-            <StatBar label="Consistencia" value={userTeam.consistency} />
-            <StatBar label="Agresividad" value={userTeam.aggressiveness} />
+            <StatBar label={t('championship.my_team.talent', 'Talento')} value={userTeam.talent} />
+            <StatBar label={t('championship.my_team.consistency', 'Consistencia')} value={userTeam.consistency} />
+            <StatBar label={t('championship.my_team.aggressiveness', 'Agresividad')} value={userTeam.aggressiveness} />
             <div className="grid grid-cols-2 gap-2 pt-2 border-t border-gray-800/40 text-center mt-2">
               <div>
-                <p className="text-[9px] text-gray-505 uppercase font-bold">Experiencia</p>
+                <p className="text-[9px] text-gray-505 uppercase font-bold">{t('championship.my_team.experience', 'Experiencia')}</p>
                 <p className="text-xs font-semibold text-gray-300">{userTeam.experience}%</p>
               </div>
               <div>
-                <p className="text-[9px] text-gray-505 uppercase font-bold">Estado Físico</p>
+                <p className="text-[9px] text-gray-505 uppercase font-bold">{t('championship.my_team.fitness', 'Estado Físico')}</p>
                 <p className="text-xs font-semibold text-gray-300">{userTeam.fitness}%</p>
               </div>
             </div>

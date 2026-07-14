@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Trophy, Mail, Lock, User, Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Auth = ({ showToast }) => {
   const { login } = useAuth();
   const location = useLocation();
+  const { t } = useTranslation();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -21,7 +23,7 @@ const Auth = ({ showToast }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password || (!isLogin && !username)) {
-      showToast('Please fill in all fields', 'error');
+      showToast(t('auth.validation.fill_fields', 'Please fill in all fields'), 'error');
       return;
     }
 
@@ -32,7 +34,7 @@ const Auth = ({ showToast }) => {
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'X-Requested-With': 'XMLHttpRequest'
         },
@@ -46,9 +48,9 @@ const Auth = ({ showToast }) => {
 
       if (isLogin) {
         login(data.user);
-        showToast('Welcome back to MotoGP Manager!', 'success');
+        showToast(t('auth.success.login', 'Welcome back to GP Masters Manager!'), 'success');
       } else {
-        showToast('Registration successful! Please log in.', 'success');
+        showToast(t('auth.success.register', 'Registration successful! Please log in.'), 'success');
         setIsLogin(true);
         setPassword('');
       }
@@ -72,10 +74,10 @@ const Auth = ({ showToast }) => {
             <Trophy className="w-8 h-8 text-red-500" />
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
-            MOTOGP MANAGER
+            GP MASTERS MANAGER
           </h1>
           <p className="text-sm text-gray-400 mt-2 font-light">
-            Build your team, hire pilots, and rule the championship
+            {t('auth.subtitle', 'Build your team, hire pilots, and rule the championship')}
           </p>
         </div>
 
@@ -83,23 +85,21 @@ const Auth = ({ showToast }) => {
         <div className="flex border-b border-gray-800 bg-[#0F0F12]/50">
           <button
             onClick={() => { setIsLogin(true); setEmail(''); setUsername(''); setPassword(''); }}
-            className={`flex-1 py-4 text-sm font-semibold tracking-wider transition-colors ${
-              isLogin 
-                ? 'text-red-500 border-b-2 border-red-500 bg-[#16161C]/50' 
-                : 'text-gray-400 hover:text-white'
-            }`}
+            className={`flex-1 py-4 text-sm font-semibold tracking-wider transition-colors ${isLogin
+              ? 'text-red-500 border-b-2 border-red-500 bg-[#16161C]/50'
+              : 'text-gray-400 hover:text-white'
+              }`}
           >
-            SIGN IN
+            {t('auth.tab.sign_in', 'SIGN IN')}
           </button>
           <button
             onClick={() => { setIsLogin(false); setEmail(''); setUsername(''); setPassword(''); }}
-            className={`flex-1 py-4 text-sm font-semibold tracking-wider transition-colors ${
-              !isLogin 
-                ? 'text-red-500 border-b-2 border-red-500 bg-[#16161C]/50' 
-                : 'text-gray-400 hover:text-white'
-            }`}
+            className={`flex-1 py-4 text-sm font-semibold tracking-wider transition-colors ${!isLogin
+              ? 'text-red-500 border-b-2 border-red-500 bg-[#16161C]/50'
+              : 'text-gray-400 hover:text-white'
+              }`}
           >
-            REGISTER
+            {t('auth.tab.register', 'REGISTER')}
           </button>
         </div>
 
@@ -107,7 +107,7 @@ const Auth = ({ showToast }) => {
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
           {!isLogin && (
             <div className="space-y-2">
-              <label className="text-xs font-semibold tracking-wider text-gray-400 uppercase">Username</label>
+              <label className="text-xs font-semibold tracking-wider text-gray-400 uppercase">{t('auth.form.username', 'Username')}</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <User className="w-5 h-5 text-gray-500" />
@@ -125,7 +125,7 @@ const Auth = ({ showToast }) => {
           )}
 
           <div className="space-y-2">
-            <label className="text-xs font-semibold tracking-wider text-gray-400 uppercase">Email Address</label>
+            <label className="text-xs font-semibold tracking-wider text-gray-400 uppercase">{t('auth.form.email', 'Email Address')}</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Mail className="w-5 h-5 text-gray-500" />
@@ -142,7 +142,7 @@ const Auth = ({ showToast }) => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-semibold tracking-wider text-gray-400 uppercase">Password</label>
+            <label className="text-xs font-semibold tracking-wider text-gray-400 uppercase">{t('auth.form.password', 'Password')}</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock className="w-5 h-5 text-gray-500" />
@@ -168,7 +168,7 @@ const Auth = ({ showToast }) => {
             ) : (
               <>
                 <Sparkles className="w-4 h-4" />
-                {isLogin ? 'SIGN IN MANAGER' : 'CREATE ACCOUNT'}
+                {isLogin ? t('auth.btn.sign_in', 'SIGN IN MANAGER') : t('auth.btn.create_account', 'CREATE ACCOUNT')}
               </>
             )}
           </button>
