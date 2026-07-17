@@ -5,7 +5,7 @@ import { useAuth } from './AuthContext';
 const SocketContext = createContext(null);
 
 export const SocketProvider = ({ children }) => {
-  const { user, token } = useAuth();  // Get token for cross-domain auth
+  const { user, token, apiFetch } = useAuth();  // Get token and apiFetch for cross-domain auth
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
@@ -21,26 +21,17 @@ export const SocketProvider = ({ children }) => {
     const newSocket = io(socketUrl, {
       withCredentials: true,
       auth: async (cb) => {
-        // Use in-memory token for cross-domain, or fetch fresh socket token as fallback
+        // Use in-memory token for cross-domain (production)
         if (token) {
-          // Use existing auth token for WebSocket connection
           cb({ token });
         } else {
-          // Fallback: fetch temporary socket token (for cookie-based auth in Docker)
+          // Docker/same-domain: try to fetch socket token with cookies
           try {
-            const response = await fetch(`${socketUrl}/api/auth/socket-token`, {
-              credentials: 'include'
-            });
-            
-            if (response.ok) {
-              const { socketToken } = await response.json();
-              cb({ token: socketToken });
-            } else {
-              // If fails, try with null (will use cookies if available)
-              cb({ token: null });
-            }
+            const data = await apiFetch(`${socketUrl}/api/auth/socket-token`);
+            cb({ token: data.socketToken });
           } catch (err) {
-            console.warn('Could not fetch socket token, falling back to cookies:', err);
+            console.warn('Could not fetch socket token:', err);
+            // Last resort: rely on cookies (Docker only)
             cb({ token: null });
           }
         }

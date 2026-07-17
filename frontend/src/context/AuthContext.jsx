@@ -8,13 +8,17 @@ export const AuthProvider = ({ children }) => {
     const savedUser = localStorage.getItem('motogp_user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
-  const [token, setToken] = useState(null);  // Store token in memory for cross-domain
+  const [token, setToken] = useState(() => {
+    // Restore token from sessionStorage (persists on page reload, cleared on tab close)
+    return sessionStorage.getItem('motogp_token') || null;
+  });
   const [loading, setLoading] = useState(false);
 
   const login = useCallback((userData, jwtToken) => {
     setUser(userData);
     setToken(jwtToken);  // Store token in memory
     localStorage.setItem('motogp_user', JSON.stringify(userData));
+    sessionStorage.setItem('motogp_token', jwtToken);  // Persist for page reloads
   }, []);
 
   const logout = useCallback(async () => {
@@ -26,6 +30,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setToken(null);  // Clear token from memory
     localStorage.removeItem('motogp_user');
+    sessionStorage.removeItem('motogp_token');  // Clear from sessionStorage
   }, []);
 
   // Helper function to perform authenticated API calls
