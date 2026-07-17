@@ -14,9 +14,13 @@ let io;
 const initSocket = (server) => {
   const { Server } = require('socket.io');
   
+  const allowedOrigins = process.env.ALLOWED_ORIGINS 
+    ? process.env.ALLOWED_ORIGINS.split(',') 
+    : ['http://localhost:3000'];
+  
   io = new Server(server, {
     cors: {
-      origin: process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : '*',
+      origin: allowedOrigins,
       methods: ['GET', 'POST'],
       credentials: true
     }
