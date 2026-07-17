@@ -29,6 +29,23 @@ const validateSessionTime = async (championshipId, circuitId, sessionType, bypas
   const circuitSession = calendar.find(c => c.id === parseInt(circuitId));
   if (!circuitSession) throw new Error('Circuit not found in the championship calendar.');
 
+  // Verificar si la carrera está en progreso o completada (no se permiten más vueltas de entrenamientos o clasificación)
+  if (sessionType === 'practice' || sessionType === 'qualifying') {
+    const raceStatusRes = await db.query(
+      "SELECT status FROM race_weekends WHERE championship_id = $1 AND circuit_id = $2 AND session_type = 'race'",
+      [championshipId, circuitId]
+    );
+    if (raceStatusRes.rows.length > 0) {
+      const raceStatus = raceStatusRes.rows[0].status;
+      if (raceStatus === 'in_progress') {
+        throw new Error('La carrera de este Gran Premio está en curso. No se pueden realizar vueltas de entrenamientos o clasificación durante la carrera.');
+      }
+      if (raceStatus === 'completed') {
+        throw new Error('La carrera de este Gran Premio ya ha sido completada. No se pueden realizar más vueltas de entrenamientos o clasificación.');
+      }
+    }
+  }
+
   if (circuitSession.bypass_restrictions && sessionType !== 'race') {
     return;
   }

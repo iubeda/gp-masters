@@ -38,6 +38,9 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
     standings: []
   });
   
+  // Progreso del temporizador (0-100%) para la siguiente vuelta
+  const [nextLapProgress, setNextLapProgress] = useState(0);
+  
   // GP State from backend
   const [gpData, setGpData] = useState(null);
   
@@ -131,8 +134,33 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
       socket.emit('join-gp-room', roomId);
     });
 
-    socket.on('qualifying-updated', () => {
-      fetchGPStatus();
+    socket.on('qualifying-updated', (data) => {
+      // Actualizar solo la parrilla de clasificación, sin recargar todo
+      if (data.gridStatus) {
+        setGpData(prev => {
+          // Actualizar el teamStatus si corresponde al equipo actual
+          let updatedTeamStatus = prev.teamStatus;
+          if (prev.teamId && data.gridStatus) {
+            const teamGridEntry = data.gridStatus.find(t => t.team_id === prev.teamId);
+            if (teamGridEntry) {
+              updatedTeamStatus = {
+                ...prev.teamStatus,
+                qualifying_laps_used: teamGridEntry.qualifying_laps_used,
+                best_qualifying_time: teamGridEntry.best_qualifying_time
+              };
+            }
+          }
+          
+          return {
+            ...prev,
+            gridStatus: data.gridStatus,
+            teamStatus: updatedTeamStatus
+          };
+        });
+      } else {
+        // Fallback si no vienen datos (por compatibilidad)
+        fetchGPStatus();
+      }
     });
 
     socket.on('race-started', (data) => {
@@ -146,10 +174,13 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
         currentLap: data.lap,
         standings: data.standings
       }));
+      // Resetear el progreso al recibir una nueva vuelta
+      setNextLapProgress(0);
     });
 
     socket.on('race-finished', () => {
       setLiveRace(prev => ({ ...prev, isActive: false }));
+      setNextLapProgress(0);
       fetchGPStatus();
       showToast('¡La carrera ha finalizado!', 'success');
     });
@@ -163,6 +194,27 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
       socket.off('race-finished');
     };
   }, [socket, championship?.id, circuit?.id]);
+
+  // Temporizador de progreso: incrementa cada segundo durante la carrera
+  useEffect(() => {
+    if (!liveRace.isActive || liveRace.currentLap >= liveRace.totalLaps) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setNextLapProgress(prev => {
+        // 20 segundos = 100%, así que cada segundo = 5%
+        const newProgress = prev + 5;
+        // Permitir que llegue a 100 y luego resetear
+        if (newProgress >= 100) {
+          return 0;
+        }
+        return newProgress;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [liveRace.isActive, liveRace.currentLap, liveRace.totalLaps]);
 
   // Calculate sum of offsets
   const setupSum = setup.engine + setup.gearbox + setup.suspension + setup.chassis + setup.wings;
@@ -199,7 +251,13 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
         })
       });
       showToast(`¡Tanda de libres completada! Mejor tiempo: ${res.bestTime ? formatLapTime(res.bestTime) : 'Caída'}`, 'success');
-      fetchGPStatus();
+      
+      // Actualizar solo los datos necesarios sin recargar toda la página
+      setGpData(prev => ({
+        ...prev,
+        teamStatus: res.updatedStatus,
+        practiceLaps: res.practiceLaps || prev.practiceLaps
+      }));
     } catch (error) {
       showToast(error.message, 'error');
     } finally {
@@ -231,7 +289,14 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
         })
       });
       showToast(`¡Clasificación completada! Mejor tiempo: ${res.bestTime ? formatLapTime(res.bestTime) : 'Caída'}`, 'success');
-      fetchGPStatus();
+      
+      // Actualizar solo los datos necesarios sin recargar toda la página
+      setGpData(prev => ({
+        ...prev,
+        teamStatus: res.updatedStatus,
+        qualifyingLaps: res.qualifyingLaps || prev.qualifyingLaps,
+        gridStatus: res.gridStatus || prev.gridStatus
+      }));
     } catch (error) {
       showToast(error.message, 'error');
     } finally {
@@ -389,7 +454,27 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
           {activeTab === 'practice' && (
             <div className="space-y-6">
               {teamId ? (
-                isPracticeFuture ? (
+                liveRace.isActive ? (
+                  <div className="bg-yellow-950/20 border border-yellow-500/20 p-5 rounded-2xl text-center space-y-2">
+                    <Activity className="w-6 h-6 text-yellow-400 mx-auto mb-2 animate-pulse" />
+                    <p className="text-sm font-bold text-yellow-400">
+                      {t('championship.race_center.race_in_progress_no_practice', 'La carrera está en curso.')}
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {t('championship.race_center.no_sessions_during_race', 'No se pueden realizar vueltas de entrenamientos durante la carrera.')}
+                    </p>
+                  </div>
+                ) : isRaceFinished ? (
+                  <div className="bg-red-950/20 border border-red-500/20 p-5 rounded-2xl text-center space-y-2">
+                    <CheckCircle2 className="w-6 h-6 text-red-400 mx-auto mb-2" />
+                    <p className="text-sm font-bold text-red-400">
+                      {t('championship.race_center.race_completed_no_practice', 'La carrera de este Gran Premio ya ha sido completada.')}
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {t('championship.race_center.no_more_sessions', 'No se pueden realizar más vueltas de entrenamientos.')}
+                    </p>
+                  </div>
+                ) : isPracticeFuture ? (
                   <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic tracking-wider flex flex-col items-center gap-2">
                     <CalendarDays className="w-6 h-6 text-blue-400 mb-1" />
                     <span>{t('championship.race_center.practice_not_started', 'Los entrenamientos libres aún no han comenzado.')}</span>
@@ -464,7 +549,27 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
           {activeTab === 'qualifying' && (
             <div className="space-y-6">
               {teamId ? (
-                isQualifyingFuture ? (
+                liveRace.isActive ? (
+                  <div className="bg-yellow-950/20 border border-yellow-500/20 p-5 rounded-2xl text-center space-y-2">
+                    <Activity className="w-6 h-6 text-yellow-400 mx-auto mb-2 animate-pulse" />
+                    <p className="text-sm font-bold text-yellow-400">
+                      {t('championship.race_center.race_in_progress_no_qualifying', 'La carrera está en curso.')}
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {t('championship.race_center.no_sessions_during_race', 'No se pueden realizar vueltas de clasificación durante la carrera.')}
+                    </p>
+                  </div>
+                ) : isRaceFinished ? (
+                  <div className="bg-red-950/20 border border-red-500/20 p-5 rounded-2xl text-center space-y-2">
+                    <CheckCircle2 className="w-6 h-6 text-red-400 mx-auto mb-2" />
+                    <p className="text-sm font-bold text-red-400">
+                      {t('championship.race_center.race_completed_no_qualifying', 'La carrera de este Gran Premio ya ha sido completada.')}
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {t('championship.race_center.no_more_sessions', 'No se pueden realizar más vueltas de clasificación.')}
+                    </p>
+                  </div>
+                ) : isQualifyingFuture ? (
                   <div className="bg-[#101017]/40 border border-gray-850 p-5 rounded-2xl text-center text-sm font-bold text-gray-300 italic tracking-wider flex flex-col items-center gap-2">
                     <CalendarDays className="w-6 h-6 text-blue-400 mb-1" />
                     <span>{t('championship.race_center.qualifying_not_started', 'La sesión de clasificación aún no ha comenzado.')}</span>
@@ -575,7 +680,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
 
               {/* Live Timing / Broadcasting en progreso */}
               {liveRace.isActive && (
-                <LiveTimingTable liveRace={liveRace} />
+                <LiveTimingTable liveRace={liveRace} nextLapProgress={nextLapProgress} />
               )}
 
               {/* Resultados Finales de la Carrera */}

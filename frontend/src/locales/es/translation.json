@@ -207,7 +207,13 @@
       "race_simulation": "Simulación de la Carrera",
       "race_simulation_desc": "La carrera se simula de forma progresiva (vuelta a vuelta) para ofrecer Live Timing a todos los usuarios conectados.",
       "starting_transmission": "Iniciando Transmisión...",
-      "start_race_live": "¡INICIAR CARRERA (LIVE)!"
+      "start_race_live": "¡INICIAR CARRERA (LIVE)!",
+      "race_completed_no_practice": "La carrera de este Gran Premio ya ha sido completada.",
+      "race_completed_no_qualifying": "La carrera de este Gran Premio ya ha sido completada.",
+      "race_in_progress_no_practice": "La carrera está en curso.",
+      "race_in_progress_no_qualifying": "La carrera está en curso.",
+      "no_sessions_during_race": "No se pueden realizar vueltas de esta sesión durante la carrera.",
+      "no_more_sessions": "No se pueden realizar más vueltas de esta sesión."
     },
     "telemetry": {
       "best_time": "Mejor tiempo",
@@ -251,11 +257,13 @@
       "live": "En Directo",
       "laps": "Vueltas",
       "waiting_first_lap": "Esperando el paso por meta de la primera vuelta...",
+      "waiting_data": "Cargando datos de carrera...",
       "pos": "Pos",
       "pilot_team": "Piloto / Equipo",
       "lap_time": "Tiempo de Vuelta",
       "wear": "Desgaste",
-      "crash": "Caída (DNF)"
+      "crash": "Caída (DNF)",
+      "next_lap_in": "Próxima vuelta en"
     }
   },
   "dashboard": {
