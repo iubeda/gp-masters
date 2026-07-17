@@ -5,7 +5,7 @@ import { useAuth } from './AuthContext';
 const SocketContext = createContext(null);
 
 export const SocketProvider = ({ children }) => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();  // Get token for cross-domain auth
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
@@ -21,22 +21,28 @@ export const SocketProvider = ({ children }) => {
     const newSocket = io(socketUrl, {
       withCredentials: true,
       auth: async (cb) => {
-        // Obtener token fresco en cada conexión/reconexión
-        try {
-          const response = await fetch(`${socketUrl}/api/auth/socket-token`, {
-            credentials: 'include'
-          });
-          
-          if (response.ok) {
-            const { socketToken } = await response.json();
-            cb({ token: socketToken });
-          } else {
-            // Si falla, intentar sin token (funcionará si cookies están disponibles)
+        // Use in-memory token for cross-domain, or fetch fresh socket token as fallback
+        if (token) {
+          // Use existing auth token for WebSocket connection
+          cb({ token });
+        } else {
+          // Fallback: fetch temporary socket token (for cookie-based auth in Docker)
+          try {
+            const response = await fetch(`${socketUrl}/api/auth/socket-token`, {
+              credentials: 'include'
+            });
+            
+            if (response.ok) {
+              const { socketToken } = await response.json();
+              cb({ token: socketToken });
+            } else {
+              // If fails, try with null (will use cookies if available)
+              cb({ token: null });
+            }
+          } catch (err) {
+            console.warn('Could not fetch socket token, falling back to cookies:', err);
             cb({ token: null });
           }
-        } catch (err) {
-          console.warn('Could not fetch socket token, falling back to cookies:', err);
-          cb({ token: null });
         }
       }
     });
@@ -50,7 +56,7 @@ export const SocketProvider = ({ children }) => {
     return () => {
       newSocket.disconnect();
     };
-  }, [user]);
+  }, [user, token]);  // Add token dependency for cross-domain auth
 
   return (
     <SocketContext.Provider value={{ socket }}>

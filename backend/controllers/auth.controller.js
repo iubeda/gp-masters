@@ -75,6 +75,7 @@ const login = asyncHandler(async (req, res) => {
       username: user.username,
       role: user.role
     },
+    token  // Return token in body for cross-domain support
   });
 });
 

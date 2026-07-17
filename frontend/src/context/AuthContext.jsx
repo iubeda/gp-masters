@@ -8,11 +8,12 @@ export const AuthProvider = ({ children }) => {
     const savedUser = localStorage.getItem('motogp_user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
+  const [token, setToken] = useState(null);  // Store token in memory for cross-domain
   const [loading, setLoading] = useState(false);
 
-  const login = useCallback((userData) => {
+  const login = useCallback((userData, jwtToken) => {
     setUser(userData);
-    // Removed localStorage.setItem('motogp_token', jwtToken);
+    setToken(jwtToken);  // Store token in memory
     localStorage.setItem('motogp_user', JSON.stringify(userData));
   }, []);
 
@@ -23,6 +24,7 @@ export const AuthProvider = ({ children }) => {
       console.error('Logout failed:', e);
     }
     setUser(null);
+    setToken(null);  // Clear token from memory
     localStorage.removeItem('motogp_user');
   }, []);
 
@@ -34,10 +36,15 @@ export const AuthProvider = ({ children }) => {
       ...options.headers,
     };
 
+    // Add Authorization header for cross-domain support
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch(url, {
       ...options,
       headers,
-      credentials: 'include',
+      credentials: 'include',  // Still send cookies for same-domain
     });
 
     if (response.status === 401) {
@@ -55,11 +62,11 @@ export const AuthProvider = ({ children }) => {
     }
 
     return data;
-  }, [logout]);
+  }, [logout, token]);  // Add token dependency
 
   const contextValue = React.useMemo(() => ({
-    user, login, logout, apiFetch, isAuthenticated: !!user
-  }), [user, login, logout, apiFetch]);
+    user, token, login, logout, apiFetch, isAuthenticated: !!user
+  }), [user, token, login, logout, apiFetch]);
 
   return (
     <AuthContext.Provider value={contextValue}>

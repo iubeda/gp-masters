@@ -47,7 +47,7 @@ const Auth = ({ showToast }) => {
       }
 
       if (isLogin) {
-        login(data.user);
+        login(data.user, data.token);  // Pass token for cross-domain support
         showToast(t('auth.success.login', 'Welcome back to GP Masters Manager!'), 'success');
       } else {
         showToast(t('auth.success.register', 'Registration successful! Please log in.'), 'success');
