@@ -2,7 +2,7 @@
 INSERT INTO users (email, username, password_hash, role, created_at) VALUES
 ('admin@test.com', 'admin', '$2a$10$CPKZBLmK.fFR9QAO5p3D7uSHefNIzf8f0erNIlMlD0ljp0pHHfPAy', 'admin', CURRENT_TIMESTAMP),
 ('master@test.com', 'testMaster', '$2a$10$CPKZBLmK.fFR9QAO5p3D7uSHefNIzf8f0erNIlMlD0ljp0pHHfPAy', 'master', CURRENT_TIMESTAMP),
-('player@test.com', 'testPlayer', '$2a$10$CPKZBLmK.fFR9QAO5p3D7uSHefNIzf8f0erNIlMlD0ljp0pHHfPAy', 'player', CURRENT_TIMESTAMP)
+('player@test.com', 'testPlayer', '$2a$10$CPKZBLmK.fFR9QAO5p3D7uSHefNIzf8f0erNIlMlD0ljp0pHHfPAy', 'player', CURRENT_TIMESTAMP),
 ('player2@test.com', 'testPlayer2', '$2a$10$CPKZBLmK.fFR9QAO5p3D7uSHefNIzf8f0erNIlMlD0ljp0pHHfPAy', 'player', CURRENT_TIMESTAMP)
 ON CONFLICT (email) DO NOTHING;
 
