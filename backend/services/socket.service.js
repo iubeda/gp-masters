@@ -26,13 +26,21 @@ const initSocket = (server) => {
     }
   });
 
-  // Middleware de Autenticación (lee el token desde la cookie HTTP-only)
+  // Middleware de Autenticación - Dual fallback (cookie o token temporal)
   io.use((socket, next) => {
+    let token = null;
+    
+    // 1. Intentar leer desde cookie (funciona en Docker/mismo dominio)
     const cookieHeader = socket.handshake.headers.cookie;
-    const token = cookieHeader
+    token = cookieHeader
       ?.split('; ')
       .find(c => c.startsWith('token='))
       ?.split('=')[1];
+    
+    // 2. Si no hay cookie, usar token temporal (funciona cross-domain en producción)
+    if (!token) {
+      token = socket.handshake.auth?.token;
+    }
 
     if (!token) {
       return next(new Error('Authentication error: Token missing'));

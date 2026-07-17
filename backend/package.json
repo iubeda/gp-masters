@@ -4,7 +4,8 @@
   "description": "Backend API for GP Masters Manager MVP",
   "main": "server.js",
   "scripts": {
-    "start": "npm run migrate:up && node server.js",
+    "start": "node server.js",
+    "start:migrate": "npm run migrate:up && node server.js",
     "dev": "npm run migrate:up && nodemon server.js",
     "test": "vitest run --globals --no-file-parallelism",
     "test:watch": "vitest --globals --no-file-parallelism",

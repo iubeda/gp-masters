@@ -87,8 +87,25 @@ const logout = asyncHandler(async (req, res) => {
   res.json({ message: 'Logged out successfully.' });
 });
 
+const getSocketToken = asyncHandler(async (req, res) => {
+  // Generate temporary token for WebSocket authentication (cross-domain compatible)
+  const socketToken = jwt.sign(
+    { 
+      email: req.user.email, 
+      username: req.user.username, 
+      role: req.user.role,
+      purpose: 'socket'
+    },
+    JWT_SECRET,
+    { expiresIn: '5m' }  // Short-lived token for initial connection
+  );
+
+  res.json({ socketToken });
+});
+
 module.exports = {
   register,
   login,
-  logout
+  logout,
+  getSocketToken
 };

@@ -17,5 +17,5 @@ EXPOSE 5000
 # Set environment
 ENV PORT=5000
 
-# Start server
-CMD ["npm", "start"]
+# Start server with migrations (for local Docker development)
+CMD ["npm", "run", "start:migrate"]
