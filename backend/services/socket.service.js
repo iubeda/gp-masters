@@ -16,14 +16,20 @@ const initSocket = (server) => {
   
   io = new Server(server, {
     cors: {
-      origin: '*', // En producción esto debería restringirse a la URL del frontend
-      methods: ['GET', 'POST']
+      origin: process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : '*',
+      methods: ['GET', 'POST'],
+      credentials: true
     }
   });
 
-  // Middleware de Autenticación
+  // Middleware de Autenticación (lee el token desde la cookie HTTP-only)
   io.use((socket, next) => {
-    const token = socket.handshake.auth?.token;
+    const cookieHeader = socket.handshake.headers.cookie;
+    const token = cookieHeader
+      ?.split('; ')
+      .find(c => c.startsWith('token='))
+      ?.split('=')[1];
+
     if (!token) {
       return next(new Error('Authentication error: Token missing'));
     }

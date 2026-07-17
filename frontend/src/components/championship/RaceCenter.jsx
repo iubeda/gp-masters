@@ -126,6 +126,11 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
     const roomId = { championshipId: championship.id, circuitId: circuit.id };
     socket.emit('join-gp-room', roomId);
 
+    // Re-join room on reconnection (server loses room membership on disconnect)
+    socket.on('connect', () => {
+      socket.emit('join-gp-room', roomId);
+    });
+
     socket.on('qualifying-updated', () => {
       fetchGPStatus();
     });
@@ -151,6 +156,7 @@ const RaceCenter = ({ championship, circuit, apiFetch, showToast, userRole, toda
 
     return () => {
       socket.emit('leave-gp-room', roomId);
+      socket.off('connect');
       socket.off('qualifying-updated');
       socket.off('race-started');
       socket.off('race-lap');
