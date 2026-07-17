@@ -207,7 +207,13 @@
       "race_simulation": "Race Simulation",
       "race_simulation_desc": "The race is simulated progressively (lap by lap) to offer Live Timing to all connected users.",
       "starting_transmission": "Starting Transmission...",
-      "start_race_live": "START RACE (LIVE)!"
+      "start_race_live": "START RACE (LIVE)!",
+      "race_completed_no_practice": "The race for this Grand Prix has already been completed.",
+      "race_completed_no_qualifying": "The race for this Grand Prix has already been completed.",
+      "race_in_progress_no_practice": "The race is in progress.",
+      "race_in_progress_no_qualifying": "The race is in progress.",
+      "no_sessions_during_race": "Laps cannot be performed during the race.",
+      "no_more_sessions": "No more laps can be performed in this session."
     },
     "telemetry": {
       "best_time": "Best time",
@@ -251,11 +257,13 @@
       "live": "Live",
       "laps": "Laps",
       "waiting_first_lap": "Waiting for the first lap finish line pass...",
+      "waiting_data": "Loading race data...",
       "pos": "Pos",
       "pilot_team": "Rider / Team",
       "lap_time": "Lap Time",
       "wear": "Wear",
-      "crash": "Crash (DNF)"
+      "crash": "Crash (DNF)",
+      "next_lap_in": "Next lap in"
     }
   },
   "dashboard": {

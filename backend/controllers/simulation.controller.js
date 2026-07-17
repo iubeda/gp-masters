@@ -75,6 +75,19 @@ const runPracticeStint = asyncHandler(async (req, res) => {
   }
 
   const result = await runStint('practice', req.body, req.user.email);
+  
+  // Obtener historial de vueltas actualizado
+  const teamRes = await db.query(
+    'SELECT id FROM teams WHERE user_email = $1 AND championship_id = $2',
+    [req.user.email, championship_id]
+  );
+  const teamId = teamRes.rows[0]?.id;
+  
+  if (teamId) {
+    const practiceLaps = await simulationModel.getLapHistory(championship_id, circuit_id, teamId, 'practice');
+    result.practiceLaps = practiceLaps;
+  }
+  
   res.json(result);
 });
 
@@ -94,10 +107,28 @@ const runQualifyingStint = asyncHandler(async (req, res) => {
 
   const result = await runStint('qualifying', req.body, req.user.email);
   
+  // Obtener la parrilla actualizada para enviar a todos los clientes
+  const updatedGridStatus = await simulationModel.getGPStatusForAllTeams(championship_id, circuit_id);
+  
+  // Obtener historial de vueltas actualizado
+  const teamRes = await db.query(
+    'SELECT id FROM teams WHERE user_email = $1 AND championship_id = $2',
+    [req.user.email, championship_id]
+  );
+  const teamId = teamRes.rows[0]?.id;
+  
+  if (teamId) {
+    const qualifyingLaps = await simulationModel.getLapHistory(championship_id, circuit_id, teamId, 'qualifying');
+    result.qualifyingLaps = qualifyingLaps;
+  }
+  
+  result.gridStatus = updatedGridStatus;
+  
   // Notificar a todos los usuarios conectados a este GP que hay nuevos tiempos
   emitToGP(championship_id, circuit_id, 'qualifying-updated', {
     team_email: req.user.email,
-    bestTime: result.bestTime
+    bestTime: result.bestTime,
+    gridStatus: updatedGridStatus
   });
 
   res.json(result);

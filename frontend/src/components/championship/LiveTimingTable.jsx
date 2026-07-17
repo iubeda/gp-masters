@@ -3,7 +3,7 @@ import { Activity, Timer } from 'lucide-react';
 import { formatLapTime } from '../../utils/timeFormat';
 import { useTranslation } from 'react-i18next';
 
-export default function LiveTimingTable({ liveRace }) {
+export default function LiveTimingTable({ liveRace, nextLapProgress = 0 }) {
   const { t } = useTranslation();
   return (
     <div className="bg-[#101017] border border-red-900/30 rounded-2xl overflow-hidden shadow-[0_0_20px_rgba(220,38,38,0.1)] relative">
@@ -27,10 +27,37 @@ export default function LiveTimingTable({ liveRace }) {
         </div>
       </div>
 
+      {/* Barra de progreso para la siguiente vuelta */}
+      {liveRace.currentLap < liveRace.totalLaps && liveRace.currentLap > 0 && (
+        <div className="px-5 pt-4 pb-2">
+          <div className="flex items-center justify-between text-xs mb-2">
+            <span className="text-gray-400 font-semibold">
+              {t('championship.live_timing.next_lap_in', 'Próxima vuelta en')}...
+            </span>
+            <span className="text-red-400 font-mono font-bold">
+              {Math.max(0, Math.ceil((100 - nextLapProgress) * 0.2))}s
+            </span>
+          </div>
+          <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden relative">
+            {nextLapProgress > 0 && (
+              <div 
+                className="h-full bg-gradient-to-r from-red-600 via-red-500 to-red-400 transition-all duration-1000 ease-linear relative"
+                style={{ width: `${nextLapProgress}%` }}
+              >
+                <div className="absolute inset-0 bg-white/20 animate-pulse" />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="overflow-x-auto p-4">
         {liveRace.standings.length === 0 ? (
           <div className="text-center py-10 text-gray-500 text-xs italic">
-            {t('championship.live_timing.waiting_first_lap', 'Esperando el paso por meta de la primera vuelta...')}
+            {liveRace.currentLap === 0 
+              ? t('championship.live_timing.waiting_first_lap', 'Esperando el paso por meta de la primera vuelta...')
+              : t('championship.live_timing.waiting_data', 'Cargando datos de carrera...')
+            }
           </div>
         ) : (
           (() => {
