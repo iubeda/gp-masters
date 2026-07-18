@@ -201,9 +201,9 @@ const ChampionshipDetail = ({ showToast }) => {
               />
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className={isCreator ? "grid grid-cols-1 lg:grid-cols-3 gap-8" : ""}>
               {/* Race calendar */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className={isCreator ? "lg:col-span-2 space-y-6" : "space-y-6"}>
                 <div className="glass rounded-2xl border border-gray-800 overflow-hidden">
                   <div className="p-6 bg-gradient-to-r from-yellow-600/10 via-transparent to-transparent border-b border-gray-800 flex items-center justify-between">
                     <h2 className="text-xl font-bold text-white">{t('championship.calendar.title', 'Calendario de Carreras')}</h2>
@@ -232,26 +232,28 @@ const ChampionshipDetail = ({ showToast }) => {
               </div>
 
               {/* Add circuit form (creator only) */}
-              <div className="lg:col-span-1 space-y-6">
-                {isCreator && (!championship.circuits || championship.circuits.length < (championship.max_circuits ?? 15)) && (
-                  <AddCircuitForm
-                    onSubmit={handleAddCircuit}
-                    circuits={circuits}
-                    championshipCircuits={championship.circuits}
-                    selectedCircuitId={selectedCircuitId}
-                    setSelectedCircuitId={setSelectedCircuitId}
-                    addingCircuit={addingCircuit}
-                  />
-                )}
-                {championship.circuits?.length >= (championship.max_circuits ?? 15) && (
-                  <div className="p-4 bg-yellow-950/20 border border-yellow-900/30 rounded-2xl flex items-center gap-3">
-                    <Check className="w-5 h-5 text-yellow-500 shrink-0" />
-                    <p className="text-xs text-yellow-350 leading-relaxed">
-                      {t('championship.calendar.max_reached', 'Este campeonato ha alcanzado el límite máximo de {{max}} circuitos.', { max: championship.max_circuits ?? 15 })}
-                    </p>
-                  </div>
-                )}
-              </div>
+              {isCreator && (
+                <div className="lg:col-span-1 space-y-6">
+                  {(!championship.circuits || championship.circuits.length < (championship.max_circuits ?? 15)) && (
+                    <AddCircuitForm
+                      onSubmit={handleAddCircuit}
+                      circuits={circuits}
+                      championshipCircuits={championship.circuits}
+                      selectedCircuitId={selectedCircuitId}
+                      setSelectedCircuitId={setSelectedCircuitId}
+                      addingCircuit={addingCircuit}
+                    />
+                  )}
+                  {championship.circuits?.length >= (championship.max_circuits ?? 15) && (
+                    <div className="p-4 bg-yellow-950/20 border border-yellow-900/30 rounded-2xl flex items-center gap-3">
+                      <Check className="w-5 h-5 text-yellow-500 shrink-0" />
+                      <p className="text-xs text-yellow-350 leading-relaxed">
+                        {t('championship.calendar.max_reached', 'Este campeonato ha alcanzado el límite máximo de {{max}} circuitos.', { max: championship.max_circuits ?? 15 })}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
