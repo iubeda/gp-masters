@@ -32,6 +32,11 @@
 
 ---
 
+## ✅ Prueba de la aplicación
+Más información sobre cómo probar la aplicación en el documento [Enlace a Google Slides](https://docs.google.com/presentation/d/1FrHNnUTZJ4NMNL-TDfvIiJGt4Pqzn-jda0tzTY4ogXk/edit?usp=sharing)
+
+---
+
 ## 🛠️ Tecnologías Utilizadas
 
 El proyecto está construido sobre una arquitectura moderna desacoplada en Frontend y Backend:
