@@ -115,15 +115,30 @@ export default function StrategyForm({
                 {setup[s.id] > 0 ? `+${setup[s.id]}` : setup[s.id]}
               </span>
             </div>
-            <input
-              type="range"
-              min="-10"
-              max="10"
-              step="1"
-              value={setup[s.id]}
-              onChange={(e) => handleSliderChange(s.id, e.target.value)}
-              className={`w-full bg-gray-800 rounded-lg appearance-none h-1.5 cursor-pointer ${s.color}`}
-            />
+            <div className="relative">
+              <input
+                type="range"
+                min="-10"
+                max="10"
+                step="1"
+                value={setup[s.id]}
+                onChange={(e) => handleSliderChange(s.id, e.target.value)}
+                className={`w-full bg-gray-800 rounded-lg appearance-none h-1.5 cursor-pointer ${s.color}`}
+              />
+              {/* Marcas visuales */}
+              <div className="flex justify-between px-1 mt-1">
+                {Array.from({ length: 21 }, (_, i) => i - 10).map((tick) => (
+                  <div key={tick} className="flex flex-col items-center">
+                    <div className={`w-px ${tick % 5 === 0 ? 'h-2 bg-gray-500' : 'h-1 bg-gray-700'}`}></div>
+                    {tick % 5 === 0 && (
+                      <span className={`text-[9px] mt-0.5 ${tick === 0 ? 'text-gray-400 font-bold' : 'text-gray-600'}`}>
+                        {tick > 0 ? `+${tick}` : tick}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         ))}
       </div>
